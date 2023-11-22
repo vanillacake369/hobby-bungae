@@ -22,7 +22,7 @@ public class PostEntity extends TimeEntity {
     private String password;
     @Column(nullable = false, length = 500)
     private String contents;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     private String region;
 
     public PostEntity(PostAddRequestDto requestDto) {
