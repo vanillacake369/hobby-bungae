@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class HobbyBungaeApplication {
 
     public static void main(String[] args) {
+//        CommonResponseDTO dto = new UserResponseDTO();
+//        CommonResponseDTO dto = new PostResponseDTO();
+//        CommonResponseDTO dto = new PostResponseDTO();
         SpringApplication.run(HobbyBungaeApplication.class, args);
     }
 
