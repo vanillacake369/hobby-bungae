@@ -7,17 +7,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class User extends TimeStamp{
+public class State {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id_name",nullable = false)
-    private String idName;
+    @Column(name = "si",nullable = false)
+    private String siName;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String password;
+    @Override
+    public String toString() {
+        return "State{" +
+                "id=" + id +
+                ", siName='" + siName + '\'' +
+                '}';
+    }
 }
