@@ -1,4 +1,4 @@
-package com.example.hobbybungae.domain;
+package com.example.hobbybungae.domain.state;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

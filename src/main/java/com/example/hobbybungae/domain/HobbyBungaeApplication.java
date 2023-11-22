@@ -1,4 +1,4 @@
-package com.example.hobbybungae;
+package com.example.hobbybungae.domain;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

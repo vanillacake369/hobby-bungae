@@ -3,7 +3,8 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/hobby_bungae?serverTimezone=UTC&characterEncoding=UTF-8
     driverClassName: com.mysql.cj.jdbc.Driver
-
+    username: root
+    password: 1026baby
   # JPA
   jpa:
     properties:

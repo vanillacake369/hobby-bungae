@@ -1,4 +1,4 @@
-package com.example.hobbybungae;
+package com.example.hobbybungae.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

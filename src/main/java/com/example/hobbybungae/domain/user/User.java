@@ -1,21 +1,20 @@
-package com.example.hobbybungae.domain;
+package com.example.hobbybungae.domain.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import java.util.List;
+import lombok.Getter;
 
+@Getter
 @Entity
-public class User extends TimeStamp{
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id_name",nullable = false)
+    @Column(nullable = false)
     private String idName;
 
     @Column(nullable = false)
@@ -23,10 +22,4 @@ public class User extends TimeStamp{
 
     @Column(nullable = false)
     private String password;
-
-//    @OneToMany
-//    private List<BungaePost> bungaePosts;
-//
-//    @OneToOne
-//    private Profile profile;
 }
