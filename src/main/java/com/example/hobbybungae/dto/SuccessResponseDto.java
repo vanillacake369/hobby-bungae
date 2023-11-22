@@ -1,5 +1,8 @@
 package com.example.hobbybungae.dto;
 
+import lombok.Getter;
+
+@Getter
 public class SuccessResponseDto extends CommonResponseDto{
     private Object data;
 

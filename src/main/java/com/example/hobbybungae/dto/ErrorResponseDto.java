@@ -1,5 +1,8 @@
 package com.example.hobbybungae.dto;
 
+import lombok.Getter;
+
+@Getter
 public class ErrorResponseDto extends CommonResponseDto{
     private String msg;
 
@@ -8,10 +11,4 @@ public class ErrorResponseDto extends CommonResponseDto{
         this.msg = msg;
     }
 
-    @Override
-    public String toString() {
-        return "ErrorResponseDto{" +
-            "msg='" + msg + '\'' +
-            '}';
-    }
 }

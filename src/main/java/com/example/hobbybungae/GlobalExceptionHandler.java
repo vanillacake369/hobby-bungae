@@ -1,8 +1,5 @@
 package com.example.hobbybungae;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-
-import com.example.hobbybungae.dto.CommonResponseDto;
 import com.example.hobbybungae.dto.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,14 +33,11 @@ public class GlobalExceptionHandler {
         }
         log.info(builder.toString());
 
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-//            new ErrorResponseDto(
-//                builder.toString()
-//            )
-//        );
-        ErrorResponseDto responseDto = new ErrorResponseDto(builder.toString());
-        log.info(responseDto.toString());
-        return new ResponseEntity<>(responseDto, BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+            new ErrorResponseDto(
+                builder.toString()
+            )
+        );
 
     }
 
