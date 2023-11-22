@@ -1,5 +1,7 @@
 package com.example.hobbybungae.config;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 import com.example.hobbybungae.security.JwtAuthenticationFilter;
 import com.example.hobbybungae.security.JwtAuthorizationFilter;
 import com.example.hobbybungae.security.JwtUtil;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -64,6 +67,9 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll() // resources 접근 허용 설정
+                        .requestMatchers(
+                                antMatcher(HttpMethod.GET, "/hobby-bungae/v1/hobbies/**")
+                        ).permitAll()  // 글 단건,전체 조회 모두 접근 허용
                         .requestMatchers("/hobby-bungae/v1/users/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
