@@ -5,10 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +25,19 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+//    @OneToMany
+//    List<BungaePost> bungaePosts;
+
+//    @OneToOne
+//    Profile profile;
+
+
+    @Builder
+    public User(Long id, String idName, String name, String password) {
+        this.id = id;
+        this.idName = idName;
+        this.name = name;
+        this.password = password;
+    }
 }

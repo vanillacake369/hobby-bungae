@@ -1,5 +1,7 @@
 package com.example.hobbybungae.domain.hobby;
 
+import com.example.hobbybungae.domain.dto.ErrorResponseDto;
+import com.example.hobbybungae.domain.dto.SuccessResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +20,7 @@ public class HobbyController {
     private final HobbyService hobbyService;
 
     @PostMapping
-    public ResponseEntity<CommonResponseDto> postHobby(@RequestBody @Valid HobbyRequestDto requestDto){
+    public ResponseEntity<SuccessResponseDto> postHobby(@RequestBody @Valid HobbyRequestDto requestDto){
         HobbyResponseDto responseDto = hobbyService.postHobby(requestDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -27,7 +29,7 @@ public class HobbyController {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<CommonResponseDto> duplicateHobbyName(IllegalArgumentException ex){
+    public ResponseEntity<ErrorResponseDto> duplicateHobbyName(IllegalArgumentException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
             new ErrorResponseDto(
                 ex.getMessage()
