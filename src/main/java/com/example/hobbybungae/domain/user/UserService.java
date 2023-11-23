@@ -12,10 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-//@Transactional(readOnly = true)
+@Transactional(readOnly = true)
 public class UserService {
 
     private static final String SIGNUP_ERROR_MESSAGE = "중복되는 회원 아이디가 존재합니다. 다른 아이디로 시도해주세요.";
+//    private final ProfileService profileService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -37,6 +38,8 @@ public class UserService {
                 .password(passwordEncoder.encode(requestDto.password()))
                 .build();
         userRepository.save(newUser);
+
+//        profileService.createNewUserProfile(newUser);
 
         return new ResponseEntity<>(new SuccessResponseDto(newUser), HttpStatus.OK);
     }
