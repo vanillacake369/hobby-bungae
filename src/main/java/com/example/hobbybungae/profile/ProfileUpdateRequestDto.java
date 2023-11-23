@@ -6,7 +6,7 @@ import java.util.List;
 
 @Getter
 public class ProfileUpdateRequestDto {
-    private String user_id;
+    private String idName;
     private String password;
     private String name;
     private String introduction;

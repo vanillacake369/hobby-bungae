@@ -1,6 +1,7 @@
 package com.example.hobbybungae.profile;
 
 import lombok.Getter;
+import org.springframework.context.annotation.Profile;
 
 @Getter
 public record ProfileResponseDto (
@@ -11,13 +12,12 @@ public record ProfileResponseDto (
         String introduction //,
         // List<hobby> hobbies
 ) {
-    public static ProfileResponseDto fromProfile(ProfileEntity editProfile) {
+    public static ProfileResponseDto fromProfile(ProfileEntity updateProfile) {
         return new ProfileResponseDto(
-                editProfile.getProfile_Id(),
-                editProfile.getUser_id(),
-                editProfile.getPassword(),
-                editProfile.getName(),
-                editProfile.getIntroduction() //,
+                updateProfile.getProfileId(),
+                updateProfile.getUserID(),
+                updateProfile.getName(),
+                updateProfile.getIntroduction() //,
                // saveProfile.getHobbies()
         );
     }

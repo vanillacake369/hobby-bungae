@@ -1,4 +1,4 @@
 package com.example.hobbybungae.profile;
 
-public class ProfileCheckRequestDto {
+public class ProfileSearchRequestDto {
 }

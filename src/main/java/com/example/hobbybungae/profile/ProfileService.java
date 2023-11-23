@@ -2,7 +2,6 @@ package com.example.hobbybungae.profile;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +28,7 @@ public class ProfileService {
         return new ProfileResponseDto(profileEntity);
     }
 
+    @Transactional(readOnly = true)
     private ProfileEntity getProfileEntity(Long profileId) {
         return profileJpaRepository.findById(profileId)
                 .orElseThrow(() -> new ProfileNotFoundException("해당 프로필을 찾을 수 없습니다."));
