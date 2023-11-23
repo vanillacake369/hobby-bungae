@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "hobbies")
 @NoArgsConstructor
-@AllArgsConstructor
 public class Hobby {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +21,8 @@ public class Hobby {
 
     @Column
     private String hobbyName;
+
+    public Hobby(String hobbyName) {
+        this.hobbyName = hobbyName;
+    }
 }
