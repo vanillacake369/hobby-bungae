@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-11-23T23:58:12.147Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="-7aRfMoOtWanDK4CCB7B" version="22.1.3" type="github">
+<mxfile host="app.diagrams.net" modified="2023-11-23T23:59:20.786Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="rpZl8x_Ho0OG22N_CtiG" version="22.1.3" type="github">
   <diagram name="페이지-1" id="ONSRwsZsQMqiGqJdxQxZ">
     <mxGraphModel dx="3623" dy="2098" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -9,6 +9,11 @@
         </mxCell>
         <mxCell id="ylA6RAmN_qZPsvHQUGK8-21" value="토큰 검증단" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-110" y="555" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6Mnrhp99cKoq0SR3Ej0p-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="6Mnrhp99cKoq0SR3Ej0p-23" target="ylA6RAmN_qZPsvHQUGK8-21" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-50.05882352941171" y="669.9999999999995" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="6Mnrhp99cKoq0SR3Ej0p-94" value="" style="group" parent="1" vertex="1" connectable="0">
           <mxGeometry x="-1110" y="-430" width="910" height="350" as="geometry" />
@@ -244,11 +249,8 @@
         <mxCell id="9J_CCUZRL3qdixfYIrlr-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="hkT8D0nBrZQYGym--TO3-3" target="6Mnrhp99cKoq0SR3Ej0p-22">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9J_CCUZRL3qdixfYIrlr-32" value="" style="group" vertex="1" connectable="0" parent="1">
-          <mxGeometry x="-1290" y="640" width="1420" height="535" as="geometry" />
-        </mxCell>
-        <mxCell id="6Mnrhp99cKoq0SR3Ej0p-99" value="프로필" style="swimlane;whiteSpace=wrap;html=1;" parent="9J_CCUZRL3qdixfYIrlr-32" vertex="1">
-          <mxGeometry width="1420" height="535" as="geometry" />
+        <mxCell id="6Mnrhp99cKoq0SR3Ej0p-99" value="프로필" style="swimlane;whiteSpace=wrap;html=1;movable=0;resizable=0;rotatable=0;deletable=0;editable=0;locked=1;connectable=0;" parent="1" vertex="1">
+          <mxGeometry x="-1210" y="660" width="1420" height="535" as="geometry" />
         </mxCell>
         <mxCell id="6Mnrhp99cKoq0SR3Ej0p-28" value="비밀번호 입력 여부 &lt;br&gt;필터" style="rounded=0;whiteSpace=wrap;html=1;" parent="6Mnrhp99cKoq0SR3Ej0p-99" vertex="1">
           <mxGeometry x="343" y="230" width="120" height="60" as="geometry" />
@@ -297,11 +299,6 @@
         </mxCell>
         <mxCell id="9J_CCUZRL3qdixfYIrlr-29" value="로그인사용자&lt;br&gt;프로필사용자&lt;br&gt;일치 검증 필터" style="whiteSpace=wrap;html=1;" vertex="1" parent="6Mnrhp99cKoq0SR3Ej0p-99">
           <mxGeometry x="180" y="230" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="6Mnrhp99cKoq0SR3Ej0p-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="6Mnrhp99cKoq0SR3Ej0p-23" target="ylA6RAmN_qZPsvHQUGK8-21" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1239.9411764705883" y="29.999999999999545" as="targetPoint" />
-          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
