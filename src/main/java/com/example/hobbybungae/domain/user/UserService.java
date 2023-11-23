@@ -2,7 +2,6 @@ package com.example.hobbybungae.domain.user;
 
 import com.example.hobbybungae.response.CommonResponseDto;
 import com.example.hobbybungae.response.ErrorResponseDto;
-import com.example.hobbybungae.response.SuccessResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private static final String SIGNUP_ERROR_MESSAGE = "중복되는 회원 아이디가 존재합니다. 다른 아이디로 시도해주세요.";
-//    private final ProfileService profileService;
+    //    private final ProfileService profileService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -41,6 +40,6 @@ public class UserService {
 
 //        profileService.createNewUserProfile(newUser);
 
-        return new ResponseEntity<>(new SuccessResponseDto(newUser), HttpStatus.OK);
+        return new ResponseEntity<>(UserResponseDto.successResponseOf(newUser), HttpStatus.OK);
     }
 }

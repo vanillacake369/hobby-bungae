@@ -1,11 +1,13 @@
 package com.example.hobbybungae.domain.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
-public class UserResponseDto {
-    private String idName;
-    private String name;
+import com.example.hobbybungae.response.SuccessResponseDto;
+
+public record UserResponseDto(
+        String idName,
+        String name) {
+    public static SuccessResponseDto successResponseOf(User newUser) {
+        UserResponseDto userResponseDto = new UserResponseDto(newUser.getIdName(), newUser.getName());
+        return new SuccessResponseDto(userResponseDto);
+    }
 }

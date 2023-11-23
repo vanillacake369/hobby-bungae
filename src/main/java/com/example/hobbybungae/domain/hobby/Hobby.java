@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,4 +23,9 @@ public class Hobby {
 
     @Column
     private String hobbyName;
+
+    @Builder
+    private Hobby(String hobbyName) {
+        this.hobbyName = hobbyName;
+    }
 }
