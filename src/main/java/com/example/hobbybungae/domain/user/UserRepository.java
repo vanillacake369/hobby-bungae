@@ -1,4 +1,4 @@
-package com.example.hobbybungae.user;
+package com.example.hobbybungae.domain.user;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

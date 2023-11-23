@@ -1,7 +1,7 @@
 package com.example.hobbybungae.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import com.example.hobbybungae.domain.state.State;
+import com.example.hobbybungae.domain.state.StateRepository;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

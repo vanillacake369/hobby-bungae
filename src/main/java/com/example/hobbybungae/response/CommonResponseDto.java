@@ -1,4 +1,4 @@
-package com.example.hobbybungae.dto;
+package com.example.hobbybungae.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

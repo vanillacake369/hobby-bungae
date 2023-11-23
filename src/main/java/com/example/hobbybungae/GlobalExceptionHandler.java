@@ -1,8 +1,9 @@
 package com.example.hobbybungae;
 
-import com.example.hobbybungae.dto.ErrorResponseDto;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
+import com.example.hobbybungae.response.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -16,12 +17,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> processValidationError(
-        MethodArgumentNotValidException ex){
+            MethodArgumentNotValidException ex) {
         log.info("입력값 검증 예외");
         BindingResult bindingResult = ex.getBindingResult();
 
         StringBuilder builder = new StringBuilder();
-        for(FieldError fieldError : bindingResult.getFieldErrors()){
+        for (FieldError fieldError : bindingResult.getFieldErrors()) {
             log.info(fieldError.getField());
             builder.append("[");
             builder.append(fieldError.getField());
@@ -33,12 +34,9 @@ public class GlobalExceptionHandler {
         }
         log.info(builder.toString());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-            new ErrorResponseDto(
-                builder.toString()
-            )
-        );
-
+        ErrorResponseDto responseDto = new ErrorResponseDto(builder.toString());
+        log.info(responseDto.toString());
+        return new ResponseEntity<>(responseDto, BAD_REQUEST);
     }
 
 }

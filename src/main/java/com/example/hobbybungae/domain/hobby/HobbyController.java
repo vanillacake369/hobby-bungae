@@ -1,8 +1,7 @@
-package com.example.hobbybungae.hobby;
+package com.example.hobbybungae.domain.hobby;
 
-import com.example.hobbybungae.dto.CommonResponseDto;
-import com.example.hobbybungae.dto.ErrorResponseDto;
-import com.example.hobbybungae.dto.SuccessResponseDto;
+import com.example.hobbybungae.response.ErrorResponseDto;
+import com.example.hobbybungae.response.SuccessResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,20 +20,20 @@ public class HobbyController {
     private final HobbyService hobbyService;
 
     @PostMapping
-    public ResponseEntity<SuccessResponseDto> postHobby(@RequestBody @Valid HobbyRequestDto requestDto){
+    public ResponseEntity<SuccessResponseDto> postHobby(@RequestBody @Valid HobbyRequestDto requestDto) {
         HobbyResponseDto responseDto = hobbyService.postHobby(requestDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(
-            new SuccessResponseDto(responseDto)
+                new SuccessResponseDto(responseDto)
         );
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponseDto> duplicateHobbyName(IllegalArgumentException ex){
+    public ResponseEntity<ErrorResponseDto> duplicateHobbyName(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
-            new ErrorResponseDto(
-                ex.getMessage()
-            )
+                new ErrorResponseDto(
+                        ex.getMessage()
+                )
         );
     }
 }

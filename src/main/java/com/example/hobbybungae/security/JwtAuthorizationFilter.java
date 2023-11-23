@@ -1,7 +1,7 @@
 package com.example.hobbybungae.security;
 
-import com.example.hobbybungae.dto.CommonResponseDto;
-import com.example.hobbybungae.dto.ErrorResponseDto;
+import com.example.hobbybungae.response.CommonResponseDto;
+import com.example.hobbybungae.response.ErrorResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -31,7 +31,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-        HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
+            HttpServletRequest req, HttpServletResponse res, FilterChain filterChain)
+            throws ServletException, IOException {
 
         String token = jwtUtil.getJwtFromHeader(req);
 

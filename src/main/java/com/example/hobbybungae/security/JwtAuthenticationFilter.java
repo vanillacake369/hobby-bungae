@@ -1,10 +1,10 @@
 package com.example.hobbybungae.security;
 
-import com.example.hobbybungae.dto.ErrorResponseDto;
-import com.example.hobbybungae.dto.SuccessResponseDto;
-import com.example.hobbybungae.user.User;
-import com.example.hobbybungae.user.UserRequestDto;
-import com.example.hobbybungae.user.UserResponseDto;
+import com.example.hobbybungae.domain.user.User;
+import com.example.hobbybungae.domain.user.UserRequestDto;
+import com.example.hobbybungae.domain.user.UserResponseDto;
+import com.example.hobbybungae.response.ErrorResponseDto;
+import com.example.hobbybungae.response.SuccessResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,16 +28,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(
-        HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+            HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             UserRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), UserRequestDto.class);
 
             return getAuthenticationManager().authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    requestDto.getIdName(),
-                    requestDto.getPassword(),
-                    null
-                )
+                    new UsernamePasswordAuthenticationToken(
+                            requestDto.idName(),
+                            requestDto.password(),
+                            null
+                    )
             );
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -46,7 +46,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+                                            Authentication authResult) throws IOException {
         User user = ((UserDetailsImpl) authResult.getPrincipal()).getUser();
         UserResponseDto userResponseDto = new UserResponseDto(user.getIdName(), user.getName());
 
@@ -65,7 +66,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                              AuthenticationException failed) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 
         ErrorResponseDto responseDto = new ErrorResponseDto("회원을 찾을 수 없습니다.");

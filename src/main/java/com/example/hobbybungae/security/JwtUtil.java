@@ -25,12 +25,11 @@ public class JwtUtil {
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
     // 토큰 만료시간
-    private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
-
+    private static final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
     @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
     private String secretKey;
     private Key key;
-    private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
     @PostConstruct
     public void init() {
@@ -43,12 +42,12 @@ public class JwtUtil {
         Date date = new Date();
 
         return BEARER_PREFIX +
-            Jwts.builder()
-                .setSubject(username) // 사용자 식별자값
-                .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
-                .setIssuedAt(date) // 발급일
-                .signWith(key, signatureAlgorithm) // 암호화 알고리즘
-                .compact();
+                Jwts.builder()
+                        .setSubject(username) // 사용자 식별자값
+                        .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
+                        .setIssuedAt(date) // 발급일
+                        .signWith(key, signatureAlgorithm) // 암호화 알고리즘
+                        .compact();
     }
 
     // header 에서 JWT 가져오기
