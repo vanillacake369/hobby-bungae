@@ -65,6 +65,10 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
+                        .requestMatchers(HttpMethod.GET, "v1/users/profile/{$user-id}")
+                        .authenticated() // 프로필 조회 요청 인증 요망
+                        .requestMatchers(HttpMethod.GET, "v1/users/profile")
+                        .authenticated() // 프로필 조회 요청 인증 요망
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll() // resources 접근 허용 설정
                         .requestMatchers(

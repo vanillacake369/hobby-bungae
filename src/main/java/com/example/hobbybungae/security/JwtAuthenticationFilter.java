@@ -1,10 +1,10 @@
 package com.example.hobbybungae.security;
 
-import com.example.hobbybungae.domain.dto.ErrorResponseDto;
-import com.example.hobbybungae.domain.dto.SuccessResponseDto;
 import com.example.hobbybungae.domain.user.User;
 import com.example.hobbybungae.domain.user.UserRequestDto;
 import com.example.hobbybungae.domain.user.UserResponseDto;
+import com.example.hobbybungae.response.ErrorResponseDto;
+import com.example.hobbybungae.response.SuccessResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;

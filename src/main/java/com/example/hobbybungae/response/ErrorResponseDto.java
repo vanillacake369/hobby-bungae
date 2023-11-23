@@ -1,4 +1,4 @@
-package com.example.hobbybungae.domain.dto;
+package com.example.hobbybungae.response;
 
 import lombok.Getter;
 

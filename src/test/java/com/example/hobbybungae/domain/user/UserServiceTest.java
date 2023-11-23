@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.hobbybungae.domain.TimeStamp;
-import com.example.hobbybungae.domain.dto.CommonResponseDto;
-import com.example.hobbybungae.domain.dto.ErrorResponseDto;
-import com.example.hobbybungae.domain.dto.SuccessResponseDto;
+import com.example.hobbybungae.response.CommonResponseDto;
+import com.example.hobbybungae.response.ErrorResponseDto;
+import com.example.hobbybungae.response.SuccessResponseDto;
 import java.util.Objects;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;

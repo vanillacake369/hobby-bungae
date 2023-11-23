@@ -1,7 +1,7 @@
 package com.example.hobbybungae.security;
 
-import com.example.hobbybungae.domain.dto.CommonResponseDto;
-import com.example.hobbybungae.domain.dto.ErrorResponseDto;
+import com.example.hobbybungae.response.CommonResponseDto;
+import com.example.hobbybungae.response.ErrorResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;

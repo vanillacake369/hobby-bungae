@@ -1,8 +1,8 @@
-package com.example.hobbybungae.domain;
+package com.example.hobbybungae;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-import com.example.hobbybungae.domain.dto.ErrorResponseDto;
+import com.example.hobbybungae.response.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
