@@ -1,12 +1,12 @@
-package com.example.hobbybungae.controller;
+package com.example.hobbybungae.domain.post.controller;
 
 import com.example.hobbybungae.exception.AuthorizeException;
 import com.example.hobbybungae.exception.PostNotFoundException;
-import com.example.hobbybungae.Dto.PostRequestDto;
-import com.example.hobbybungae.Dto.PostResponseDto;
+import com.example.hobbybungae.domain.post.dto.PostRequestDto;
+import com.example.hobbybungae.domain.post.dto.PostResponseDto;
 import com.example.hobbybungae.exception.ErrorResponseDto;
 import com.example.hobbybungae.security.UserDetailsImpl;
-import com.example.hobbybungae.service.PostService;
+import com.example.hobbybungae.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +50,7 @@ public class PostController {
             @RequestBody PostRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
             ) {
-        PostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
+        PostResponseDto responseDto = postService.updatePost(postId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -60,27 +60,8 @@ public class PostController {
             @PathVariable Long postId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        postService.deletePost(postId, userDetails.getUser());
+        postService.deletePost(postId);
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(PostNotFoundException.class)
-    public ResponseEntity<ErrorResponseDto> postNotFoundExceptionHandler(PostNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ErrorResponseDto(
-                        HttpStatus.NOT_FOUND.value(),
-                        ex.getMessage()
-                )
-        );
-    }
-
-    @ExceptionHandler(AuthorizeException.class)
-    public ResponseEntity<ErrorResponseDto> authorizeExceptionHandler(AuthorizeException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                new ErrorResponseDto(
-                        HttpStatus.UNAUTHORIZED.value(),
-                        ex.getMessage()
-                )
-        );
-    }
 }

@@ -1,7 +1,5 @@
 package com.example.hobbybungae.security;
 
-import com.example.hobbybungae.response.CommonResponseDto;
-import com.example.hobbybungae.response.ErrorResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -42,10 +40,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 // 인증정보가 존재하지 않을때
                 ObjectMapper objectMapper = new ObjectMapper();
 
-                CommonResponseDto commonResponseDto = new ErrorResponseDto("토큰이 유효하지 않습니다.");
                 res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 res.setContentType("application/json; charset=UTF-8");
-                res.getWriter().write(objectMapper.writeValueAsString(commonResponseDto));
+                res.getWriter().write(objectMapper.writeValueAsString("토큰이 유효하지 않습니다."));
                 return;
             }
 

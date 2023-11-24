@@ -40,7 +40,7 @@ public class UserService {
 
 //        profileService.createNewUserProfile(newUser);
 
-        return new ResponseEntity<>(UserResponseDto.successResponseOf(newUser), HttpStatus.OK);
+        return new ResponseEntity<>(new UserResponseDto(newUser.getIdName(), newUser.getName()), HttpStatus.OK);
     }
 
     private void verifyDuplicatedUser(UserRequestDto requestDto) throws DuplicatedUserException {

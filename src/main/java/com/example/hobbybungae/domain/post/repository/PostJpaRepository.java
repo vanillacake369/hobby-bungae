@@ -1,7 +1,7 @@
-package com.example.hobbybungae.repository;
+package com.example.hobbybungae.domain.post.repository;
 
 
-import com.example.hobbybungae.entity.PostEntity;
+import com.example.hobbybungae.domain.post.entity.PostEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

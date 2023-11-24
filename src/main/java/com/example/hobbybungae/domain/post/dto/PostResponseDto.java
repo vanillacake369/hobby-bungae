@@ -1,7 +1,7 @@
-package com.example.hobbybungae.Dto;
+package com.example.hobbybungae.domain.post.dto;
 
 
-import com.example.hobbybungae.entity.PostEntity;
+import com.example.hobbybungae.domain.post.entity.PostEntity;
 
 import java.time.LocalDateTime;
 

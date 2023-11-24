@@ -1,4 +1,4 @@
-package com.example.hobbybungae.entity;
+package com.example.hobbybungae.domain.post.entity;
 
 
 import jakarta.persistence.*;
