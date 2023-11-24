@@ -1,4 +1,4 @@
-package com.example.hobbybungae.domain.hobby;
+package com.example.hobbybungae.domain.hobby.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +22,7 @@ public class Hobby {
     @Column
     private String hobbyName;
 
+    @Builder
     public Hobby(String hobbyName) {
         this.hobbyName = hobbyName;
     }
