@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "hobbies")
 @NoArgsConstructor
-@AllArgsConstructor
 public class Hobby {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +23,7 @@ public class Hobby {
     private String hobbyName;
 
     @Builder
-    private Hobby(String hobbyName) {
+    public Hobby(String hobbyName) {
         this.hobbyName = hobbyName;
     }
 }

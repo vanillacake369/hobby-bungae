@@ -3,14 +3,12 @@ package com.example.hobbybungae.security;
 import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
-import com.example.hobbybungae.global_exception.ErrorCode;
-import com.example.hobbybungae.global_exception.ErrorDetail;
+import com.example.hobbybungae.exception.ErrorResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -56,6 +54,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
 
         ObjectMapper objectMapper = new ObjectMapper();
+
         String result = objectMapper.writeValueAsString(userResponseDto);
 
         response.setStatus(HttpStatus.OK.value());
@@ -68,12 +67,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        ErrorDetail errorDetail = new ErrorDetail(
-                "user id_name & password",
-                request.getReader().lines().collect(Collectors.joining()),
-                ErrorCode.ACCESS_DENIED.getMessage()
-        );
-        String result = objectMapper.writeValueAsString(errorDetail);
+
+        String result = objectMapper.writeValueAsString("회원을 찾을 수 없습니다.");
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");

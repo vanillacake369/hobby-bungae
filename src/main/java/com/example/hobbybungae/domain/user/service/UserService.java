@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
+
     private static final String DUPLICATED_USER_ERROR_MESSAGE = "중복되지 않는 아이디를 확인해주시길 바랍니다.";
+    //    private final ProfileService profileService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -36,7 +38,9 @@ public class UserService {
                 .build();
         userRepository.save(newUser);
 
-        return new ResponseEntity<>(UserResponseDto.successResponseOf(newUser), HttpStatus.OK);
+//        profileService.createNewUserProfile(newUser);
+
+        return new ResponseEntity<>(new UserResponseDto(newUser.getIdName(), newUser.getName()), HttpStatus.OK);
     }
 
     private void verifyDuplicatedUser(UserRequestDto requestDto) throws DuplicatedUserException {
