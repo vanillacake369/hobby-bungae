@@ -50,6 +50,6 @@ public class PostService {
 
     public PostEntity getPostEntity(Long postId) {
         return postJpaRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundPostException());
+                .orElseThrow(() -> new NotFoundPostException("postId", Long.toString(postId), "조회 후 게시글을 선택해주세요"));
     }
 }

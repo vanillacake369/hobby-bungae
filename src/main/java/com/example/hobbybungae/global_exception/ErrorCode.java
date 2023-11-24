@@ -21,7 +21,7 @@ public enum ErrorCode {
     INVALID_POST_MODIFIER(HttpStatus.NOT_FOUND, "수정하시려는 번개글의 수정 권한이 없습니다."),
     /* COMMENT */
     NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "선택하신 댓글은 존재하지 않는 댓글입니다."),
-    INVALID_COMMENT_MODIFIER(HttpStatus.NOT_FOUND, "선택하신 댓글은 존재하지 않는 댓글입니다."),
+    INVALID_COMMENT_MODIFIER(HttpStatus.NOT_FOUND, "수정하시려는 댓글의 수정 권한이 없습니다."),
     UNMATCHED_COMMENT_POST(HttpStatus.CONFLICT, "작성하신 댓글은 해당 게시글의 댓글이 아닙니다.");
     private final HttpStatus code;
     private final String message;
