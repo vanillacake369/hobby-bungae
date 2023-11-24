@@ -3,6 +3,8 @@ package com.example.hobbybungae.domain.comment.service;
 import com.example.hobbybungae.domain.comment.dto.CommentRequestDto;
 import com.example.hobbybungae.domain.comment.dto.CommentResponseDto;
 import com.example.hobbybungae.domain.comment.entity.Comment;
+import com.example.hobbybungae.domain.comment.exception.InvalidCommentModifier;
+import com.example.hobbybungae.domain.comment.exception.UnmatchedCommentPost;
 import com.example.hobbybungae.domain.comment.repository.CommentRepository;
 import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.post.service.PostService;
@@ -30,7 +32,7 @@ public class CommentService {
 
     public List<CommentResponseDto> getComments(Long postId) {
         Post post = postService.getPostEntity(postId);
-        List<CommentResponseDto> commentResponseDtoList = commentRepository.findAllByPostEntity(post)
+        List<CommentResponseDto> commentResponseDtoList = commentRepository.findAllByPost(post)
                 .stream().map(CommentResponseDto::new).toList();
 
         return commentResponseDtoList;
@@ -64,12 +66,14 @@ public class CommentService {
     public void checkPost(Comment comment, Long postId) {
         if (!comment.getPost().getId().equals(postId)) {
 //            throw new MisMatchedCommentException("해당 글의 댓글이 아닙니다.");
+            throw new UnmatchedCommentPost("comment's postId", postId.toString());
         }
     }
 
     public void checkUser(Comment comment, String idName) {
         if (!comment.getUser().getIdName().equals(idName)) {
 //            throw new MisMatchedCommentException("작성자만 수정/삭제할 수 있습니다.");
+            throw new InvalidCommentModifier("comment's modifier", idName);
         }
     }
 }

@@ -1,9 +1,12 @@
 package com.example.hobbybungae.global_exception;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@JsonFormat(shape = Shape.OBJECT)
 public enum ErrorCode {
     /* USER */
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인이 필요한 요청입니다."),

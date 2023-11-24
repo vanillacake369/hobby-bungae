@@ -9,4 +9,8 @@ public class InvalidCommentModifier extends DomainException {
     public InvalidCommentModifier(String field, String value, String reason) {
         super(ErrorCode.INVALID_COMMENT_MODIFIER, new ErrorDetail(field, value, reason));
     }
+
+    public InvalidCommentModifier(String field, String value) {
+        super(ErrorCode.INVALID_COMMENT_MODIFIER, new ErrorDetail(field, value));
+    }
 }

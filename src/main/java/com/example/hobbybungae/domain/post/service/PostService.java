@@ -21,7 +21,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final HobbyRepository hobbyRepository;
 
-    public PostResponseDto addPost(PostRequestDto requestDto) {
+    public PostResponseDto addPost(PostRequestDto requestDto) throws NotFoundHobbyException {
         // 취미카테고리 & 지역 데이터 존재여부 검증
         validateHobbyExistence(requestDto.getHobby());
 
@@ -31,7 +31,7 @@ public class PostService {
         return new PostResponseDto(savePost);
     }
 
-    void validateHobbyExistence(String hobby) {
+    void validateHobbyExistence(String hobby) throws NotFoundHobbyException {
         boolean hasNotHobby = hobbyRepository.findByHobbyName(hobby).isEmpty();
         if (hasNotHobby) {
             throw new NotFoundHobbyException("hobby", hobby, "선택한 취미 카테고리가 없습니다");

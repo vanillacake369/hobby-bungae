@@ -9,4 +9,8 @@ public class UnmatchedCommentPost extends DomainException {
     public UnmatchedCommentPost(String field, String value, String reason) {
         super(ErrorCode.UNMATCHED_COMMENT_POST, new ErrorDetail(field, value, reason));
     }
+
+    public UnmatchedCommentPost(String field, String value) {
+        super(ErrorCode.UNMATCHED_COMMENT_POST, new ErrorDetail(field, value));
+    }
 }
