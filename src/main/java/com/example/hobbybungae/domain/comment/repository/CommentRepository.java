@@ -1,7 +1,8 @@
-package com.example.hobbybungae.domain.comment;
+package com.example.hobbybungae.domain.comment.repository;
 
 
-import com.example.hobbybungae.entity.PostEntity;
+import com.example.hobbybungae.domain.comment.entity.Comment;
+import com.example.hobbybungae.domain.post.entity.PostEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

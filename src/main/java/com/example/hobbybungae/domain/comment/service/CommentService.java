@@ -1,8 +1,12 @@
-package com.example.hobbybungae.domain.comment;
+package com.example.hobbybungae.domain.comment.service;
 
+import com.example.hobbybungae.domain.comment.dto.CommentRequestDto;
+import com.example.hobbybungae.domain.comment.dto.CommentResponseDto;
+import com.example.hobbybungae.domain.comment.entity.Comment;
+import com.example.hobbybungae.domain.comment.repository.CommentRepository;
 import com.example.hobbybungae.domain.user.entity.User;
-import com.example.hobbybungae.entity.PostEntity;
-import com.example.hobbybungae.service.PostService;
+import com.example.hobbybungae.domain.post.entity.PostEntity;
+import com.example.hobbybungae.domain.post.service.PostService;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

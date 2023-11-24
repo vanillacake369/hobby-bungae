@@ -1,5 +1,6 @@
-package com.example.hobbybungae.domain.comment;
+package com.example.hobbybungae.domain.comment.dto;
 
+import com.example.hobbybungae.domain.comment.entity.Comment;
 import lombok.Getter;
 
 @Getter

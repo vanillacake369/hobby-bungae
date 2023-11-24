@@ -1,10 +1,10 @@
-package com.example.hobbybungae.service;
+package com.example.hobbybungae.domain.post.service;
 
-import com.example.hobbybungae.Dto.PostRequestDto;
-import com.example.hobbybungae.exception.PostNotFoundException;
-import com.example.hobbybungae.Dto.PostResponseDto;
-import com.example.hobbybungae.entity.PostEntity;
-import com.example.hobbybungae.repository.PostJpaRepository;
+import com.example.hobbybungae.domain.post.dto.PostRequestDto;
+import com.example.hobbybungae.domain.post.exception.NotFoundPostException;
+import com.example.hobbybungae.domain.post.dto.PostResponseDto;
+import com.example.hobbybungae.domain.post.entity.PostEntity;
+import com.example.hobbybungae.domain.post.repository.PostJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +39,6 @@ public class PostService {
     @Transactional
     public PostResponseDto updatePost(Long postId, PostRequestDto requestDto) {
         PostEntity postEntity = getPostEntity(postId);
-//        verifyPassword(postEntity, requestDto.getPassword());
         postEntity.update(requestDto);
         return new PostResponseDto(postEntity);
     }
@@ -51,6 +50,6 @@ public class PostService {
 
     public PostEntity getPostEntity(Long postId) {
         return postJpaRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException("해당 게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundPostException());
     }
 }
