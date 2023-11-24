@@ -1,11 +1,10 @@
 package com.example.hobbybungae.domain.post.repository;
 
 
-import com.example.hobbybungae.domain.post.entity.PostEntity;
+import com.example.hobbybungae.domain.post.entity.Post;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
-public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
-    List<PostEntity> findAllByOrderByCreatedAtDesc();
+public interface PostJpaRepository extends JpaRepository<Post, Long> {
+    List<Post> findAllByOrderByCreatedAtDesc();
 }

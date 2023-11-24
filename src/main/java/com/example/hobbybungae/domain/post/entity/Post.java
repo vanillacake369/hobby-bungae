@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "post")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostEntity extends TimeStamp {
+public class Post extends TimeStamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,7 +30,7 @@ public class PostEntity extends TimeStamp {
     @Column(nullable = false)
     private String hobby;
 
-    public PostEntity(PostRequestDto requestDto) {
+    public Post(PostRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContent();
         this.state = requestDto.getState();
@@ -42,7 +42,5 @@ public class PostEntity extends TimeStamp {
         this.contents = requestDto.getContent();
         this.state = requestDto.getState();
         this.hobby = requestDto.getHobby();
-
-
     }
 }

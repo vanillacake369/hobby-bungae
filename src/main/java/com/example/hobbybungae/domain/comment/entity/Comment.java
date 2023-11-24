@@ -1,8 +1,8 @@
 package com.example.hobbybungae.domain.comment.entity;
 
 import com.example.hobbybungae.domain.comment.dto.CommentRequestDto;
+import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.user.entity.User;
-import com.example.hobbybungae.domain.post.entity.PostEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,17 +25,17 @@ public class Comment {
     private String text;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="post_id")
-    private PostEntity postEntity;
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    public Comment(CommentRequestDto requestDto, User user, PostEntity postEntity) {
+    public Comment(CommentRequestDto requestDto, User user, Post post) {
         this.text = requestDto.getText();
         this.user = user;
-        this.postEntity = postEntity;
+        this.post = post;
     }
 
     public void update(CommentRequestDto requestDto) {
