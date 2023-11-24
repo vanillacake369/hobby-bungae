@@ -1,10 +1,9 @@
 package com.example.hobbybungae.domain.comment;
 
-import com.example.hobbybungae.domain.post.PostEntity;
-import com.example.hobbybungae.domain.post.PostService;
-import com.example.hobbybungae.domain.user.User;
+import com.example.hobbybungae.domain.user.entity.User;
+import com.example.hobbybungae.entity.PostEntity;
+import com.example.hobbybungae.service.PostService;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
 package com.example.hobbybungae.domain.comment;
 
-import com.example.hobbybungae.response.ErrorResponseDto;
+import com.example.hobbybungae.exception.ErrorResponseDto;
 import com.example.hobbybungae.security.UserDetailsImpl;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CommentResponseDto> postComment(
         @PathVariable Long postId,
-        @RequestBody CommentRequestDto requestDto,
+        @Valid @RequestBody CommentRequestDto requestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
         CommentResponseDto responseDto = commentService.postComment(postId, requestDto, userDetails.getUser());
@@ -45,7 +45,7 @@ public class CommentController {
     public ResponseEntity<CommentResponseDto> updateComment(
         @PathVariable Long postId,
         @PathVariable Long commentId,
-        @RequestBody CommentRequestDto requestDto,
+        @Valid @RequestBody CommentRequestDto requestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
         CommentResponseDto responseDto = commentService.updateComment(postId, commentId, requestDto, userDetails.getUser());
@@ -62,10 +62,5 @@ public class CommentController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(MisMatchedCommentException.class)
-    public ResponseEntity<ErrorResponseDto> MistMatchedCommentExceptionHandler(MisMatchedCommentException ex){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-            new ErrorResponseDto(ex.getMessage())
-        );
-    }
+
 }

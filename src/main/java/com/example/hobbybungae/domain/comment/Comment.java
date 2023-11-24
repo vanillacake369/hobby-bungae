@@ -1,7 +1,7 @@
 package com.example.hobbybungae.domain.comment;
 
-import com.example.hobbybungae.domain.post.PostEntity;
-import com.example.hobbybungae.domain.user.User;
+import com.example.hobbybungae.domain.user.entity.User;
+import com.example.hobbybungae.entity.PostEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

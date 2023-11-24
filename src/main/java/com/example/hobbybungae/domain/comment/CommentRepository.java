@@ -1,6 +1,7 @@
 package com.example.hobbybungae.domain.comment;
 
-import com.example.hobbybungae.domain.post.PostEntity;
+
+import com.example.hobbybungae.entity.PostEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
