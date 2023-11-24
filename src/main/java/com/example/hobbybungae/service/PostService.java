@@ -1,8 +1,9 @@
 package com.example.hobbybungae.service;
 
-import com.example.hobbybungae.Dto.PostRequestDto;
+import com.example.hobbybungae.domain.user.User;
+import com.example.hobbybungae.dto.PostRequestDto;
 import com.example.hobbybungae.exception.PostNotFoundException;
-import com.example.hobbybungae.Dto.PostResponseDto;
+import com.example.hobbybungae.dto.PostResponseDto;
 import com.example.hobbybungae.entity.PostEntity;
 import com.example.hobbybungae.repository.PostJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,14 +38,13 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponseDto updatePost(Long postId, PostRequestDto requestDto) {
+    public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) {
         PostEntity postEntity = getPostEntity(postId);
-//        verifyPassword(postEntity, requestDto.getPassword());
         postEntity.update(requestDto);
         return new PostResponseDto(postEntity);
     }
 
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, User user) {
         PostEntity postEntity = getPostEntity(postId);
         postJpaRepository.delete(postEntity);
     }

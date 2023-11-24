@@ -2,8 +2,8 @@ package com.example.hobbybungae.controller;
 
 import com.example.hobbybungae.exception.AuthorizeException;
 import com.example.hobbybungae.exception.PostNotFoundException;
-import com.example.hobbybungae.Dto.PostRequestDto;
-import com.example.hobbybungae.Dto.PostResponseDto;
+import com.example.hobbybungae.dto.PostRequestDto;
+import com.example.hobbybungae.dto.PostResponseDto;
 import com.example.hobbybungae.exception.ErrorResponseDto;
 import com.example.hobbybungae.security.UserDetailsImpl;
 import com.example.hobbybungae.service.PostService;
@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.util.List;
 
 @RestController
@@ -26,9 +27,12 @@ public class PostController {
     public ResponseEntity<PostResponseDto> addPost(
             @RequestBody PostRequestDto requestDto
     ) {
-        PostResponseDto responseDto = postService.addPost(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-    }
+
+            PostResponseDto responseDto = postService.addPost(requestDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+
+        }
+
 
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponseDto> getPost(
@@ -83,4 +87,6 @@ public class PostController {
                 )
         );
     }
+
+
 }

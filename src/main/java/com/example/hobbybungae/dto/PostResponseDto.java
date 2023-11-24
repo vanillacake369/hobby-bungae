@@ -1,4 +1,4 @@
-package com.example.hobbybungae.Dto;
+package com.example.hobbybungae.dto;
 
 
 import com.example.hobbybungae.entity.PostEntity;

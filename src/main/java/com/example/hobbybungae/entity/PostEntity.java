@@ -1,7 +1,7 @@
 package com.example.hobbybungae.entity;
 
 
-import com.example.hobbybungae.Dto.PostRequestDto;
+import com.example.hobbybungae.dto.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
