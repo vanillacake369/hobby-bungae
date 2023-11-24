@@ -1,5 +1,9 @@
-package com.example.hobbybungae.domain.user;
+package com.example.hobbybungae.domain.user.service;
 
+import com.example.hobbybungae.domain.user.UserRepository;
+import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
+import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
+import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.response.CommonResponseDto;
 import com.example.hobbybungae.response.ErrorResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +24,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    boolean hasDuplicatedUser(String idName) {
+    public boolean hasDuplicatedUser(String idName) {
         return userRepository.findByIdName(idName).isPresent();
     }
 

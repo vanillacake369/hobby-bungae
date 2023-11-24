@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.hobbybungae.domain.TimeStamp;
+import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
+import com.example.hobbybungae.domain.user.entity.User;
+import com.example.hobbybungae.domain.user.service.UserService;
 import com.example.hobbybungae.response.CommonResponseDto;
 import com.example.hobbybungae.response.ErrorResponseDto;
 import com.example.hobbybungae.response.SuccessResponseDto;

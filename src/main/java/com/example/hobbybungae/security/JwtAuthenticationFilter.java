@@ -1,8 +1,8 @@
 package com.example.hobbybungae.security;
 
-import com.example.hobbybungae.domain.user.User;
-import com.example.hobbybungae.domain.user.UserRequestDto;
-import com.example.hobbybungae.domain.user.UserResponseDto;
+import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
+import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
+import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.response.ErrorResponseDto;
 import com.example.hobbybungae.response.SuccessResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;

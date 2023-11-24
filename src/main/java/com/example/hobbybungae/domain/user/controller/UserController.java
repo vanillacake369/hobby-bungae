@@ -1,5 +1,7 @@
-package com.example.hobbybungae.domain.user;
+package com.example.hobbybungae.domain.user.controller;
 
+import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
+import com.example.hobbybungae.domain.user.service.UserService;
 import com.example.hobbybungae.response.CommonResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/hobby-bungae/v1/users")
 public class UserController {
-
     private final UserService userService;
 
     @PostMapping

@@ -1,4 +1,4 @@
-package com.example.hobbybungae.domain.user;
+package com.example.hobbybungae.domain.user.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

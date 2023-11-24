@@ -1,5 +1,6 @@
-package com.example.hobbybungae.domain.user;
+package com.example.hobbybungae.domain.user.entity;
 
+import com.example.hobbybungae.domain.TimeStamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor
-public class User {
+public class User extends TimeStamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,11 +1,14 @@
 package com.example.hobbybungae.domain.hobby;
 
+import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.response.ErrorResponseDto;
 import com.example.hobbybungae.response.SuccessResponseDto;
+import com.example.hobbybungae.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +37,23 @@ public class HobbyController {
                 new ErrorResponseDto(
                         ex.getMessage()
                 )
+        );
+    }
+
+    @PostMapping
+    public ResponseEntity<SuccessResponseDto> postHobby2(@RequestBody @Valid HobbyRequestDto requestDto,
+                                                         @AuthenticationPrincipal
+                                                         UserDetailsImpl userDetails) {
+        // 생성,수정,삭제
+        // 사용자 검증
+        User user = userDetails.getUser();
+        Long id = user.getId();
+
+        // 도메인 내에서 사용자 검증
+        HobbyResponseDto responseDto = hobbyService.postHobby(requestDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new SuccessResponseDto(responseDto)
         );
     }
 }

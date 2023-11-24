@@ -1,6 +1,7 @@
-package com.example.hobbybungae.domain.user;
+package com.example.hobbybungae.domain.user.dto.response;
 
 
+import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.response.SuccessResponseDto;
 
 public record UserResponseDto(
