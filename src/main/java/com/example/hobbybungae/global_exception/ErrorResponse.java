@@ -1,5 +1,7 @@
 package com.example.hobbybungae.global_exception;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -9,6 +11,7 @@ import org.springframework.validation.BindingResult;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonFormat(shape = Shape.OBJECT)
 public class ErrorResponse {
     private ErrorCode error;
     private List<ErrorDetail> errorDetails;

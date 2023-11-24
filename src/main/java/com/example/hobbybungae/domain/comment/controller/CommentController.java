@@ -18,46 +18,47 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/hobby-bungae/v1/hobbies/{postId}/comments")
+@RestController
 public class CommentController {
 
     private final CommentService commentService;
 
     @PostMapping
     public ResponseEntity<CommentResponseDto> postComment(
-        @PathVariable Long postId,
-        @Valid @RequestBody CommentRequestDto requestDto,
-        @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+            @PathVariable Long postId,
+            @Valid @RequestBody CommentRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
         CommentResponseDto responseDto = commentService.postComment(postId, requestDto, userDetails.getUser());
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping
-    public ResponseEntity<List<CommentResponseDto>> getComments(@PathVariable Long postId){
+    public ResponseEntity<List<CommentResponseDto>> getComments(@PathVariable Long postId) {
         List<CommentResponseDto> responseDtoList = commentService.getComments(postId);
         return ResponseEntity.ok(responseDtoList);
     }
 
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(
-        @PathVariable Long postId,
-        @PathVariable Long commentId,
-        @Valid @RequestBody CommentRequestDto requestDto,
-        @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
-        CommentResponseDto responseDto = commentService.updateComment(postId, commentId, requestDto, userDetails.getUser());
+            @PathVariable Long postId,
+            @PathVariable Long commentId,
+            @Valid @RequestBody CommentRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        CommentResponseDto responseDto = commentService.updateComment(postId, commentId, requestDto,
+                userDetails.getUser());
         return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
-        @PathVariable Long postId,
-        @PathVariable Long commentId,
-        @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+            @PathVariable Long postId,
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
         commentService.deleteComment(postId, commentId, userDetails.getUser());
         return ResponseEntity.noContent().build();
     }
