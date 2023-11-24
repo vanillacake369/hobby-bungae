@@ -1,10 +1,7 @@
 package com.example.hobbybungae.domain.post.controller;
 
-import com.example.hobbybungae.exception.AuthorizeException;
-import com.example.hobbybungae.exception.PostNotFoundException;
 import com.example.hobbybungae.domain.post.dto.PostRequestDto;
 import com.example.hobbybungae.domain.post.dto.PostResponseDto;
-import com.example.hobbybungae.exception.ErrorResponseDto;
 import com.example.hobbybungae.security.UserDetailsImpl;
 import com.example.hobbybungae.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;

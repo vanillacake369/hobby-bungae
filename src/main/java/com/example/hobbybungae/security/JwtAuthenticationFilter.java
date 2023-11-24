@@ -3,7 +3,6 @@ package com.example.hobbybungae.security;
 import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
-import com.example.hobbybungae.exception.ErrorResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
