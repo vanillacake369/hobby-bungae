@@ -1,4 +1,5 @@
-package com.example.hobbybungae.dto;
+
+package com.example.hobbybungae.domain.post.dto;
 
 import lombok.Getter;
 
