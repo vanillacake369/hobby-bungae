@@ -1,4 +1,4 @@
-package com.example.hobbybungae.controller.exception;
+package com.example.hobbybungae.exception;
 
 
 public class AuthorizeException extends RuntimeException {

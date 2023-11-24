@@ -8,18 +8,18 @@ import java.time.LocalDateTime;
 public record PostResponseDto(
         Long id,
         String title,
-        String author,
         String content,
-        String region,
+        String state,
+        String hobby,
         LocalDateTime createdAt
 ) {
     public PostResponseDto(PostEntity savePost) {
         this(
                 savePost.getId(),
                 savePost.getTitle(),
-                savePost.getAuthor(),
                 savePost.getContents(),
-                savePost.getRegion(),
+                savePost.getState(),
+                savePost.getHobby(),
                 savePost.getCreatedAt()
         );
     }

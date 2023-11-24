@@ -1,29 +1,30 @@
 package com.example.hobbybungae.controller;
 
-import com.example.hobbybungae.controller.exception.AuthorizeException;
-import com.example.hobbybungae.controller.exception.PostNotFoundException;
-import com.example.hobbybungae.Dto.PostAddRequestDto;
+import com.example.hobbybungae.exception.AuthorizeException;
+import com.example.hobbybungae.exception.PostNotFoundException;
+import com.example.hobbybungae.Dto.PostRequestDto;
 import com.example.hobbybungae.Dto.PostResponseDto;
-import com.example.hobbybungae.Dto.PostUpdateRequestDto;
-import com.example.hobbybungae.Dto.exception.ErrorResponseDto;
+import com.example.hobbybungae.exception.ErrorResponseDto;
+import com.example.hobbybungae.security.UserDetailsImpl;
 import com.example.hobbybungae.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/hobbys")
+@RequestMapping("/hobby-bungae/v1/hobbies")
 public class PostController {
 
     private final PostService postService;
 
     @PostMapping
     public ResponseEntity<PostResponseDto> addPost(
-            @RequestBody PostAddRequestDto requestDto
+            @RequestBody PostRequestDto requestDto
     ) {
         PostResponseDto responseDto = postService.addPost(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
@@ -43,27 +44,28 @@ public class PostController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @PatchMapping("/{postId}")
+    @PutMapping("/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long postId,
-            @RequestBody PostUpdateRequestDto requestDto
-    ) {
-        PostResponseDto responseDto = postService.updatePost(postId, requestDto);
+            @RequestBody PostRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+            ) {
+        PostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
         return ResponseEntity.ok(responseDto);
     }
+
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(
             @PathVariable Long postId,
-            @RequestHeader("password") String password
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        postService.deletePost(postId, password);
+        postService.deletePost(postId, userDetails.getUser());
         return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> postNotFoundExceptionHandler(PostNotFoundException ex) {
-//        System.err.println(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ErrorResponseDto(
                         HttpStatus.NOT_FOUND.value(),
@@ -73,7 +75,7 @@ public class PostController {
     }
 
     @ExceptionHandler(AuthorizeException.class)
-    public ResponseEntity<ErrorResponseDto> postNotFoundExceptionHandler(AuthorizeException ex) {
+    public ResponseEntity<ErrorResponseDto> authorizeExceptionHandler(AuthorizeException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 new ErrorResponseDto(
                         HttpStatus.UNAUTHORIZED.value(),
