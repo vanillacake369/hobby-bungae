@@ -1,10 +1,8 @@
 package com.example.hobbybungae.security;
 
-import com.example.hobbybungae.domain.user.User;
-import com.example.hobbybungae.domain.user.UserRequestDto;
-import com.example.hobbybungae.domain.user.UserResponseDto;
-import com.example.hobbybungae.response.ErrorResponseDto;
-import com.example.hobbybungae.response.SuccessResponseDto;
+import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
+import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
+import com.example.hobbybungae.domain.user.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,8 +54,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        SuccessResponseDto responseDto = new SuccessResponseDto(userResponseDto);
-        String result = objectMapper.writeValueAsString(responseDto);
+        String result = objectMapper.writeValueAsString(userResponseDto);
 
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json");
@@ -70,8 +67,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                               AuthenticationException failed) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        ErrorResponseDto responseDto = new ErrorResponseDto("회원을 찾을 수 없습니다.");
-        String result = objectMapper.writeValueAsString(responseDto);
+        String result = objectMapper.writeValueAsString("회원을 찾을 수 없습니다.");
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
