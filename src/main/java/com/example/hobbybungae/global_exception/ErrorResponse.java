@@ -1,12 +1,11 @@
 package com.example.hobbybungae.global_exception;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,31 +18,21 @@ public class ErrorResponse {
         this.errorDetails = errorDetails;
     }
 
-    public static ErrorResponse of(final GlobalErrorCode globalErrorCode, final BindingResult bindingResult) {
-        return new ErrorResponse(globalErrorCode.getErrorCode(), ErrorDetail.of(bindingResult));
+    public ErrorResponse(ErrorCode error) {
+        this.error = error;
     }
 
-    @Getter
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class ErrorDetail {
-        private String field;
-        private String value;
-        private String reason;
+    public static ErrorResponse of(final ErrorCode errorCode, final BindingResult bindingResult) {
+        return new ErrorResponse(errorCode, ErrorDetail.of(bindingResult));
+    }
 
-        public ErrorDetail(String field, String value, String reason) {
-            this.field = field;
-            this.value = value;
-            this.reason = reason;
-        }
+    public static ErrorResponse of(final ErrorCode errorCode) {
+        return new ErrorResponse(errorCode);
+    }
 
-        public static List<ErrorDetail> of(BindingResult bindingResult) {
-            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-            return fieldErrors.stream()
-                    .map(fieldError ->
-                            new ErrorDetail(fieldError.getField(),
-                                    Objects.requireNonNull(fieldError.getRejectedValue()).toString(),
-                                    fieldError.getDefaultMessage()))
-                    .toList();
-        }
+    public static ErrorResponse of(ErrorCode errorCode, ErrorDetail errorDetail) {
+        List<ErrorDetail> errorDetails = new ArrayList<>();
+        errorDetails.add(errorDetail);
+        return new ErrorResponse(errorCode, errorDetails);
     }
 }

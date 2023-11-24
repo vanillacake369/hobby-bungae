@@ -4,6 +4,7 @@ import com.example.hobbybungae.domain.user.UserRepository;
 import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
+import com.example.hobbybungae.domain.user.exception.DuplicatedUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserService {
 
-    private static final String SIGNUP_ERROR_MESSAGE = "중복되는 회원 아이디가 존재합니다. 다른 아이디로 시도해주세요.";
+    private static final String DUPLICATED_USER_ERROR_MESSAGE = "중복되지 않는 아이디를 확인해주시길 바랍니다.";
     //    private final ProfileService profileService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -27,11 +28,8 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseEntity<UserResponseDto> signUp(UserRequestDto requestDto) {
-//        if (hasDuplicatedUser(requestDto.idName())) {
-//            return new ResponseEntity<>(new ErrorResponseDto(SIGNUP_ERROR_MESSAGE),
-//                    HttpStatus.CONFLICT);
-//        }
+    public ResponseEntity<UserResponseDto> signUp(UserRequestDto requestDto) throws DuplicatedUserException {
+        verifyDuplicatedUser(requestDto);
 
         User newUser = User.builder()
                 .idName(requestDto.idName())
@@ -43,5 +41,11 @@ public class UserService {
 //        profileService.createNewUserProfile(newUser);
 
         return new ResponseEntity<>(UserResponseDto.successResponseOf(newUser), HttpStatus.OK);
+    }
+
+    private void verifyDuplicatedUser(UserRequestDto requestDto) throws DuplicatedUserException {
+        if (hasDuplicatedUser(requestDto.idName())) {
+            throw new DuplicatedUserException("id_name", requestDto.idName(), DUPLICATED_USER_ERROR_MESSAGE);
+        }
     }
 }
