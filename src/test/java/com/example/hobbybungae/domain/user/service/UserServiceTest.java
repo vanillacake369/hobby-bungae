@@ -1,12 +1,13 @@
-package com.example.hobbybungae.domain.user;
+package com.example.hobbybungae.domain.user.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.hobbybungae.domain.common.TimeStamp;
 import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
+import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
-import com.example.hobbybungae.domain.user.service.UserService;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,12 +104,10 @@ class UserServiceTest {
     @MethodSource("createNewUserSuccess")
     public void 회원가입_해피케이스(UserRequestDto requestDto) {
         // WHEN
-//        ResponseEntity<CommonResponseDto> commonResponseDtoResponseEntity = userService.signUp(requestDto);
+        ResponseEntity<UserResponseDto> response = userService.signUp(requestDto);
 
         // THEN
-//        assertEquals(commonResponseDtoResponseEntity.getStatusCode(), HttpStatus.OK);
-//        assertEquals(Objects.requireNonNull(commonResponseDtoResponseEntity.getBody()).getClass(),
-//                SuccessResponseDto.class);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
 
     @ParameterizedTest

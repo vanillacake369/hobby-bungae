@@ -30,10 +30,6 @@ public class User extends TimeStamp {
 //    @OneToMany
 //    List<BungaePost> bungaePosts;
 
-//    @OneToOne
-//    Profile profile;
-
-
     @Builder
     public User(Long id, String idName, String name, String password) {
         this.id = id;

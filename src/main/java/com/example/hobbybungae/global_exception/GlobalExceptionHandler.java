@@ -29,8 +29,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
         log.error("handleAccessDeniedException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.HANDLE_ACCESS_DENIED);
-        return new ResponseEntity<>(response, ErrorCode.HANDLE_ACCESS_DENIED.getCode());
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.ACCESS_DENIED);
+        return new ResponseEntity<>(response, ErrorCode.ACCESS_DENIED.getCode());
     }
 
     /**

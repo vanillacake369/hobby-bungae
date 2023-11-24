@@ -1,8 +1,14 @@
-package com.example.hobbybungae.entity;
+package com.example.hobbybungae.domain.post.entity;
 
 
-import com.example.hobbybungae.Dto.PostRequestDto;
-import jakarta.persistence.*;
+import com.example.hobbybungae.domain.common.TimeStamp;
+import com.example.hobbybungae.domain.post.dto.PostRequestDto;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +17,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "post")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostEntity extends TimeEntity {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class PostEntity extends TimeStamp {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, length = 20)
     private String title;
