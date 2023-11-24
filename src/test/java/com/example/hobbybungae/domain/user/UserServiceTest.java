@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.example.hobbybungae.domain.common.TimeStamp;
 import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
 import com.example.hobbybungae.domain.user.entity.User;
+import com.example.hobbybungae.domain.user.repository.UserRepository;
 import com.example.hobbybungae.domain.user.service.UserService;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;

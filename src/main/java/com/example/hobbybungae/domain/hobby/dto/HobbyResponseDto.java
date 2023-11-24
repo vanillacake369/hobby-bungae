@@ -1,6 +1,6 @@
-package com.example.hobbybungae.domain.hobby;
+package com.example.hobbybungae.domain.hobby.dto;
 
-import com.example.hobbybungae.domain.hobby.Hobby;
+import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import lombok.Getter;
 
 @Getter

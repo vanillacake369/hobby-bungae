@@ -1,4 +1,4 @@
-package com.example.hobbybungae.domain.hobby;
+package com.example.hobbybungae.domain.hobby.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

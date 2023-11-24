@@ -1,4 +1,4 @@
-package com.example.hobbybungae.domain.user;
+package com.example.hobbybungae.domain.user.repository;
 
 import com.example.hobbybungae.domain.user.entity.User;
 import java.util.Optional;

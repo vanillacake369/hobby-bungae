@@ -1,10 +1,10 @@
 package com.example.hobbybungae.domain.user.service;
 
-import com.example.hobbybungae.domain.user.UserRepository;
 import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.exception.DuplicatedUserException;
+import com.example.hobbybungae.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

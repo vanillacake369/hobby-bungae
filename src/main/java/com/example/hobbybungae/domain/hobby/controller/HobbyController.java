@@ -1,5 +1,8 @@
-package com.example.hobbybungae.domain.hobby;
+package com.example.hobbybungae.domain.hobby.controller;
 
+import com.example.hobbybungae.domain.hobby.dto.HobbyRequestDto;
+import com.example.hobbybungae.domain.hobby.dto.HobbyResponseDto;
+import com.example.hobbybungae.domain.hobby.service.HobbyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

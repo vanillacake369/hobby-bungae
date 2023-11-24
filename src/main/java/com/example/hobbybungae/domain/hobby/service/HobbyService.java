@@ -1,5 +1,9 @@
-package com.example.hobbybungae.domain.hobby;
+package com.example.hobbybungae.domain.hobby.service;
 
+import com.example.hobbybungae.domain.hobby.dto.HobbyRequestDto;
+import com.example.hobbybungae.domain.hobby.dto.HobbyResponseDto;
+import com.example.hobbybungae.domain.hobby.entity.Hobby;
+import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

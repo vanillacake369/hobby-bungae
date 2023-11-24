@@ -1,7 +1,7 @@
 package com.example.hobbybungae.security;
 
-import com.example.hobbybungae.domain.user.UserRepository;
 import com.example.hobbybungae.domain.user.entity.User;
+import com.example.hobbybungae.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
