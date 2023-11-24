@@ -1,6 +1,6 @@
 package com.example.hobbybungae.security;
 
-import com.example.hobbybungae.domain.user.User;
+import com.example.hobbybungae.domain.user.entity.User;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
