@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -55,31 +56,31 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // CSRF 설정
-        http.csrf((csrf) -> csrf.disable());
+        http.csrf(AbstractHttpConfigurer::disable);
 
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement((sessionManagement) ->
-            sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
-            authorizeHttpRequests
-                .requestMatchers(HttpMethod.GET, "v1/users/profile/{$user-id}")
-                .authenticated() // 프로필 조회 요청 인증 요망
-                .requestMatchers(HttpMethod.GET, "v1/users/profile")
-                .authenticated() // 프로필 조회 요청 인증 요망
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .permitAll() // resources 접근 허용 설정
-                .requestMatchers(
-                    antMatcher(HttpMethod.GET, "/hobby-bungae/v1/hobbies/**")
-                ).permitAll()  // 글 단건,전체 조회 모두 접근 허용
-                .requestMatchers("/hobby-bungae/v1/users/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
-                .anyRequest().authenticated() // 그 외 모든 요청 인증처리
+                authorizeHttpRequests
+                        .requestMatchers(HttpMethod.GET, "/hobby-bungae/v1/users/profile/{$user-id}")
+                        .authenticated() // 프로필 조회 요청 인증 요망
+                        .requestMatchers(HttpMethod.GET, "/hobby-bungae/v1/users/profile")
+                        .authenticated() // 프로필 조회 요청 인증 요망
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                        .permitAll() // resources 접근 허용 설정
+                        .requestMatchers(
+                                antMatcher(HttpMethod.GET, "/hobby-bungae/v1/hobbies/**")
+                        ).permitAll()  // 글 단건,전체 조회 모두 접근 허용
+                        .requestMatchers("/hobby-bungae/v1/users/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
+                        .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
         http.formLogin((formLogin) ->
-            formLogin
-                .loginPage("/hobby-bungae/v1/users/signin").permitAll()
+                formLogin
+                        .loginPage("/hobby-bungae/v1/users/signin").permitAll()
         );
 
         // 필터 관리

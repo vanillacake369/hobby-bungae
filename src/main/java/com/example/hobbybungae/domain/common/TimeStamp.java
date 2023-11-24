@@ -1,4 +1,4 @@
-package com.example.hobbybungae.domain;
+package com.example.hobbybungae.domain.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

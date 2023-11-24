@@ -1,8 +1,8 @@
 package com.example.hobbybungae.domain.user.controller;
 
 import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
+import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.service.UserService;
-import com.example.hobbybungae.response.CommonResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<CommonResponseDto> signUp(@RequestBody @Valid UserRequestDto requestDto) {
+    public ResponseEntity<UserResponseDto> signUp(@RequestBody @Valid UserRequestDto requestDto) {
         return userService.signUp(requestDto);
     }
 }

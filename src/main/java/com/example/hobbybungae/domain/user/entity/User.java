@@ -1,6 +1,6 @@
 package com.example.hobbybungae.domain.user.entity;
 
-import com.example.hobbybungae.domain.TimeStamp;
+import com.example.hobbybungae.domain.common.TimeStamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

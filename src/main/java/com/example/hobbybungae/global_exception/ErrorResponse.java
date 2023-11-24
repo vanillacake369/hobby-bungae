@@ -11,16 +11,16 @@ import org.springframework.validation.FieldError;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ErrorResponse {
-    private ErrorCodeFormat error;
+    private ErrorCode error;
     private List<ErrorDetail> errorDetails;
 
-    public ErrorResponse(ErrorCodeFormat error, List<ErrorDetail> errorDetails) {
+    public ErrorResponse(ErrorCode error, List<ErrorDetail> errorDetails) {
         this.error = error;
         this.errorDetails = errorDetails;
     }
 
     public static ErrorResponse of(final GlobalErrorCode globalErrorCode, final BindingResult bindingResult) {
-        return new ErrorResponse(globalErrorCode.getErrorCodeFormat(), ErrorDetail.of(bindingResult));
+        return new ErrorResponse(globalErrorCode.getErrorCode(), ErrorDetail.of(bindingResult));
     }
 
     @Getter

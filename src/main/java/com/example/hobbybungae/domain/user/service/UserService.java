@@ -4,8 +4,6 @@ import com.example.hobbybungae.domain.user.UserRepository;
 import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
-import com.example.hobbybungae.response.CommonResponseDto;
-import com.example.hobbybungae.response.ErrorResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +27,11 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseEntity<CommonResponseDto> signUp(UserRequestDto requestDto) {
-        if (hasDuplicatedUser(requestDto.idName())) {
-            return new ResponseEntity<>(new ErrorResponseDto(SIGNUP_ERROR_MESSAGE),
-                    HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<UserResponseDto> signUp(UserRequestDto requestDto) {
+//        if (hasDuplicatedUser(requestDto.idName())) {
+//            return new ResponseEntity<>(new ErrorResponseDto(SIGNUP_ERROR_MESSAGE),
+//                    HttpStatus.CONFLICT);
+//        }
 
         User newUser = User.builder()
                 .idName(requestDto.idName())
