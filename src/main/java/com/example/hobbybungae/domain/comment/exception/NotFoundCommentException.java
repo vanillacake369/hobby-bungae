@@ -6,7 +6,7 @@ import com.example.hobbybungae.global_exception.ErrorDetail;
 
 /* 댓글이 없는 경우  */
 public class NotFoundCommentException extends DomainException {
-    public NotFoundCommentException(String field, String value, String reason) {
-        super(ErrorCode.NOT_FOUND_COMMENT, new ErrorDetail(field, value, reason));
+    public NotFoundCommentException(String field, String value) {
+        super(ErrorCode.NOT_FOUND_COMMENT, new ErrorDetail(field, value));
     }
 }

@@ -6,7 +6,7 @@ import com.example.hobbybungae.global_exception.ErrorDetail;
 
 /* 중복 카테고리 존재  */
 public class DuplicatedHobbyException extends DomainException {
-    public DuplicatedHobbyException(String field, String value, String reason) {
-        super(ErrorCode.DUPLICATED_HOBBY, new ErrorDetail(field, value, reason));
+    public DuplicatedHobbyException(String field, String value) {
+        super(ErrorCode.DUPLICATED_HOBBY, new ErrorDetail(field, value));
     }
 }
