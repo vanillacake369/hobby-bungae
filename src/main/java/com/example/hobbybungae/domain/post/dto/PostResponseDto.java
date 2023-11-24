@@ -1,10 +1,7 @@
-
 package com.example.hobbybungae.domain.post.dto;
 
 
-
-import com.example.hobbybungae.domain.post.entity.PostEntity;
-
+import com.example.hobbybungae.domain.post.entity.Post;
 import java.time.LocalDateTime;
 
 public record PostResponseDto(
@@ -15,7 +12,7 @@ public record PostResponseDto(
         String hobby,
         LocalDateTime createdAt
 ) {
-    public PostResponseDto(PostEntity savePost) {
+    public PostResponseDto(Post savePost) {
         this(
                 savePost.getId(),
                 savePost.getTitle(),

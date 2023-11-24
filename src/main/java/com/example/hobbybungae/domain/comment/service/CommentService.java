@@ -3,10 +3,12 @@ package com.example.hobbybungae.domain.comment.service;
 import com.example.hobbybungae.domain.comment.dto.CommentRequestDto;
 import com.example.hobbybungae.domain.comment.dto.CommentResponseDto;
 import com.example.hobbybungae.domain.comment.entity.Comment;
+import com.example.hobbybungae.domain.comment.exception.InvalidCommentModifier;
+import com.example.hobbybungae.domain.comment.exception.UnmatchedCommentPost;
 import com.example.hobbybungae.domain.comment.repository.CommentRepository;
-import com.example.hobbybungae.domain.user.entity.User;
-import com.example.hobbybungae.domain.post.entity.PostEntity;
+import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.post.service.PostService;
+import com.example.hobbybungae.domain.user.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,16 +24,16 @@ public class CommentService {
     private final PostService postService;
 
     public CommentResponseDto postComment(Long postId, CommentRequestDto requestDto, User user) {
-        PostEntity postEntity = postService.getPostEntity(postId);
-        Comment comment = new Comment(requestDto, user, postEntity);
+        Post post = postService.getPostEntity(postId);
+        Comment comment = new Comment(requestDto, user, post);
         Comment saveComment = commentRepository.save(comment);
         return new CommentResponseDto(saveComment);
     }
 
     public List<CommentResponseDto> getComments(Long postId) {
-        PostEntity postEntity = postService.getPostEntity(postId);
-        List<CommentResponseDto> commentResponseDtoList = commentRepository.findAllByPostEntity(postEntity)
-            .stream().map(CommentResponseDto::new).toList();
+        Post post = postService.getPostEntity(postId);
+        List<CommentResponseDto> commentResponseDtoList = commentRepository.findAllByPost(post)
+                .stream().map(CommentResponseDto::new).toList();
 
         return commentResponseDtoList;
     }
@@ -54,22 +56,24 @@ public class CommentService {
     }
 
 
-    public Comment getCommentEntity(Long commentId){
+    public Comment getCommentEntity(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-            () -> new EntityNotFoundException("해당 댓글을 찾을 수 없습니다.")
+                () -> new EntityNotFoundException("해당 댓글을 찾을 수 없습니다.")
         );
         return comment;
     }
 
-    public void checkPost(Comment comment, Long postId){
-        if(!comment.getPostEntity().getId().equals(postId)){
+    public void checkPost(Comment comment, Long postId) {
+        if (!comment.getPost().getId().equals(postId)) {
 //            throw new MisMatchedCommentException("해당 글의 댓글이 아닙니다.");
+            throw new UnmatchedCommentPost("comment's postId", postId.toString());
         }
     }
 
-    public void checkUser(Comment comment, String idName){
-        if(!comment.getUser().getIdName().equals(idName)){
+    public void checkUser(Comment comment, String idName) {
+        if (!comment.getUser().getIdName().equals(idName)) {
 //            throw new MisMatchedCommentException("작성자만 수정/삭제할 수 있습니다.");
+            throw new InvalidCommentModifier("comment's modifier", idName);
         }
     }
 }

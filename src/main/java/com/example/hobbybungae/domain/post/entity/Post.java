@@ -1,18 +1,38 @@
 package com.example.hobbybungae.domain.post.entity;
 
 
+import com.example.hobbybungae.domain.comment.entity.Comment;
+import com.example.hobbybungae.domain.common.TimeStamp;
 import com.example.hobbybungae.domain.post.dto.PostRequestDto;
-import jakarta.persistence.*;
+import com.example.hobbybungae.domain.user.entity.User;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Entity
 @Table(name = "post")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostEntity extends TimeEntity {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Entity
+public class Post extends TimeStamp {
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
+
+    @OneToMany(mappedBy = "post")
+    List<Comment> comments;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, length = 20)
     private String title;
@@ -23,7 +43,7 @@ public class PostEntity extends TimeEntity {
     @Column(nullable = false)
     private String hobby;
 
-    public PostEntity(PostRequestDto requestDto) {
+    public Post(PostRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContent();
         this.state = requestDto.getState();
@@ -35,7 +55,5 @@ public class PostEntity extends TimeEntity {
         this.contents = requestDto.getContent();
         this.state = requestDto.getState();
         this.hobby = requestDto.getHobby();
-
-
     }
 }

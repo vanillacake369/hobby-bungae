@@ -22,6 +22,11 @@ public class ErrorDetail {
         this.reason = reason;
     }
 
+    public ErrorDetail(String field, String value) {
+        this.field = field;
+        this.value = value;
+    }
+
     public static List<ErrorDetail> of(BindingResult bindingResult) {
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         return fieldErrors.stream()
