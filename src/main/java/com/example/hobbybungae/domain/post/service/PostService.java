@@ -4,6 +4,7 @@ import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
 import com.example.hobbybungae.domain.post.dto.PostRequestDto;
 import com.example.hobbybungae.domain.post.dto.PostResponseDto;
 import com.example.hobbybungae.domain.post.entity.Post;
+import com.example.hobbybungae.domain.post.exception.InvalidPostModifierException;
 import com.example.hobbybungae.domain.post.exception.NotFoundHobbyException;
 import com.example.hobbybungae.domain.post.exception.NotFoundPostException;
 import com.example.hobbybungae.domain.post.repository.PostRepository;
@@ -50,9 +51,14 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) {
+    public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) throws InvalidPostModifierException {
         Post post = getPostEntity(postId);
-//        verifyPassword(postEntity, requestDto.getPassword());
+
+        validateUserIsAuthor(post.getUser().getId(), user.getId());
+
+//        post.update(requestDto);
+//        return new PostResponseDto(post);
+//        Post post = getPostEntity(postId);
         post.update(requestDto);
         return new PostResponseDto(post);
     }
@@ -65,5 +71,11 @@ public class PostService {
     public Post getPostEntity(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundPostException("postId", postId.toString(), "주어진 id에 해당하는 게시글이 존재하지 않음"));
+    }
+
+    void validateUserIsAuthor(Long postAuthorId, Long loggedInUserId) throws InvalidPostModifierException {
+        if (!postAuthorId.equals(loggedInUserId)) {
+            throw new InvalidPostModifierException("postAuthor", postAuthorId.toString(), "사용자는 이 게시물을 업데이트/삭제할 권한이 없습니다.");
+        }
     }
 }
