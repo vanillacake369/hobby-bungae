@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "hobbies")
+@Table(name = "hobby")
 @NoArgsConstructor
 public class Hobby {
 
