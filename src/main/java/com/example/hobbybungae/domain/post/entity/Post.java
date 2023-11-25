@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,7 +30,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Post extends TimeStamp {
 
-	@OneToMany(targetEntity = PostHobby.class, mappedBy = "post", cascade = CascadeType.PERSIST)
+	@OneToMany(targetEntity = PostHobby.class, mappedBy = "post")
 	private final List<PostHobby> postHobbyList = new ArrayList<>();
 
 	@OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -53,19 +54,33 @@ public class Post extends TimeStamp {
 	@Column(nullable = false, length = 500)
 	private String contents;
 
+	@Builder
+	public Post(String title, String contents) {
+		this.title = title;
+		this.contents = contents;
+	}
 
 	public Post(PostRequestDto requestDto) {
 		this.title = requestDto.getTitle();
 		this.contents = requestDto.getContent();
 		this.state = requestDto.getState();
-//        this.hobby = requestDto.getHobby();
+		List<PostHobby> postHobbies = requestDto.getHobbies().stream()
+			.map(hobby -> new PostHobby(this, hobby)).toList();
+		postHobbies.forEach(this::addHobby);
 	}
 
 	public void update(PostRequestDto requestDto) {
 		this.title = requestDto.getTitle();
 		this.contents = requestDto.getContent();
 		this.state = requestDto.getState();
-//        this.hobby = requestDto.getHobby();
+		List<PostHobby> postHobbies = requestDto.getHobbies().stream()
+			.map(hobby -> new PostHobby(this, hobby)).toList();
+		postHobbies.forEach(this::addHobby);
+	}
+
+	public void addHobby(PostHobby postHobby) {
+		postHobbyList.add(postHobby);
+		postHobby.setPost(this);
 	}
 
 	@Override

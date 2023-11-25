@@ -64,12 +64,7 @@ public class PostService {
 	public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user)
 		throws InvalidPostModifierException {
 		Post post = getPostEntity(postId);
-
 		validateUserIsAuthor(post.getUser().getId(), user.getId());
-
-//        post.update(requestDto);
-//        return new PostResponseDto(post);
-//        Post post = getPostEntity(postId);
 		post.update(requestDto);
 		return new PostResponseDto(post);
 	}

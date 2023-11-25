@@ -1,4 +1,3 @@
-
 package com.example.hobbybungae.domain.post.dto;
 
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
@@ -9,9 +8,12 @@ import lombok.Getter;
 
 @Getter
 public class PostRequestDto {
-    private String title;
-    private String content;
-    private State state;
-    private List<Hobby> hobbies;
 
+	private String title;
+
+	private String content;
+
+	private State state;
+
+	private List<Hobby> hobbies;
 }
