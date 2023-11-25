@@ -1,10 +1,7 @@
 package com.example.hobbybungae.domain.user.entity;
 
-import com.example.hobbybungae.domain.comment.entity.Comment;
 import com.example.hobbybungae.domain.common.TimeStamp;
-import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +27,7 @@ public class User extends TimeStamp {
 //    List<Comment> comments;
 
     @OneToMany(targetEntity = UserHobby.class, mappedBy = "user")
-    private List<UserHobby> userHobbyList = new ArrayList<>();
+    private final List<UserHobby> userHobbyList = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,5 +52,21 @@ public class User extends TimeStamp {
         this.name = name;
         this.introduction = introduction;
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User user)) {
+            return false;
+        }
+        return getId().equals(user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
