@@ -1,5 +1,6 @@
 package com.example.hobbybungae.domain.post.service;
 
+import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
 import com.example.hobbybungae.domain.post.dto.PostRequestDto;
 import com.example.hobbybungae.domain.post.dto.PostResponseDto;
@@ -7,6 +8,7 @@ import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.post.exception.InvalidPostModifierException;
 import com.example.hobbybungae.domain.post.exception.NotFoundHobbyException;
 import com.example.hobbybungae.domain.post.exception.NotFoundPostException;
+import com.example.hobbybungae.domain.post.repository.PostHobbyRepository;
 import com.example.hobbybungae.domain.post.repository.PostRepository;
 import com.example.hobbybungae.domain.user.entity.User;
 import java.util.List;
@@ -21,10 +23,11 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final HobbyRepository hobbyRepository;
+    private final PostHobbyRepository postHobbyRepository;
 
     public PostResponseDto addPost(PostRequestDto requestDto) throws NotFoundHobbyException {
         // 취미카테고리 & 지역 데이터 존재여부 검증
-        validateHobbyExistence(requestDto.getHobby());
+        validateHobbyExistence(requestDto.getHobbies());
 
         // Dto -> Entity
         Post post = new Post(requestDto);
@@ -32,11 +35,11 @@ public class PostService {
         return new PostResponseDto(savePost);
     }
 
-    void validateHobbyExistence(String hobby) throws NotFoundHobbyException {
-        boolean hasNotHobby = hobbyRepository.findByHobbyName(hobby).isEmpty();
-        if (hasNotHobby) {
-            throw new NotFoundHobbyException("hobby", hobby, "선택한 취미 카테고리가 없습니다");
-        }
+    void validateHobbyExistence(List<Hobby> hobbies) throws NotFoundHobbyException {
+        for(Hobby hobby : hobbies)
+            if (hobbyRepository.findByHobbyName(hobby.getHobbyName()).isEmpty()) {
+                throw new NotFoundHobbyException("hobby", hobby.getHobbyName(), "선택한 취미 카테고리가 없습니다");
+            }
     }
 
     public PostResponseDto getPost(Long postId) {

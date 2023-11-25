@@ -5,6 +5,7 @@ import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.exception.DuplicatedUserException;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
+import com.example.hobbybungae.domain.userProfile.repository.UserHobbyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class UserService {
     private static final String DUPLICATED_USER_ERROR_MESSAGE = "중복되지 않는 아이디를 확인해주시길 바랍니다.";
     //    private final ProfileService profileService;
     private final UserRepository userRepository;
+    private final UserHobbyRepository userHobbyRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional

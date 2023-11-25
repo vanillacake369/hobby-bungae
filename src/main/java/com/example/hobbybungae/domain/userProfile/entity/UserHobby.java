@@ -4,10 +4,12 @@ import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name = "user_hobby")
+@NoArgsConstructor
 public class UserHobby {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

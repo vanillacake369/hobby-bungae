@@ -5,6 +5,7 @@ import com.example.hobbybungae.domain.hobby.dto.HobbyResponseDto;
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.hobby.exception.DuplicatedHobbyException;
 import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
+import com.example.hobbybungae.domain.userProfile.repository.UserHobbyRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

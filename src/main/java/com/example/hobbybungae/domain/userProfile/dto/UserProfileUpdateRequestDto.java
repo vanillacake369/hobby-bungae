@@ -5,7 +5,6 @@ import lombok.Getter;
 
 import java.util.List;
 
-@Getter
 public record UserProfileUpdateRequestDto<Hobby> (
         String idName,
         String name,
