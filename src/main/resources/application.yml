@@ -1,10 +1,10 @@
 spring:
   # DATABASE
   datasource:
-    url: jdbc:mysql://localhost:3306/hobby_bungae?serverTimezone=UTC&characterEncoding=UTF-8
+    url: ${DB_URL}
     driverClassName: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 1026baby
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   # JPA
   jpa:
     properties:
@@ -22,4 +22,4 @@ spring:
 jwt:
   secret:
     key:
-      7Iqk7YyM66W07YOA7L2U65Sp7YG065+9U3ByaW5n6rCV7J2Y7Yqc7YSw7LWc7JuQ67mI7J6F64uI64ukLg==
+      ${JWT_KEY}
