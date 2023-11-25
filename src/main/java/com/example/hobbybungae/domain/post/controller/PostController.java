@@ -5,6 +5,8 @@ import com.example.hobbybungae.domain.post.dto.PostResponseDto;
 import com.example.hobbybungae.domain.post.service.PostService;
 import com.example.hobbybungae.security.UserDetailsImpl;
 import java.util.List;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +50,7 @@ public class PostController {
     @PutMapping("/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long postId,
-            @RequestBody PostRequestDto requestDto,
+            @Valid @RequestBody PostRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         PostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
