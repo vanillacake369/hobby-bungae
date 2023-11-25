@@ -16,14 +16,13 @@ import lombok.NoArgsConstructor;
 @Table(name = "post_hobby")
 @NoArgsConstructor
 public class PostHobby {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
-
     @ManyToOne
     @JoinColumn(name = "hobby_id", nullable = false)
     private Hobby hobby;

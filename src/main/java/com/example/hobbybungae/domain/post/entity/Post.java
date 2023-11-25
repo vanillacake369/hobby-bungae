@@ -29,51 +29,58 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Post extends TimeStamp {
 
-    @OneToMany(mappedBy = "post")
-    private final List<PostHobby> postHobbyList = new ArrayList<>();
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    User user;
-    @ManyToOne
-    @JoinColumn(name = "state_id")
-    State state;
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    List<Comment> comments;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false, length = 20)
-    private String title;
-    @Column(nullable = false, length = 500)
-    private String contents;
+	@OneToMany(targetEntity = PostHobby.class, mappedBy = "post", cascade = CascadeType.PERSIST)
+	private final List<PostHobby> postHobbyList = new ArrayList<>();
 
-    public Post(PostRequestDto requestDto) {
-        this.title = requestDto.getTitle();
-        this.contents = requestDto.getContent();
-        this.state = requestDto.getState();
+	@OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private final List<Comment> comments = new ArrayList<>();
+
+	@ManyToOne
+	@JoinColumn(name = "state_id")
+	State state;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	User user;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(nullable = false, length = 20)
+	private String title;
+
+	@Column(nullable = false, length = 500)
+	private String contents;
+
+
+	public Post(PostRequestDto requestDto) {
+		this.title = requestDto.getTitle();
+		this.contents = requestDto.getContent();
+		this.state = requestDto.getState();
 //        this.hobby = requestDto.getHobby();
-    }
+	}
 
-    public void update(PostRequestDto requestDto) {
-        this.title = requestDto.getTitle();
-        this.contents = requestDto.getContent();
-        this.state = requestDto.getState();
+	public void update(PostRequestDto requestDto) {
+		this.title = requestDto.getTitle();
+		this.contents = requestDto.getContent();
+		this.state = requestDto.getState();
 //        this.hobby = requestDto.getHobby();
-    }
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Post post)) {
-            return false;
-        }
-        return getId().equals(post.getId());
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Post post)) {
+			return false;
+		}
+		return getId().equals(post.getId());
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId());
+	}
 }

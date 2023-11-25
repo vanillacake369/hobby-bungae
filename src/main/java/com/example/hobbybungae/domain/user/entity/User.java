@@ -1,7 +1,10 @@
 package com.example.hobbybungae.domain.user.entity;
 
+import com.example.hobbybungae.domain.comment.entity.Comment;
 import com.example.hobbybungae.domain.common.TimeStamp;
+import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,15 +23,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User extends TimeStamp {
 
-//    @OneToMany(targetEntity = Post.class, mappedBy = "user", cascade = CascadeType.REMOVE)
-//    List<Post> posts;
-
-//    @OneToMany(targetEntity = Comment.class, mappedBy = "user", cascade = CascadeType.REMOVE)
-//    List<Comment> comments;
-
     @OneToMany(targetEntity = UserHobby.class, mappedBy = "user")
     private final List<UserHobby> userHobbyList = new ArrayList<>();
 
+    @OneToMany(targetEntity = Post.class, mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<Post> posts = new ArrayList<>();
+
+    @OneToMany(targetEntity = Comment.class, mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<Comment> comments = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
