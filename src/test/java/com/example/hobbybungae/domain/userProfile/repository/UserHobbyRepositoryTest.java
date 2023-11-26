@@ -90,16 +90,16 @@ class UserHobbyRepositoryTest {
 		Hobby tennis = new Hobby("테니스");
 		user.addHobby(golf);
 		user.addHobby(tennis);
-		userRepository.save(user);
 
-		// THEN
+		// WHEN
 		List<UserHobby> userHobbyList = userHobbyRepository.findAllByUserId(id);
 		userHobbyRepository.deleteAll(userHobbyList);
 		for (Hobby hobby : hobbies) {
 			user.addHobby(hobby);
 		}
+		userRepository.save(user);
 
-		// WHEN
+		// THEN
 		boolean leftoutUserOfGolf = golf.getUserHobbyList().stream()
 			.anyMatch(userHobby -> userHobby.getUser().equals(user));
 		boolean leftoutUserOfTennis = tennis.getUserHobbyList().stream()

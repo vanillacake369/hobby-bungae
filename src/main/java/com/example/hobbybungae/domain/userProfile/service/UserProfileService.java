@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserProfileService {
 
 	private final UserRepository userRepository;
@@ -34,14 +35,24 @@ public class UserProfileService {
 	}
 
 	// 사용자 프로필 조회
+	@Transactional(readOnly = true)
 	public UserProfileResponseDto getUser(Long id, User inputUser) {
 		validateId(id, inputUser.getId());
 		User user = getUserEntity(id);
 		return UserProfileResponseDto.of(user);
 	}
 
-	// Update Password
-	@Transactional
+	/**
+	 * 패스워드 수정값을 포함한 사용자 프로필 수정
+	 *
+	 * @param id
+	 * @param requestDto
+	 * @param inputUser
+	 * @return 수정된 사용자 프로필 데이터
+	 * <p>
+	 * Validation은 따로 분리하는 게 좋아보임/
+	 * @author 임지훈
+	 */
 	public UserProfileResponseDto updateUser(Long id, UserProfileUpdateRequestDto requestDto, User inputUser) {
 		validateId(id, inputUser.getId());
 		if (!requestDto.password().isEmpty()) {
@@ -51,20 +62,7 @@ public class UserProfileService {
 			}
 			//inputUser.updatePassword(passwordEncoder.encode(requestDto.getPassword())); // 지훈님 User에 만들어야함
 		}
-		//inputUser.update(requestDto);
-
-		// 회원 A => 야구,축구
-		// A|야구
-		// A|축구
-		// 야구(A)
-		// 축구(A)
-
-		// 회원 A => 농구
-		// A|
-		// A| => A|농구
-		// 야구()
-		// 축구()
-		// 농구(A)
+		// inputUser.update(requestDto);
 
 		//현재 유저의 취미를 모두 삭제하고 새로 등록
 		List<UserHobby> userHobbyList = userHobbyRepository.findAllByUserId(id);
