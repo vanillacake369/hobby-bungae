@@ -69,7 +69,7 @@ class CommentRepositoryTest {
 	}
 
 	@Test
-	@DisplayName("Post를 입력받아 Comment 생성 및 업데이트합니다.")
+	@DisplayName("User를 입력받아 Comment 생성 및 업데이트합니다.")
 	public void User에_대한_Comment생성() {
 		assert savedUser != null;
 		// GIVEN

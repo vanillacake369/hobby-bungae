@@ -57,7 +57,7 @@ public class Comment {
 		setPost(post);
 		this.text = requestDto.getText();
 	}
-
+	
 	public void setPost(Post post) {
 		// 기존 연관된 Comment 제거
 		if (this.post != null) {

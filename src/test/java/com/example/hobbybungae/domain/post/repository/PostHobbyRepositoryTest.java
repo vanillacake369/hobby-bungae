@@ -1,13 +1,12 @@
 package com.example.hobbybungae.domain.post.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
-import com.example.hobbybungae.domain.hobby.exception.NotFoundHobbyException;
 import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
 import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.post.entity.PostHobby;
-import com.example.hobbybungae.domain.post.exception.NotFoundPostException;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,16 +36,19 @@ class PostHobbyRepositoryTest {
 	public void post_hobby_양방향연관관계_해결() {
 		// GIVEN
 		Post post = Post.builder().title("야구 번개 모아요").contents("같이 야구 하실 분 9명 모아요~").build();
-		Hobby hobby = Hobby.builder().hobbyName("야구").build();
-		hobbyRepository.save(hobby);
-		// WHEN
-		post.addHobby(hobby);
+		Hobby hobbyBaseball = Hobby.builder().hobbyName("야구").build();
+		Hobby hobbySoccer = Hobby.builder().hobbyName("축구").build();
+		hobbyRepository.save(hobbyBaseball);
+		hobbyRepository.save(hobbySoccer);
+		// WHEN 서비스단
+		post.addHobby(hobbyBaseball);
+		post.addHobby(hobbySoccer);
 		postRepository.save(post);
 		// THEN
-		PostHobby postHobbyOfPost = postHobbyRepository.findPostHobbyByPost(post)
-			.orElseThrow(() -> new NotFoundPostException("postId", post.getId().toString()));
-		PostHobby postHobbyOfHobby = postHobbyRepository.findPostHobbyByHobby(hobby).
-			orElseThrow(() -> new NotFoundHobbyException("hobbyId", hobby.getId().toString()));
-		assertEquals(postHobbyOfHobby, postHobbyOfPost);
+		List<PostHobby> postHobbyByPost = postHobbyRepository.findPostHobbyByPost(post);
+		List<PostHobby> postHobbyByBaseball = postHobbyRepository.findPostHobbyByHobby(hobbyBaseball);
+		List<PostHobby> postHobbyBySoccer = postHobbyRepository.findPostHobbyByHobby(hobbySoccer);
+		assertTrue(postHobbyByPost.containsAll(postHobbyByBaseball));
+		assertTrue(postHobbyByPost.containsAll(postHobbyBySoccer));
 	}
 }
