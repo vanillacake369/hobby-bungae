@@ -42,7 +42,7 @@ public class User extends TimeStamp {
 	@Column(nullable = false)
 	private String name;
 
-	@Column(nullable = true)
+	@Column
 	private String introduction;
 
 	@Column(nullable = false)
@@ -71,5 +71,19 @@ public class User extends TimeStamp {
 	@Override
 	public int hashCode() {
 		return Objects.hash(getId());
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+			"userHobbyList=" + userHobbyList +
+			", posts=" + posts +
+			", comments=" + comments +
+			", id=" + id +
+			", idName='" + idName + '\'' +
+			", name='" + name + '\'' +
+			", introduction='" + introduction + '\'' +
+			", password='" + password + '\'' +
+			'}';
 	}
 }
