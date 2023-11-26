@@ -3,10 +3,10 @@ package com.example.hobbybungae.domain.post.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
+import com.example.hobbybungae.domain.hobby.exception.NotFoundHobbyException;
 import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
 import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.post.entity.PostHobby;
-import com.example.hobbybungae.domain.post.exception.NotFoundHobbyException;
 import com.example.hobbybungae.domain.post.exception.NotFoundPostException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

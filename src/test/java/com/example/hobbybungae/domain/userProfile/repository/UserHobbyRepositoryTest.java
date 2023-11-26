@@ -3,8 +3,8 @@ package com.example.hobbybungae.domain.userProfile.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
+import com.example.hobbybungae.domain.hobby.exception.NotFoundHobbyException;
 import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
-import com.example.hobbybungae.domain.post.exception.NotFoundHobbyException;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.exception.NotFoundUserException;
 import com.example.hobbybungae.domain.user.repository.UserRepository;

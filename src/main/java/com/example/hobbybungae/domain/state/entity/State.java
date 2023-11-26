@@ -25,4 +25,13 @@ public class State {
 
 	@Column(nullable = false, name = "gu")
 	private String stateGu;
+
+	@Override
+	public String toString() {
+		return "State{" +
+			"stateDo='" + stateDo + '\'' +
+			", stateSi='" + stateSi + '\'' +
+			", stateGu='" + stateGu + '\'' +
+			'}';
+	}
 }

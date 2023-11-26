@@ -3,8 +3,8 @@ package com.example.hobbybungae.domain.hobby.service;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
+import com.example.hobbybungae.domain.hobby.exception.NotFoundHobbyException;
 import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
-import com.example.hobbybungae.domain.post.exception.NotFoundHobbyException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
