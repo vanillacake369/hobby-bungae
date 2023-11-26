@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Post extends TimeStamp {
 
-	@OneToMany(targetEntity = PostHobby.class, mappedBy = "post", cascade = CascadeType.ALL)
+	@OneToMany(targetEntity = PostHobby.class, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<PostHobby> postHobbyList = new ArrayList<>();
 
 	@OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -82,11 +82,12 @@ public class Post extends TimeStamp {
 	/**
 	 * Hobby를 입력받아 다대다 연관관계 해결
 	 *
-	 * @param hobby
+	 * @param hobby 입력된 Hobby
 	 */
 	public void addHobby(Hobby hobby) {
 		PostHobby postHobby = new PostHobby(this, hobby);
 		postHobby.addPostAndHobby(this, hobby);
+		postHobbyList.add(postHobby);
 	}
 
 	@Override

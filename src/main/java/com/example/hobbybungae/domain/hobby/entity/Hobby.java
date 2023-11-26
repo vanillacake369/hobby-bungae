@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Hobby {
 
-	@OneToMany(targetEntity = PostHobby.class, mappedBy = "hobby", cascade = CascadeType.ALL)
+	@OneToMany(targetEntity = PostHobby.class, mappedBy = "hobby", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<PostHobby> postHobbyList = new ArrayList<>();
 
 	@Id
