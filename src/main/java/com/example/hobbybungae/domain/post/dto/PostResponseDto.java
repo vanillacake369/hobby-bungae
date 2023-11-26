@@ -5,6 +5,7 @@ import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.post.entity.PostHobby;
 import com.example.hobbybungae.domain.state.entity.State;
+import com.example.hobbybungae.domain.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public record PostResponseDto(
 	String title,
 	String content,
 	State state,
-	String author,
+	User user,
 	List<Hobby> hobbies,
 	LocalDateTime createdAt
 ) {
@@ -24,7 +25,7 @@ public record PostResponseDto(
 			savePost.getTitle(),
 			savePost.getContents(),
 			savePost.getState(),
-			savePost.getAuthor(),
+			savePost.getUser(),
 			savePost.getPostHobbies().stream()
 				.map(PostHobby::getHobby).toList(),
 			savePost.getCreatedAt()

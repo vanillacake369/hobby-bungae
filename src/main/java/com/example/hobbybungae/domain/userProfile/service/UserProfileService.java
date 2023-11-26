@@ -62,15 +62,8 @@ public class UserProfileService {
 			}
 			signInUser.updatePassword(passwordEncoder.encode(requestDto.password())); // 지훈님 User에 만들어야함
 		}
+		
 		signInUser.update(requestDto);
-
-		//현재 유저의 취미를 모두 삭제하고 새로 등록
-//		List<UserHobby> userHobbyList = userHobbyRepository.findAllByUserId(id);
-//		userHobbyRepository.deleteAll(userHobbyList);
-//		List<Hobby> newHobbyList = requestDto.hobbies();
-//		for (Hobby hobby : newHobbyList) {
-//			signInUser.addHobby(hobby);
-//		}
 
 		return UserProfileResponseDto.of(signInUser);
 	}

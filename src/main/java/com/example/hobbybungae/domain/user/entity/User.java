@@ -113,7 +113,7 @@ public class User extends TimeStamp {
 	/**
 	 * User와 기존에 연관되어있는 UserHobby들을 탐색한 뒤, Hobby의 연관관계 제거
 	 */
-	void removeHobbies() {
+	public void removeHobbies() {
 		if (!userHobbies.isEmpty()) {
 			userHobbies.forEach(userHobby ->
 				userHobby.getHobby()
@@ -121,10 +121,11 @@ public class User extends TimeStamp {
 					.remove(userHobby)
 			);
 		}
+		userHobbies.clear();
 	}
 
 
-	public void updatePassword(String encode) {
-		this.password = getPassword();
+	public void updatePassword(String password) {
+		this.password = password;
 	}
 }
