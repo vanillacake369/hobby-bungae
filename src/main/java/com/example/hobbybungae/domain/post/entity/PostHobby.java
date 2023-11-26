@@ -42,9 +42,9 @@ public class PostHobby {
 	 * @param post  생성한 Post
 	 * @param hobby Post생성을 위한 입력된 Hobby
 	 */
-	public void addPostAndHobby(Post post, Hobby hobby) {
-		this.post = post;
-		this.hobby = hobby;
-		this.hobby.getPostHobbyList().add(this);
+	public static PostHobby addPostAndHobby(Post post, Hobby hobby) {
+		PostHobby postHobby = new PostHobby(post, hobby);
+		postHobby.hobby.getPostHobbyList().add(postHobby);
+		return postHobby;
 	}
 }

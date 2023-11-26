@@ -33,7 +33,7 @@ import lombok.Setter;
 public class Post extends TimeStamp {
 
 	@OneToMany(targetEntity = PostHobby.class, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-	private final List<PostHobby> postHobbyList = new ArrayList<>();
+	private final List<PostHobby> postHobbies = new ArrayList<>();
 
 	@OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<Comment> comments = new ArrayList<>();
@@ -83,16 +83,20 @@ public class Post extends TimeStamp {
 	}
 
 	/**
-	 * Hobby를 입력받아 다대다 연관관계 해결
+	 * Post와 다대다 연관관계의 Hobby를 입력받아 연관관계 해결
 	 *
 	 * @param hobby 입력된 Hobby
 	 */
 	public void addHobby(Hobby hobby) {
-		PostHobby postHobby = new PostHobby(this, hobby);
-		postHobby.addPostAndHobby(this, hobby);
-		postHobbyList.add(postHobby);
+		PostHobby postHobby = PostHobby.addPostAndHobby(this, hobby);
+		postHobbies.add(postHobby);
 	}
 
+	/**
+	 * Post와 1대다 관계의 User를 입력받아 연관관계 해결
+	 *
+	 * @param user 로그인 된 User
+	 */
 	public void setAuthor(User user) {
 		// 기존 연관된 User 제거
 		if (this.user != null) {
@@ -122,7 +126,7 @@ public class Post extends TimeStamp {
 	@Override
 	public String toString() {
 		return "Post{" +
-			"postHobbyList=" + postHobbyList +
+			"postHobbyList=" + postHobbies +
 			", comments=" + comments +
 			", state=" + state +
 			", user=" + user +

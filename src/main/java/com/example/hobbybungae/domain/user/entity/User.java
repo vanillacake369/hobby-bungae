@@ -2,6 +2,7 @@ package com.example.hobbybungae.domain.user.entity;
 
 import com.example.hobbybungae.domain.comment.entity.Comment;
 import com.example.hobbybungae.domain.common.TimeStamp;
+import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
 import jakarta.persistence.CascadeType;
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
 public class User extends TimeStamp {
 
 	@OneToMany(targetEntity = UserHobby.class, mappedBy = "user")
-	private final List<UserHobby> userHobbyList = new ArrayList<>();
+	private final List<UserHobby> userHobbies = new ArrayList<>();
 
 	@OneToMany(targetEntity = Post.class, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<Post> posts = new ArrayList<>();
@@ -57,6 +58,16 @@ public class User extends TimeStamp {
 		this.password = password;
 	}
 
+	/**
+	 * User와 다대다 연관관계의 Hobby를 입력받아 연관관계 해결
+	 *
+	 * @param hobby 입력된 Hobby
+	 */
+	public void addHobby(Hobby hobby) {
+		UserHobby userHobby = UserHobby.addUserAndHobby(this, hobby);
+		userHobbies.add(userHobby);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -76,7 +87,7 @@ public class User extends TimeStamp {
 	@Override
 	public String toString() {
 		return "User{" +
-			"userHobbyList=" + userHobbyList +
+			"userHobbyList=" + userHobbies +
 			", posts=" + posts +
 			", comments=" + comments +
 			", id=" + id +
