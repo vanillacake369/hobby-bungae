@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@Transactional
 class PostHobbyRepositoryTest {
 
 	@Autowired
@@ -31,7 +32,6 @@ class PostHobbyRepositoryTest {
 	@Autowired
 	HobbyRepository hobbyRepository;
 
-	@Transactional
 	@Test
 	@DisplayName("Hobby를 입력받아 PostHobby를 생성, 이에 대한 양방향 관계를 resolve합니다.")
 	public void Hobby간_양방향연관관계_해결() {
