@@ -17,7 +17,7 @@ public class State {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, name = "do")
+	@Column(name = "do")
 	private String stateDo;
 
 	@Column(nullable = false, name = "si")
