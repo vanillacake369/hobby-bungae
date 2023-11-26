@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserProfileService {
 
 	private final UserRepository userRepository;
@@ -43,8 +44,6 @@ public class UserProfileService {
 	 * @param signInUser 로그인한 프로필 주인 사용자
 	 * @return 수정된 사용자 프로필 데이터
 	 */
-	// Update Password
-	@Transactional
 	public UserProfileResponseDto updateUser(Long id, UserProfileUpdateRequestDto requestDto,
 		User signInUser) {
 		validateId(id, signInUser.getId());

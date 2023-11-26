@@ -29,6 +29,12 @@ public class PostService {
 
 	private final StateService stateService;
 
+	void validateHobbiesExistence(List<Hobby> hobbies) throws NotFoundHobbyException {
+		for (Hobby hobby : hobbies) {
+			hobbyService.validateHobbyExistence(hobby);
+		}
+	}
+
 	public PostResponseDto addPost(PostRequestDto requestDto, User user)
 		throws NotFoundHobbyException, NotFoundStateException {
 		// 취미카테고리 & 지역 데이터 존재여부 검증
@@ -39,12 +45,6 @@ public class PostService {
 		Post post = Post.of(requestDto, user);
 		Post savePost = postRepository.save(post);
 		return new PostResponseDto(savePost);
-	}
-
-	void validateHobbiesExistence(List<Hobby> hobbies) throws NotFoundHobbyException {
-		for (Hobby hobby : hobbies) {
-			hobbyService.validateHobbyExistence(hobby);
-		}
 	}
 
 	@Transactional(readOnly = true)
@@ -70,6 +70,7 @@ public class PostService {
 
 	public void deletePost(Long postId, User user) {
 		Post post = getPostById(postId);
+		validateUserIsAuthor(post.getUser().getId(), user.getId());
 		postRepository.delete(post);
 	}
 

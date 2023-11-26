@@ -5,7 +5,6 @@ import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.exception.DuplicatedUserException;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
-import com.example.hobbybungae.domain.userProfile.repository.UserHobbyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,39 +14,36 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class UserService {
 
-    private static final String DUPLICATED_USER_ERROR_MESSAGE = "중복되지 않는 아이디를 확인해주시길 바랍니다.";
-    //    private final ProfileService profileService;
-    private final UserRepository userRepository;
-    private final UserHobbyRepository userHobbyRepository;
-    private final PasswordEncoder passwordEncoder;
+	private static final String DUPLICATED_USER_ERROR_MESSAGE = "중복되지 않는 아이디를 확인해주시길 바랍니다.";
 
-    @Transactional
-    public boolean hasDuplicatedUser(String idName) {
-        return userRepository.findByIdName(idName).isPresent();
-    }
+	//    private final ProfileService profileService;
+	private final UserRepository userRepository;
 
-    @Transactional
-    public ResponseEntity<UserResponseDto> signUp(UserRequestDto requestDto) throws DuplicatedUserException {
-        verifyDuplicatedUser(requestDto);
+	private final PasswordEncoder passwordEncoder;
 
-        User newUser = User.builder()
-                .idName(requestDto.idName())
-                .name(requestDto.name())
-                .password(passwordEncoder.encode(requestDto.password()))
-                .build();
-        userRepository.save(newUser);
+	public boolean hasDuplicatedUser(String idName) {
+		return userRepository.findByIdName(idName).isPresent();
+	}
 
-//        profileService.createNewUserProfile(newUser);
+	public ResponseEntity<UserResponseDto> signUp(UserRequestDto requestDto) throws DuplicatedUserException {
+		verifyDuplicatedUser(requestDto);
 
-        return new ResponseEntity<>(new UserResponseDto(newUser.getIdName(), newUser.getName()), HttpStatus.OK);
-    }
+		User newUser = User.builder()
+			.idName(requestDto.idName())
+			.name(requestDto.name())
+			.password(passwordEncoder.encode(requestDto.password()))
+			.build();
+		userRepository.save(newUser);
 
-    private void verifyDuplicatedUser(UserRequestDto requestDto) throws DuplicatedUserException {
-        if (hasDuplicatedUser(requestDto.idName())) {
-            throw new DuplicatedUserException("id_name", requestDto.idName(), DUPLICATED_USER_ERROR_MESSAGE);
-        }
-    }
+		return new ResponseEntity<>(new UserResponseDto(newUser.getIdName(), newUser.getName()), HttpStatus.OK);
+	}
+
+	private void verifyDuplicatedUser(UserRequestDto requestDto) throws DuplicatedUserException {
+		if (hasDuplicatedUser(requestDto.idName())) {
+			throw new DuplicatedUserException("id_name", requestDto.idName(), DUPLICATED_USER_ERROR_MESSAGE);
+		}
+	}
 }
