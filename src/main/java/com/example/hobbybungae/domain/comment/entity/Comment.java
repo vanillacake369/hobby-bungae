@@ -3,6 +3,7 @@ package com.example.hobbybungae.domain.comment.entity;
 import com.example.hobbybungae.domain.comment.dto.CommentRequestDto;
 import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.user.entity.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,8 +14,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -22,44 +26,64 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Comment {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+	// 외래키이므로 영속성 전이 PERSIST
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "user_id")
+	private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
+	// 외래키이므로 영속성 전이 PERSIST
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "post_id")
+	@Setter(AccessLevel.NONE)
+	private Post post;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String text;
+	@Column(nullable = false)
+	private String text;
 
-    public Comment(CommentRequestDto requestDto, User user, Post post) {
-        this.text = requestDto.getText();
-        this.user = user;
-        this.post = post;
-    }
+	@Builder
+	public Comment(String text) {
+		this.text = text;
+	}
 
-    public void update(CommentRequestDto requestDto) {
-        this.text = requestDto.getText();
-    }
+	public Comment(CommentRequestDto requestDto, User user, Post post) {
+		this.text = requestDto.getText();
+		this.user = user;
+		this.post = post;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Comment comment)) {
-            return false;
-        }
-        return getId().equals(comment.getId());
-    }
+	public void update(CommentRequestDto requestDto, Post post) {
+		setPost(post);
+		// requestDto 데이터 업데이트
+		this.text = requestDto.getText();
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
-    }
+	public void setPost(Post post) {
+		// 기존 연관된 Comment 제거
+		if (this.post != null) {
+			this.post.getComments().remove(this);
+		}
+		// Post 추가 후, Post에서의 comments에 본인 추가
+		this.post = post;
+		post.getComments().add(this);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Comment comment)) {
+			return false;
+		}
+		return getId().equals(comment.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId());
+	}
 }

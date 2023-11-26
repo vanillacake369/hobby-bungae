@@ -49,11 +49,13 @@ public class PostService {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public PostResponseDto getPost(Long postId) {
 		Post post = getPostEntity(postId);
 		return new PostResponseDto(post);
 	}
 
+	@Transactional(readOnly = true)
 	public List<PostResponseDto> getPosts() {
 		return postRepository.findAllByOrderByCreatedAtDesc().stream()
 			.map(PostResponseDto::new)
@@ -74,6 +76,7 @@ public class PostService {
 		postRepository.delete(post);
 	}
 
+	@Transactional(readOnly = true)
 	public Post getPostEntity(Long postId) {
 		return postRepository.findById(postId)
 			.orElseThrow(() -> new NotFoundPostException("postId", postId.toString(), "주어진 id에 해당하는 게시글이 존재하지 않음"));
