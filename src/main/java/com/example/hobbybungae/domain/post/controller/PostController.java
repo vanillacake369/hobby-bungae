@@ -41,8 +41,9 @@ public class PostController {
 	}
 
 	@PostMapping
-	public ResponseEntity<PostResponseDto> addPost(@RequestBody PostRequestDto requestDto) {
-		PostResponseDto responseDto = postService.addPost(requestDto);
+	public ResponseEntity<PostResponseDto> addPost(@RequestBody PostRequestDto requestDto,
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		PostResponseDto responseDto = postService.addPost(requestDto, userDetails.getUser());
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
 	}
 

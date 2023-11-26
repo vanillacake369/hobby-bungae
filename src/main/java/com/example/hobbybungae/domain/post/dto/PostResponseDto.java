@@ -13,6 +13,7 @@ public record PostResponseDto(
 	String title,
 	String content,
 	State state,
+	String author,
 	List<Hobby> hobbies,
 	LocalDateTime createdAt
 ) {
@@ -23,6 +24,7 @@ public record PostResponseDto(
 			savePost.getTitle(),
 			savePost.getContents(),
 			savePost.getState(),
+			savePost.getAuthor(),
 			savePost.getPostHobbies().stream()
 				.map(PostHobby::getHobby).toList(),
 			savePost.getCreatedAt()

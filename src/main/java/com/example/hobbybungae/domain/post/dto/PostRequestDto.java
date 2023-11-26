@@ -15,5 +15,7 @@ public class PostRequestDto {
 
 	private State state;
 
+	private String author;
+
 	private List<Hobby> hobbies;
 }
