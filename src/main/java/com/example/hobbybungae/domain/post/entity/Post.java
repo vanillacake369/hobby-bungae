@@ -34,7 +34,7 @@ public class Post extends TimeStamp {
 	@OneToMany(targetEntity = PostHobby.class, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<PostHobby> postHobbyList = new ArrayList<>();
 
-	@OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<Comment> comments = new ArrayList<>();
 
 	@ManyToOne
@@ -104,5 +104,18 @@ public class Post extends TimeStamp {
 	@Override
 	public int hashCode() {
 		return Objects.hash(getId());
+	}
+
+	@Override
+	public String toString() {
+		return "Post{" +
+			"postHobbyList=" + postHobbyList +
+			", comments=" + comments +
+			", state=" + state +
+			", user=" + user +
+			", id=" + id +
+			", title='" + title + '\'' +
+			", contents='" + contents + '\'' +
+			'}';
 	}
 }

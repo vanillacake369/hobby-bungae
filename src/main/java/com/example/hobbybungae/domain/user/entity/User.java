@@ -23,52 +23,53 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User extends TimeStamp {
 
-    @OneToMany(targetEntity = UserHobby.class, mappedBy = "user")
-    private final List<UserHobby> userHobbyList = new ArrayList<>();
+	@OneToMany(targetEntity = UserHobby.class, mappedBy = "user")
+	private final List<UserHobby> userHobbyList = new ArrayList<>();
 
-    @OneToMany(targetEntity = Post.class, mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<Post> posts = new ArrayList<>();
+	@OneToMany(targetEntity = Post.class, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private final List<Post> posts = new ArrayList<>();
 
-    @OneToMany(targetEntity = Comment.class, mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<Comment> comments = new ArrayList<>();
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@OneToMany(targetEntity = Comment.class, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private final List<Comment> comments = new ArrayList<>();
 
-    @Column(nullable = false)
-    private String idName;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String idName;
 
-    @Column
-    private String introduction;
+	@Column(nullable = false)
+	private String name;
 
-    @Column(nullable = false)
-    private String password;
+	@Column
+	private String introduction;
 
-    @Builder
-    public User(Long id, String idName, String name, String introduction, String password) {
-        this.id = id;
-        this.idName = idName;
-        this.name = name;
-        this.introduction = introduction;
-        this.password = password;
-    }
+	@Column(nullable = false)
+	private String password;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof User user)) {
-            return false;
-        }
-        return getId().equals(user.getId());
-    }
+	@Builder
+	public User(Long id, String idName, String name, String introduction, String password) {
+		this.id = id;
+		this.idName = idName;
+		this.name = name;
+		this.introduction = introduction;
+		this.password = password;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof User user)) {
+			return false;
+		}
+		return getId().equals(user.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId());
+	}
 }

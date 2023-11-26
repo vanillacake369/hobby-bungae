@@ -51,7 +51,7 @@ public class PostService {
 
 	@Transactional(readOnly = true)
 	public PostResponseDto getPost(Long postId) {
-		Post post = getPostEntity(postId);
+		Post post = getPostById(postId);
 		return new PostResponseDto(post);
 	}
 
@@ -65,19 +65,19 @@ public class PostService {
 	@Transactional
 	public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user)
 		throws InvalidPostModifierException {
-		Post post = getPostEntity(postId);
+		Post post = getPostById(postId);
 		validateUserIsAuthor(post.getUser().getId(), user.getId());
 		post.update(requestDto);
 		return new PostResponseDto(post);
 	}
 
 	public void deletePost(Long postId, User user) {
-		Post post = getPostEntity(postId);
+		Post post = getPostById(postId);
 		postRepository.delete(post);
 	}
 
 	@Transactional(readOnly = true)
-	public Post getPostEntity(Long postId) {
+	public Post getPostById(Long postId) {
 		return postRepository.findById(postId)
 			.orElseThrow(() -> new NotFoundPostException("postId", postId.toString(), "주어진 id에 해당하는 게시글이 존재하지 않음"));
 	}
