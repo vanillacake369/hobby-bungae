@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostService {
 
 	private final PostRepository postRepository;
@@ -28,13 +29,14 @@ public class PostService {
 
 	private final StateService stateService;
 
-	public PostResponseDto addPost(PostRequestDto requestDto, User user) throws NotFoundHobbyException, NotFoundStateException {
+	public PostResponseDto addPost(PostRequestDto requestDto, User user)
+		throws NotFoundHobbyException, NotFoundStateException {
 		// 취미카테고리 & 지역 데이터 존재여부 검증
 		validateHobbiesExistence(requestDto.getHobbies());
 		stateService.validateStateExistence(requestDto.getState());
 
 		// Dto -> Entity
-		Post post = new Post(requestDto, user);
+		Post post = Post.of(requestDto, user);
 		Post savePost = postRepository.save(post);
 		return new PostResponseDto(savePost);
 	}
@@ -63,7 +65,7 @@ public class PostService {
 		throws InvalidPostModifierException {
 		Post post = getPostById(postId);
 		validateUserIsAuthor(post.getUser().getId(), user.getId());
-		post.update(requestDto);
+		post.update(requestDto, user);
 		return new PostResponseDto(post);
 	}
 

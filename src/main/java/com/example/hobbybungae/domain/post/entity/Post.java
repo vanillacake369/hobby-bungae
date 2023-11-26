@@ -58,33 +58,63 @@ public class Post extends TimeStamp {
 	@Column(nullable = false, length = 500)
 	private String contents;
 
-	@Column(nullable = false)
-	private String author;
-
 	@Builder
 	public Post(String title, String contents) {
 		this.title = title;
 		this.contents = contents;
 	}
 
-	public Post(PostRequestDto requestDto, User user) {
+	private Post(PostRequestDto requestDto) {
 		this.title = requestDto.getTitle();
 		this.contents = requestDto.getContent();
 		this.state = requestDto.getState();
-		this.author = requestDto.getAuthor();
 		// 각 Hobby들에 대한 연관관계 저장
 		List<Hobby> hobbies = requestDto.getHobbies();
 		hobbies.forEach(this::addHobby);
 	}
 
-	public void update(PostRequestDto requestDto) {
+	private Post(PostRequestDto requestDto, User user) {
 		this.title = requestDto.getTitle();
 		this.contents = requestDto.getContent();
 		this.state = requestDto.getState();
-		this.author = requestDto.getAuthor();
+		this.user = user;
 		// 각 Hobby들에 대한 연관관계 저장
 		List<Hobby> hobbies = requestDto.getHobbies();
 		hobbies.forEach(this::addHobby);
+	}
+
+	public static Post of(PostRequestDto requestDto) {
+		return new Post(requestDto);
+	}
+
+	public static Post of(PostRequestDto requestDto, User user) {
+		return new Post(requestDto, user);
+	}
+
+	public void update(PostRequestDto requestDto, User user) {
+		this.title = requestDto.getTitle();
+		this.contents = requestDto.getContent();
+		this.state = requestDto.getState();
+		this.user = user;
+		// 기존 연관된 취미와의 연관관계 끊기
+		removeHobbies();
+		// 각 Hobby들에 대한 연관관계 저장
+		List<Hobby> hobbies = requestDto.getHobbies();
+		hobbies.forEach(this::addHobby);
+	}
+
+	/**
+	 * Post와 기존에 연관되어있는 PostHobby들을 탐색한 뒤, Hobby의 연관관계 제거
+	 */
+	public void removeHobbies() {
+		if (!postHobbies.isEmpty()) {
+			postHobbies.forEach(postHobby ->
+				postHobby.getHobby()
+					.getPostHobbyList()
+					.remove(postHobby)
+			);
+		}
+		postHobbies.clear();
 	}
 
 	/**
@@ -93,6 +123,7 @@ public class Post extends TimeStamp {
 	 * @param hobby 입력된 Hobby
 	 */
 	public void addHobby(Hobby hobby) {
+		// 새로운 연관관계 추가
 		PostHobby postHobby = PostHobby.addPostAndHobby(this, hobby);
 		postHobbies.add(postHobby);
 	}
