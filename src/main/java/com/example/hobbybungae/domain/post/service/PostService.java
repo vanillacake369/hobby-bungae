@@ -60,7 +60,6 @@ public class PostService {
 			.collect(Collectors.toList());
 	}
 
-	@Transactional
 	public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user)
 		throws InvalidPostModifierException {
 		Post post = getPostById(postId);

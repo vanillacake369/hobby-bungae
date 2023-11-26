@@ -1,5 +1,6 @@
 package com.example.hobbybungae.domain.post.service;
 
+import com.example.hobbybungae.domain.comment.entity.Comment;
 import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.post.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Import({PostService.class, Post.class})
+@Import({PostService.class, Post.class, Comment.class})
 class PostServiceTest {
 
 	@Autowired
