@@ -58,16 +58,20 @@ public class Post extends TimeStamp {
 	@Column(nullable = false, length = 500)
 	private String contents;
 
+	@Column(nullable = false)
+	private String author;
+
 	@Builder
 	public Post(String title, String contents) {
 		this.title = title;
 		this.contents = contents;
 	}
 
-	public Post(PostRequestDto requestDto) {
+	public Post(PostRequestDto requestDto, User user) {
 		this.title = requestDto.getTitle();
 		this.contents = requestDto.getContent();
 		this.state = requestDto.getState();
+		this.author = requestDto.getAuthor();
 		// 각 Hobby들에 대한 연관관계 저장
 		List<Hobby> hobbies = requestDto.getHobbies();
 		hobbies.forEach(this::addHobby);
@@ -77,6 +81,7 @@ public class Post extends TimeStamp {
 		this.title = requestDto.getTitle();
 		this.contents = requestDto.getContent();
 		this.state = requestDto.getState();
+		this.author = requestDto.getAuthor();
 		// 각 Hobby들에 대한 연관관계 저장
 		List<Hobby> hobbies = requestDto.getHobbies();
 		hobbies.forEach(this::addHobby);
