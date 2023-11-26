@@ -4,9 +4,11 @@ import com.example.hobbybungae.domain.hobby.dto.HobbyRequestDto;
 import com.example.hobbybungae.domain.hobby.dto.HobbyResponseDto;
 import com.example.hobbybungae.domain.hobby.service.HobbyService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,5 +25,11 @@ public class HobbyController {
     public ResponseEntity<HobbyResponseDto> postHobby(@RequestBody @Valid HobbyRequestDto requestDto) {
         HobbyResponseDto responseDto = hobbyService.postHobby(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<HobbyResponseDto>> getHobbies(){
+        List<HobbyResponseDto> responseDtoList = hobbyService.getHobbies();
+        return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
     }
 }

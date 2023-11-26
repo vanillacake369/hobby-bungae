@@ -72,7 +72,7 @@ public class WebSecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll() // resources 접근 허용 설정
                         .requestMatchers(
-                                antMatcher(HttpMethod.GET, "/hobby-bungae/v1/hobbies/**")
+                                antMatcher(HttpMethod.GET, "/hobby-bungae/v1/**")
                         ).permitAll()  // 글 단건,전체 조회 모두 접근 허용
                         .requestMatchers("/hobby-bungae/v1/users/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리

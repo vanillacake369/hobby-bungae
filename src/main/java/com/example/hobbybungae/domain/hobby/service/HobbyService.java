@@ -5,8 +5,9 @@ import com.example.hobbybungae.domain.hobby.dto.HobbyResponseDto;
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.hobby.exception.DuplicatedHobbyException;
 import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
-import com.example.hobbybungae.domain.userProfile.repository.UserHobbyRepository;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,4 +35,8 @@ public class HobbyService {
         }
     }
 
+    public List<HobbyResponseDto> getHobbies() {
+        return hobbyRepository.findAll().stream()
+            .map(HobbyResponseDto::new).collect(Collectors.toList());
+    }
 }
