@@ -22,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserProfileService {
 
 	private final UserRepository userRepository;
+
 	private final UserHobbyRepository userHobbyRepository;
+
 	private final PasswordEncoder passwordEncoder;
 
 	private static void validateId(Long inputId, Long signedInUserId) {
@@ -42,21 +44,35 @@ public class UserProfileService {
 	@Transactional
 	public UserProfileResponseDto updateUser(Long id, UserProfileUpdateRequestDto requestDto, User inputUser) {
 		validateId(id, inputUser.getId());
-        if (!requestDto.getPassword().isEmpty()) {
-            String inputPassword = requestDto.getPasswordReconfirm();
-            if(!passwordEncoder.matches(inputPassword, inputUser.getPassword())) {
-                throw new NotMatchingPasswordException();
-            }
-            //inputUser.updatePassword(passwordEncoder.encode(requestDto.getPassword())); // 지훈님 User에 만들어야함
-        }
+		if (!requestDto.password().isEmpty()) {
+			String inputPassword = requestDto.passwordReconfirm();
+			if (!passwordEncoder.matches(inputPassword, inputUser.getPassword())) {
+				throw new NotMatchingPasswordException();
+			}
+			//inputUser.updatePassword(passwordEncoder.encode(requestDto.getPassword())); // 지훈님 User에 만들어야함
+		}
 		//inputUser.update(requestDto);
+
+		// 회원 A => 야구,축구
+		// A|야구
+		// A|축구
+		// 야구(A)
+		// 축구(A)
+
+		// 회원 A => 농구
+		// A|
+		// A| => A|농구
+		// 야구()
+		// 축구()
+		// 농구(A)
 
 		//현재 유저의 취미를 모두 삭제하고 새로 등록
 		List<UserHobby> userHobbyList = userHobbyRepository.findAllByUserId(id);
 		userHobbyRepository.deleteAll(userHobbyList);
-		List<Hobby> newHobbyList = requestDto.getHobbyList();
-		for(Hobby hobby : newHobbyList)
+		List<Hobby> newHobbyList = requestDto.hobbyList();
+		for (Hobby hobby : newHobbyList) {
 			inputUser.addHobby(hobby);
+		}
 
 		return UserProfileResponseDto.of(inputUser);
 	}
