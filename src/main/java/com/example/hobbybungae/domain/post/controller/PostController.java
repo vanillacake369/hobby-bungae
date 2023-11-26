@@ -7,6 +7,7 @@ import com.example.hobbybungae.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,7 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/hobby-bungae/v1/hobbies")
+@Slf4j
+@RequestMapping("/hobby-bungae/v1/posts")
 public class PostController {
 
 	private final PostService postService;
@@ -43,7 +45,9 @@ public class PostController {
 	@PostMapping
 	public ResponseEntity<PostResponseDto> addPost(@RequestBody PostRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		log.info("Post Controller :: addPost");
 		PostResponseDto responseDto = postService.addPost(requestDto, userDetails.getUser());
+		log.info("Post Controller **COMPLETED** :: addPost");
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
 	}
 

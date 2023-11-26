@@ -7,7 +7,6 @@ import com.example.hobbybungae.domain.hobby.exception.DuplicatedHobbyException;
 import com.example.hobbybungae.domain.hobby.exception.NotFoundHobbyException;
 import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,8 +48,7 @@ public class HobbyService {
 	}
 
 	private void validateDuplication(String hobbyName) {
-		Optional<Hobby> checkHobbyName = hobbyRepository.findByHobbyName(hobbyName);
-		if (checkHobbyName.isPresent()) {
+		if (hobbyRepository.findByHobbyName(hobbyName).isEmpty()) {
 			throw new DuplicatedHobbyException("hobby's name", hobbyName);
 		}
 	}

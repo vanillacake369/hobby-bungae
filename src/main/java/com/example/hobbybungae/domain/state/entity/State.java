@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,11 +21,18 @@ public class State {
 	@Column(name = "do")
 	private String stateDo;
 
-	@Column(nullable = false, name = "si")
+	@Column(name = "si")
 	private String stateSi;
 
-	@Column(nullable = false, name = "gu")
+	@Column(name = "gu")
 	private String stateGu;
+
+	@Builder
+	public State(String stateDo, String stateSi, String stateGu) {
+		this.stateDo = stateDo;
+		this.stateSi = stateSi;
+		this.stateGu = stateGu;
+	}
 
 	@Override
 	public String toString() {
