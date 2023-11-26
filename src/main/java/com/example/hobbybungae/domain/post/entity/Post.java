@@ -24,6 +24,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Table(name = "post")
@@ -38,10 +39,12 @@ public class Post extends TimeStamp {
 	private final List<Comment> comments = new ArrayList<>();
 
 	@ManyToOne
+	@Setter(AccessLevel.NONE)
 	@JoinColumn(name = "state_id")
 	State state;
 
 	@ManyToOne
+	@Setter(AccessLevel.NONE)
 	@JoinColumn(name = "user_id")
 	User user;
 
@@ -88,6 +91,16 @@ public class Post extends TimeStamp {
 		PostHobby postHobby = new PostHobby(this, hobby);
 		postHobby.addPostAndHobby(this, hobby);
 		postHobbyList.add(postHobby);
+	}
+
+	public void setAuthor(User user) {
+		// 기존 연관된 User 제거
+		if (this.user != null) {
+			this.user.getPosts().remove(this);
+		}
+		// User 추가 후, User에서의 posts에 본인 추가
+		this.user = user;
+		user.getPosts().add(this);
 	}
 
 	@Override

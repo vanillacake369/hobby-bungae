@@ -42,7 +42,7 @@ public class User extends TimeStamp {
 	@Column(nullable = false)
 	private String name;
 
-	@Column
+	@Column(nullable = true)
 	private String introduction;
 
 	@Column(nullable = false)
