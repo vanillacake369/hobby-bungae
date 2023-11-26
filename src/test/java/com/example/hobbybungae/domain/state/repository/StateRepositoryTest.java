@@ -1,26 +1,35 @@
 package com.example.hobbybungae.domain.state.repository;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.example.hobbybungae.domain.state.entity.State;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
+@ActiveProfiles("test")
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = Replace.NONE)
 class StateRepositoryTest {
-    @Autowired
-    StateRepository stateRepository;
 
-    @Test
-    @DisplayName("저장한 시들을 확인합니다.")
-    public void 도시데이터확인() throws Exception {
-        // GIVEN
-        List<State> all = stateRepository.findAll();
-        // WHEN
-        for (State s : all) {
-            System.out.println(s.toString());
-        }
-        // THEN
-    }
+	@Autowired
+	StateRepository stateRepository;
+
+	@Test
+	@DisplayName("저장한 시들을 확인합니다.")
+	public void 도시데이터확인() {
+		// WHEN
+		List<State> all = stateRepository.findAll();
+
+		// THEN
+		boolean hasSeoul = all.stream()
+			.map(State::getStateSi)
+			.anyMatch(si -> si.equals("서울특별시"));
+		assertTrue(hasSeoul);
+	}
 }

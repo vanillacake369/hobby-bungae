@@ -24,6 +24,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Table(name = "post")
@@ -31,17 +32,19 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Post extends TimeStamp {
 
-	@OneToMany(targetEntity = PostHobby.class, mappedBy = "post", cascade = CascadeType.ALL)
-	private final List<PostHobby> postHobbyList = new ArrayList<>();
+	@OneToMany(targetEntity = PostHobby.class, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+	private final List<PostHobby> postHobbies = new ArrayList<>();
 
-	@OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<Comment> comments = new ArrayList<>();
 
 	@ManyToOne
+	@Setter(AccessLevel.NONE)
 	@JoinColumn(name = "state_id")
 	State state;
 
 	@ManyToOne
+	@Setter(AccessLevel.NONE)
 	@JoinColumn(name = "user_id")
 	User user;
 
@@ -80,13 +83,28 @@ public class Post extends TimeStamp {
 	}
 
 	/**
-	 * Hobby를 입력받아 다대다 연관관계 해결
+	 * Post와 다대다 연관관계의 Hobby를 입력받아 연관관계 해결
 	 *
-	 * @param hobby
+	 * @param hobby 입력된 Hobby
 	 */
 	public void addHobby(Hobby hobby) {
-		PostHobby postHobby = new PostHobby(this, hobby);
-		postHobby.addPostAndHobby(this, hobby);
+		PostHobby postHobby = PostHobby.addPostAndHobby(this, hobby);
+		postHobbies.add(postHobby);
+	}
+
+	/**
+	 * Post와 1대다 관계의 User를 입력받아 연관관계 해결
+	 *
+	 * @param user 로그인 된 User
+	 */
+	public void setAuthor(User user) {
+		// 기존 연관된 User 제거
+		if (this.user != null) {
+			this.user.getPosts().remove(this);
+		}
+		// User 추가 후, User에서의 posts에 본인 추가
+		this.user = user;
+		user.getPosts().add(this);
 	}
 
 	@Override
@@ -103,5 +121,18 @@ public class Post extends TimeStamp {
 	@Override
 	public int hashCode() {
 		return Objects.hash(getId());
+	}
+
+	@Override
+	public String toString() {
+		return "Post{" +
+			"postHobbyList=" + postHobbies +
+			", comments=" + comments +
+			", state=" + state +
+			", user=" + user +
+			", id=" + id +
+			", title='" + title + '\'' +
+			", contents='" + contents + '\'' +
+			'}';
 	}
 }

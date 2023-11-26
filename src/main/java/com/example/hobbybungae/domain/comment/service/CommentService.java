@@ -24,14 +24,14 @@ public class CommentService {
 	private final PostService postService;
 
 	public CommentResponseDto postComment(Long postId, CommentRequestDto requestDto, User user) {
-		Post post = postService.getPostEntity(postId);
+		Post post = postService.getPostById(postId);
 		Comment comment = new Comment(requestDto, user, post);
 		Comment saveComment = commentRepository.save(comment);
 		return new CommentResponseDto(saveComment);
 	}
 
 	public List<CommentResponseDto> getComments(Long postId) {
-		Post post = postService.getPostEntity(postId);
+		Post post = postService.getPostById(postId);
 
 		return commentRepository.findAllByPost(post)
 			.stream().map(CommentResponseDto::new).toList();
@@ -43,8 +43,8 @@ public class CommentService {
 		checkPost(comment, postId);
 		checkUser(comment, user.getIdName());
 
-		Post postEntity = postService.getPostEntity(postId);
-		comment.update(requestDto, postEntity);
+		Post post = postService.getPostById(postId);
+		comment.update(requestDto, post);
 		return new CommentResponseDto(comment);
 	}
 
@@ -59,10 +59,9 @@ public class CommentService {
 
 	@Transactional(readOnly = true)
 	public Comment getCommentEntity(Long commentId) {
-		Comment comment = commentRepository.findById(commentId).orElseThrow(
+		return commentRepository.findById(commentId).orElseThrow(
 			() -> new NotFoundCommentException("comment's id", commentId.toString())
 		);
-		return comment;
 	}
 
 	public void checkPost(Comment comment, Long postId) {

@@ -17,7 +17,7 @@ public class State {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, name = "do")
+	@Column(name = "do")
 	private String stateDo;
 
 	@Column(nullable = false, name = "si")
@@ -25,4 +25,13 @@ public class State {
 
 	@Column(nullable = false, name = "gu")
 	private String stateGu;
+
+	@Override
+	public String toString() {
+		return "State{" +
+			"stateDo='" + stateDo + '\'' +
+			", stateSi='" + stateSi + '\'' +
+			", stateGu='" + stateGu + '\'' +
+			'}';
+	}
 }
