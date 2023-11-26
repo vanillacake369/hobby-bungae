@@ -1,6 +1,7 @@
 package com.example.hobbybungae.domain.user.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.hobbybungae.domain.comment.entity.Comment;
@@ -8,8 +9,10 @@ import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
+import com.example.hobbybungae.domain.user.exception.DuplicatedUserException;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
 import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
+import com.example.hobbybungae.global_exception.ErrorCode;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -122,11 +125,10 @@ class UserServiceTest {
 	@MethodSource("createNewUserDuplicated")
 	public void 회원가입_언해피케이스_중복회원(UserRequestDto requestDto) {
 		// WHEN
-//        ResponseEntity<CommonResponseDto> commonResponseDtoResponseEntity = userService.signUp(requestDto);
-
+		DuplicatedUserException duplicatedUserException = assertThrows(DuplicatedUserException.class, () ->
+			userService.signUp(requestDto)
+		);
 		// THEN
-//        assertEquals(commonResponseDtoResponseEntity.getStatusCode(), HttpStatus.CONFLICT);
-//        assertEquals(Objects.requireNonNull(commonResponseDtoResponseEntity.getBody()).getClass(),
-//                ErrorResponseDto.class);
+		assertEquals(duplicatedUserException.getErrorCode(), ErrorCode.DUPLICATED_USER);
 	}
 }

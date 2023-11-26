@@ -9,22 +9,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record PostResponseDto(
-        Long id,
-        String title,
-        String content,
-        State state,
-        List<Hobby> hobbies,
-        LocalDateTime createdAt
+	Long id,
+	String title,
+	String content,
+	State state,
+	List<Hobby> hobbies,
+	LocalDateTime createdAt
 ) {
-    public PostResponseDto(Post savePost) {
-        this(
-                savePost.getId(),
-                savePost.getTitle(),
-                savePost.getContents(),
-                savePost.getState(),
-                savePost.getPostHobbyList().stream()
-                    .map(PostHobby::getHobby).toList(),
-                savePost.getCreatedAt()
-        );
-    }
+
+	public PostResponseDto(Post savePost) {
+		this(
+			savePost.getId(),
+			savePost.getTitle(),
+			savePost.getContents(),
+			savePost.getState(),
+			savePost.getPostHobbies().stream()
+				.map(PostHobby::getHobby).toList(),
+			savePost.getCreatedAt()
+		);
+	}
 }

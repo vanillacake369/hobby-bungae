@@ -1,6 +1,7 @@
 package com.example.hobbybungae.domain.hobby.entity;
 
 import com.example.hobbybungae.domain.post.entity.PostHobby;
+import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,8 +22,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Hobby {
 
-	@OneToMany(targetEntity = PostHobby.class, mappedBy = "hobby", cascade = CascadeType.ALL)
+	@OneToMany(targetEntity = PostHobby.class, mappedBy = "hobby", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<PostHobby> postHobbyList = new ArrayList<>();
+
+	@OneToMany(targetEntity = UserHobby.class, mappedBy = "hobby", cascade = CascadeType.ALL, orphanRemoval = true)
+	private final List<UserHobby> userHobbyList = new ArrayList<>();
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,11 +35,18 @@ public class Hobby {
 	@Column
 	private String hobbyName;
 
-//    @OneToMany(mappedBy = "hobby")
-//    private List<UserHobby> userHobbyList = new ArrayList<>();
-
 	@Builder
 	public Hobby(String hobbyName) {
 		this.hobbyName = hobbyName;
+	}
+
+	@Override
+	public String toString() {
+		return "Hobby{" +
+			"postHobbyList=" + postHobbyList +
+			", userHobbyList=" + userHobbyList +
+			", id=" + id +
+			", hobbyName='" + hobbyName + '\'' +
+			'}';
 	}
 }

@@ -3,7 +3,6 @@ package com.example.hobbybungae.domain.comment.entity;
 import com.example.hobbybungae.domain.comment.dto.CommentRequestDto;
 import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.user.entity.User;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,13 +25,12 @@ import lombok.Setter;
 @Entity
 public class Comment {
 
-	// 외래키이므로 영속성 전이 PERSIST
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
+	@Setter(AccessLevel.NONE)
 	private User user;
 
-	// 외래키이므로 영속성 전이 PERSIST
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id")
 	@Setter(AccessLevel.NONE)
 	private Post post;
@@ -52,15 +50,14 @@ public class Comment {
 	public Comment(CommentRequestDto requestDto, User user, Post post) {
 		this.text = requestDto.getText();
 		this.user = user;
-		this.post = post;
+		setPost(post);
 	}
 
 	public void update(CommentRequestDto requestDto, Post post) {
 		setPost(post);
-		// requestDto 데이터 업데이트
 		this.text = requestDto.getText();
 	}
-
+	
 	public void setPost(Post post) {
 		// 기존 연관된 Comment 제거
 		if (this.post != null) {
@@ -69,6 +66,16 @@ public class Comment {
 		// Post 추가 후, Post에서의 comments에 본인 추가
 		this.post = post;
 		post.getComments().add(this);
+	}
+
+	public void setAuthor(User user) {
+		// 기존 연관된 Comment 제거
+		if (this.user != null) {
+			this.user.getComments().remove(this);
+		}
+		// User 추가 후, User의 comments에 본인 추가
+		this.user = user;
+		user.getComments().add(this);
 	}
 
 	@Override
