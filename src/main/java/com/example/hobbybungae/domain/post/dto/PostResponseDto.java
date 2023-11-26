@@ -16,7 +16,7 @@ public record PostResponseDto(
 	State state,
 	User user,
 	List<Hobby> hobbies,
-	LocalDateTime createdAt
+	LocalDateTime modifiedAt
 ) {
 
 	public PostResponseDto(Post savePost) {
@@ -28,7 +28,7 @@ public record PostResponseDto(
 			savePost.getUser(),
 			savePost.getPostHobbies().stream()
 				.map(PostHobby::getHobby).toList(),
-			savePost.getCreatedAt()
+			savePost.getModifiedAt()
 		);
 	}
 }
