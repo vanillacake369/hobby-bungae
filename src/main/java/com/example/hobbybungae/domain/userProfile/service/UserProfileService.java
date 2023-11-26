@@ -1,11 +1,16 @@
 package com.example.hobbybungae.domain.userProfile.service;
 
+import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
 import com.example.hobbybungae.domain.userProfile.dto.UserProfileResponseDto;
 import com.example.hobbybungae.domain.userProfile.dto.UserProfileUpdateRequestDto;
+import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
 import com.example.hobbybungae.domain.userProfile.exception.NotMatchingIdException;
+import com.example.hobbybungae.domain.userProfile.exception.NotMatchingPasswordException;
 import com.example.hobbybungae.domain.userProfile.exception.ProfileUserNotFoundException;
+import com.example.hobbybungae.domain.userProfile.repository.UserHobbyRepository;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserProfileService {
 
 	private final UserRepository userRepository;
-
+	private final UserHobbyRepository userHobbyRepository;
 	private final PasswordEncoder passwordEncoder;
 
 	private static void validateId(Long inputId, Long signedInUserId) {
@@ -37,14 +42,22 @@ public class UserProfileService {
 	@Transactional
 	public UserProfileResponseDto updateUser(Long id, UserProfileUpdateRequestDto requestDto, User inputUser) {
 		validateId(id, inputUser.getId());
-//        if (!requestDto.getPassword().isEmpty()) {
-//            String inputPassword = requestDto.getPasswordReconfirm();
-//            if(!passwordEncoder.matches(inputPassword, inputUser.getPassword())) {
-//                throw new NotMatchingPasswordException();
-//            }
-//            //inputUser.updatePassword(requestDto); // 지훈님 User에 만들어야함
-//        }
-		//inputUser.update(requestDto); // 지훈님 User에 만들어야함
+        if (!requestDto.getPassword().isEmpty()) {
+            String inputPassword = requestDto.getPasswordReconfirm();
+            if(!passwordEncoder.matches(inputPassword, inputUser.getPassword())) {
+                throw new NotMatchingPasswordException();
+            }
+            //inputUser.updatePassword(passwordEncoder.encode(requestDto.getPassword())); // 지훈님 User에 만들어야함
+        }
+		//inputUser.update(requestDto);
+
+		//현재 유저의 취미를 모두 삭제하고 새로 등록
+		List<UserHobby> userHobbyList = userHobbyRepository.findAllByUserId(id);
+		userHobbyRepository.deleteAll(userHobbyList);
+		List<Hobby> newHobbyList = requestDto.getHobbyList();
+		for(Hobby hobby : newHobbyList)
+			inputUser.addHobby(hobby);
+
 		return UserProfileResponseDto.of(inputUser);
 	}
 

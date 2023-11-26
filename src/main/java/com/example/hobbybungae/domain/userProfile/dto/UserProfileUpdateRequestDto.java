@@ -5,7 +5,8 @@ import lombok.Getter;
 
 import java.util.List;
 
-public record UserProfileUpdateRequestDto<Hobby> (
+@Getter
+public record UserProfileUpdateRequestDto (
         String idName,
         String name,
         String passwordReconfirm,

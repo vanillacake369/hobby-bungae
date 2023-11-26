@@ -1,10 +1,11 @@
 package com.example.hobbybungae.domain.userProfile.dto;
 
+import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
 import java.util.List;
 
-public record UserProfileResponseDto<Hobby>(
+public record UserProfileResponseDto(
 	Long userId,
 	String idName,
 	String name,
