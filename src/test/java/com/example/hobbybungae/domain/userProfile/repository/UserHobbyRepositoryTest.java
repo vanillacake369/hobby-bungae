@@ -92,13 +92,8 @@ class UserHobbyRepositoryTest {
 		user.addHobby(tennis);
 
 		// WHEN
-		List<UserHobby> userHobbyList = userHobbyRepository.findAllByUserId(id);
-		userHobbyRepository.deleteAll(userHobbyList);
-		for (Hobby hobby : hobbies) {
-			user.addHobby(hobby);
-		}
-		userRepository.save(user);
-
+		user.removeHobbies();
+		
 		// THEN
 		boolean leftoutUserOfGolf = golf.getUserHobbyList().stream()
 			.anyMatch(userHobby -> userHobby.getUser().equals(user));

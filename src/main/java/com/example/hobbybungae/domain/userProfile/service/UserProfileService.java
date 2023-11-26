@@ -7,7 +7,6 @@ import com.example.hobbybungae.domain.userProfile.dto.UserProfileUpdateRequestDt
 import com.example.hobbybungae.domain.userProfile.exception.NotMatchingIdException;
 import com.example.hobbybungae.domain.userProfile.exception.NotMatchingPasswordException;
 import com.example.hobbybungae.domain.userProfile.exception.ProfileUserNotFoundException;
-import com.example.hobbybungae.domain.userProfile.repository.UserHobbyRepository;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserProfileService {
 
 	private final UserRepository userRepository;
-
-	private final UserHobbyRepository userHobbyRepository;
 
 	private final PasswordEncoder passwordEncoder;
 
@@ -62,7 +59,7 @@ public class UserProfileService {
 			}
 			signInUser.updatePassword(passwordEncoder.encode(requestDto.password())); // 지훈님 User에 만들어야함
 		}
-		
+
 		signInUser.update(requestDto);
 
 		return UserProfileResponseDto.of(signInUser);
