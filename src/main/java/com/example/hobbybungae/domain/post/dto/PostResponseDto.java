@@ -10,6 +10,7 @@ public record PostResponseDto(
         String content,
         String state,
         String hobby,
+        String author,
         LocalDateTime createdAt
 ) {
     public PostResponseDto(Post savePost) {
@@ -19,6 +20,7 @@ public record PostResponseDto(
                 savePost.getContents(),
                 savePost.getState(),
                 savePost.getHobby(),
+                savePost.getAuthor(),
                 savePost.getCreatedAt()
         );
     }

@@ -42,12 +42,15 @@ public class Post extends TimeStamp {
     private String state;
     @Column(nullable = false)
     private String hobby;
+    @Column(nullable = false)
+    private String author;
 
-    public Post(PostRequestDto requestDto) {
+    public Post(PostRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContent();
         this.state = requestDto.getState();
         this.hobby = requestDto.getHobby();
+        this.author = requestDto.getAuthor();
     }
 
     public void update(PostRequestDto requestDto) {
@@ -55,5 +58,6 @@ public class Post extends TimeStamp {
         this.contents = requestDto.getContent();
         this.state = requestDto.getState();
         this.hobby = requestDto.getHobby();
+        this.author = requestDto.getAuthor();
     }
 }

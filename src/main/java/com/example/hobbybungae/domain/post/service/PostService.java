@@ -22,12 +22,12 @@ public class PostService {
     private final PostRepository postRepository;
     private final HobbyRepository hobbyRepository;
 
-    public PostResponseDto addPost(PostRequestDto requestDto) throws NotFoundHobbyException {
+    public PostResponseDto addPost(PostRequestDto requestDto, User user) throws NotFoundHobbyException {
         // 취미카테고리 & 지역 데이터 존재여부 검증
         validateHobbyExistence(requestDto.getHobby());
 
         // Dto -> Entity
-        Post post = new Post(requestDto);
+        Post post = new Post(requestDto, user);
         Post savePost = postRepository.save(post);
         return new PostResponseDto(savePost);
     }
@@ -56,9 +56,7 @@ public class PostService {
 
         validateUserIsAuthor(post.getUser().getId(), user.getId());
 
-//        post.update(requestDto);
-//        return new PostResponseDto(post);
-//        Post post = getPostEntity(postId);
+
         post.update(requestDto);
         return new PostResponseDto(post);
     }

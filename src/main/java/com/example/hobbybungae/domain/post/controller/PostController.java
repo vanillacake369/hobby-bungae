@@ -27,9 +27,10 @@ public class PostController {
 
     private final PostService postService;
 
+
     @PostMapping
-    public ResponseEntity<PostResponseDto> addPost(@RequestBody PostRequestDto requestDto) {
-        PostResponseDto responseDto = postService.addPost(requestDto);
+    public ResponseEntity<PostResponseDto> addPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        PostResponseDto responseDto = postService.addPost(requestDto, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
@@ -66,24 +67,4 @@ public class PostController {
         postService.deletePost(postId, userDetails.getUser());
         return ResponseEntity.noContent().build();
     }
-
-//    @ExceptionHandler(PostNotFoundException.class)
-//    public ResponseEntity<ErrorResponseDto> postNotFoundExceptionHandler(PostNotFoundException ex) {
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-//                new ErrorResponseDto(
-//                        HttpStatus.NOT_FOUND.value(),
-//                        ex.getMessage()
-//                )
-//        );
-//    }
-//
-//    @ExceptionHandler(AuthorizeException.class)
-//    public ResponseEntity<ErrorResponseDto> authorizeExceptionHandler(AuthorizeException ex) {
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-//                new ErrorResponseDto(
-//                        HttpStatus.UNAUTHORIZED.value(),
-//                        ex.getMessage()
-//                )
-//        );
-//    }
 }

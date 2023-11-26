@@ -10,4 +10,5 @@ public class PostRequestDto {
     private String content;
     private String state;
     private String hobby;
+    private String author;
 }
