@@ -5,12 +5,13 @@ import lombok.Getter;
 
 @Getter
 public class HobbyResponseDto {
-    private Long hobbyId;
 
-    private String hobbyName;
+	private Long hobbyId;
 
-    public HobbyResponseDto(Hobby hobby) {
-        this.hobbyId = hobby.getHobbyId();
-        this.hobbyName = hobby.getHobbyName();
-    }
+	private String hobbyName;
+
+	public HobbyResponseDto(Hobby hobby) {
+		this.hobbyId = hobby.getId();
+		this.hobbyName = hobby.getHobbyName();
+	}
 }

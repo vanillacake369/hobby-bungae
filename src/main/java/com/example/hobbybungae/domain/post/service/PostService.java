@@ -1,13 +1,16 @@
 package com.example.hobbybungae.domain.post.service;
 
-import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
+import com.example.hobbybungae.domain.hobby.entity.Hobby;
+import com.example.hobbybungae.domain.hobby.exception.NotFoundHobbyException;
+import com.example.hobbybungae.domain.hobby.service.HobbyService;
 import com.example.hobbybungae.domain.post.dto.PostRequestDto;
 import com.example.hobbybungae.domain.post.dto.PostResponseDto;
 import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.post.exception.InvalidPostModifierException;
-import com.example.hobbybungae.domain.post.exception.NotFoundHobbyException;
 import com.example.hobbybungae.domain.post.exception.NotFoundPostException;
 import com.example.hobbybungae.domain.post.repository.PostRepository;
+import com.example.hobbybungae.domain.state.exception.NotFoundStateException;
+import com.example.hobbybungae.domain.state.service.StateService;
 import com.example.hobbybungae.domain.user.entity.User;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,61 +22,66 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostService {
 
-    private final PostRepository postRepository;
-    private final HobbyRepository hobbyRepository;
+	private final PostRepository postRepository;
 
-    public PostResponseDto addPost(PostRequestDto requestDto, User user) throws NotFoundHobbyException {
-        // 취미카테고리 & 지역 데이터 존재여부 검증
-        validateHobbyExistence(requestDto.getHobby());
+	private final HobbyService hobbyService;
 
-        // Dto -> Entity
-        Post post = new Post(requestDto, user);
-        Post savePost = postRepository.save(post);
-        return new PostResponseDto(savePost);
-    }
+	private final StateService stateService;
 
-    void validateHobbyExistence(String hobby) throws NotFoundHobbyException {
-        boolean hasNotHobby = hobbyRepository.findByHobbyName(hobby).isEmpty();
-        if (hasNotHobby) {
-            throw new NotFoundHobbyException("hobby", hobby, "선택한 취미 카테고리가 없습니다");
-        }
-    }
+	public PostResponseDto addPost(PostRequestDto requestDto) throws NotFoundHobbyException, NotFoundStateException {
+		// 취미카테고리 & 지역 데이터 존재여부 검증
+		validateHobbiesExistence(requestDto.getHobbies());
+		stateService.validateStateExistence(requestDto.getState());
 
-    public PostResponseDto getPost(Long postId) {
-        Post post = getPostEntity(postId);
-        return new PostResponseDto(post);
-    }
+		// Dto -> Entity
+		Post post = new Post(requestDto);
+		Post savePost = postRepository.save(post);
+		return new PostResponseDto(savePost);
+	}
 
-    public List<PostResponseDto> getPosts() {
-        return postRepository.findAllByOrderByCreatedAtDesc().stream()
-                .map(PostResponseDto::new)
-                .collect(Collectors.toList());
-    }
+	void validateHobbiesExistence(List<Hobby> hobbies) throws NotFoundHobbyException {
+		for (Hobby hobby : hobbies) {
+			hobbyService.validateHobbyExistence(hobby);
+		}
+	}
 
-    @Transactional
-    public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) throws InvalidPostModifierException {
-        Post post = getPostEntity(postId);
+	@Transactional(readOnly = true)
+	public PostResponseDto getPost(Long postId) {
+		Post post = getPostById(postId);
+		return new PostResponseDto(post);
+	}
 
-        validateUserIsAuthor(post.getUser().getId(), user.getId());
+	@Transactional(readOnly = true)
+	public List<PostResponseDto> getPosts() {
+		return postRepository.findAllByOrderByCreatedAtDesc().stream()
+			.map(PostResponseDto::new)
+			.collect(Collectors.toList());
+	}
 
+	@Transactional
+	public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user)
+		throws InvalidPostModifierException {
+		Post post = getPostById(postId);
+		validateUserIsAuthor(post.getUser().getId(), user.getId());
+		post.update(requestDto);
+		return new PostResponseDto(post);
+	}
 
-        post.update(requestDto);
-        return new PostResponseDto(post);
-    }
+	public void deletePost(Long postId, User user) {
+		Post post = getPostById(postId);
+		postRepository.delete(post);
+	}
 
-    public void deletePost(Long postId, User user) {
-        Post post = getPostEntity(postId);
-        postRepository.delete(post);
-    }
+	@Transactional(readOnly = true)
+	public Post getPostById(Long postId) {
+		return postRepository.findById(postId)
+			.orElseThrow(() -> new NotFoundPostException("postId", postId.toString(), "주어진 id에 해당하는 게시글이 존재하지 않음"));
+	}
 
-    public Post getPostEntity(Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundPostException("postId", postId.toString(), "주어진 id에 해당하는 게시글이 존재하지 않음"));
-    }
-
-    void validateUserIsAuthor(Long postAuthorId, Long loggedInUserId) throws InvalidPostModifierException {
-        if (!postAuthorId.equals(loggedInUserId)) {
-            throw new InvalidPostModifierException("postAuthor", postAuthorId.toString(), "사용자는 이 게시물을 업데이트/삭제할 권한이 없습니다.");
-        }
-    }
+	void validateUserIsAuthor(Long postAuthorId, Long loggedInUserId) throws InvalidPostModifierException {
+		if (!postAuthorId.equals(loggedInUserId)) {
+			throw new InvalidPostModifierException("postAuthor", postAuthorId.toString(),
+				"사용자는 이 게시물을 업데이트/삭제할 권한이 없습니다.");
+		}
+	}
 }
