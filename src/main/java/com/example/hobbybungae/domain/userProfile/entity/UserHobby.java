@@ -19,27 +19,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserHobby {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-	@ManyToOne
-	@JoinColumn(name = "hobby_id", nullable = false)
-	private Hobby hobby;
+    @ManyToOne
+    @JoinColumn(name = "hobby_id", nullable = false)
+    private Hobby hobby;
 
-	@Builder
-	public UserHobby(User user, Hobby hobby) {
-		this.user = user;
-		this.hobby = hobby;
-	}
+    @Builder
+    public UserHobby(User user, Hobby hobby) {
+        this.user = user;
+        this.hobby = hobby;
+    }
 
-	public static UserHobby addUserAndHobby(User user, Hobby hobby) {
-		UserHobby userHobby = new UserHobby(user, hobby);
-		userHobby.getHobby().getUserHobbyList().add(userHobby);
-		return userHobby;
-	}
+    // Hobby 추가 및 업데이트
+    public static UserHobby addUserAndHobby(User user, Hobby hobby) {
+        UserHobby userHobby = new UserHobby(user, hobby);
+        userHobby.getHobby().getUserHobbyList().add(userHobby);
+        return userHobby;
+    }
 }
