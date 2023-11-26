@@ -27,6 +27,7 @@ public class Comment {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
+	@Setter(AccessLevel.NONE)
 	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -65,6 +66,16 @@ public class Comment {
 		// Post 추가 후, Post에서의 comments에 본인 추가
 		this.post = post;
 		post.getComments().add(this);
+	}
+
+	public void setAuthor(User user) {
+		// 기존 연관된 Comment 제거
+		if (this.user != null) {
+			this.user.getComments().remove(this);
+		}
+		// User 추가 후, User의 comments에 본인 추가
+		this.user = user;
+		user.getComments().add(this);
 	}
 
 	@Override
