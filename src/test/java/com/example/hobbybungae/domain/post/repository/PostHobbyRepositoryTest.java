@@ -33,12 +33,11 @@ class PostHobbyRepositoryTest {
 	public void Hobby간_양방향연관관계_해결() {
 		Post post = Post.builder().title("야구 번개 모아요").contents("같이 야구 하실 분 9명 모아요~").build();
 		Hobby hobby = Hobby.builder().hobbyName("야구").build();
-		PostHobby postHobby = PostHobby.builder().post(post).hobby(hobby).build();
 		// WHEN
-		post.addHobby(postHobby);
+		post.addHobby(hobby);
 		postRepository.save(post);
-		postHobbyRepository.save(postHobby);
-		hobbyRepository.save(hobby);
+//		postHobbyRepository.save(postHobby);
+//		hobbyRepository.save(hobby);
 		// THEN
 		PostHobby postHobbyOfPost = postHobbyRepository.findPostHobbyByPost(post).get();
 		PostHobby postHobbyOfHobby = postHobbyRepository.findPostHobbyByHobby(hobby).get();

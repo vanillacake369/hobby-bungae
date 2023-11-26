@@ -3,6 +3,7 @@ package com.example.hobbybungae.domain.post.entity;
 
 import com.example.hobbybungae.domain.comment.entity.Comment;
 import com.example.hobbybungae.domain.common.TimeStamp;
+import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.post.dto.PostRequestDto;
 import com.example.hobbybungae.domain.state.entity.State;
 import com.example.hobbybungae.domain.user.entity.User;
@@ -30,7 +31,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Post extends TimeStamp {
 
-	@OneToMany(targetEntity = PostHobby.class, mappedBy = "post")
+	@OneToMany(targetEntity = PostHobby.class, mappedBy = "post", cascade = CascadeType.ALL)
 	private final List<PostHobby> postHobbyList = new ArrayList<>();
 
 	@OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -64,23 +65,28 @@ public class Post extends TimeStamp {
 		this.title = requestDto.getTitle();
 		this.contents = requestDto.getContent();
 		this.state = requestDto.getState();
-		List<PostHobby> postHobbies = requestDto.getHobbies().stream()
-			.map(hobby -> new PostHobby(this, hobby)).toList();
-		postHobbies.forEach(this::addHobby);
+		// 각 Hobby들에 대한 연관관계 저장
+		List<Hobby> hobbies = requestDto.getHobbies();
+		hobbies.forEach(this::addHobby);
 	}
 
 	public void update(PostRequestDto requestDto) {
 		this.title = requestDto.getTitle();
 		this.contents = requestDto.getContent();
 		this.state = requestDto.getState();
-		List<PostHobby> postHobbies = requestDto.getHobbies().stream()
-			.map(hobby -> new PostHobby(this, hobby)).toList();
-		postHobbies.forEach(this::addHobby);
+		// 각 Hobby들에 대한 연관관계 저장
+		List<Hobby> hobbies = requestDto.getHobbies();
+		hobbies.forEach(this::addHobby);
 	}
 
-	public void addHobby(PostHobby postHobby) {
-		postHobbyList.add(postHobby);
-		postHobby.setPost(this);
+	/**
+	 * Hobby를 입력받아 다대다 연관관계 해결
+	 *
+	 * @param hobby
+	 */
+	public void addHobby(Hobby hobby) {
+		PostHobby postHobby = new PostHobby(this, hobby);
+		postHobby.addPostAndHobby(this, hobby);
 	}
 
 	@Override
