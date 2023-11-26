@@ -15,6 +15,7 @@ public class StateService {
 	private final StateRepository stateRepository;
 
 
+	//	public void validateStateExistence(State state) {
 	public void validateStateExistence(State state) {
 		log.info("지역 검증 시작");
 		stateRepository.findByStateDoAndStateSiAndStateGu(state.getStateDo(), state.getStateSi(), state.getStateGu())

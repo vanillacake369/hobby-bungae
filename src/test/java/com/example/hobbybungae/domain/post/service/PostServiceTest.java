@@ -2,6 +2,7 @@ package com.example.hobbybungae.domain.post.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.hobbybungae.domain.comment.entity.Comment;
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
@@ -133,5 +134,21 @@ class PostServiceTest {
 		// THEN
 		assertEquals(user, postResponseDto.user());
 		assertEquals("졸려요", postResponseDto.title());
+	}
+
+	@ParameterizedTest
+	@DisplayName("게시글을 삭제합니다.")
+	@MethodSource("getPostRequestAndUser")
+	@Transactional
+	public void 게시글삭제(PostRequestDto requestDto, User user) {
+		// GIVEN
+		PostResponseDto postResponseDto = postService.addPost(requestDto, user);
+
+		// WHEN
+		postService.deletePost(postResponseDto.id(), user);
+
+		// THEN
+		boolean empty = postRepository.findById(postResponseDto.id()).isEmpty();
+		assertTrue(empty);
 	}
 }

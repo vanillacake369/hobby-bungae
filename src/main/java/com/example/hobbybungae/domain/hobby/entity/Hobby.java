@@ -2,6 +2,7 @@ package com.example.hobbybungae.domain.hobby.entity;
 
 import com.example.hobbybungae.domain.post.entity.PostHobby;
 import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "hobby")
 @NoArgsConstructor
+@JsonSerialize
 public class Hobby {
 
 	@OneToMany(targetEntity = PostHobby.class, mappedBy = "hobby")

@@ -51,8 +51,20 @@ public class PostService {
 		log.info("Post Service :: addPost");
 
 		// 취미카테고리 & 지역 데이터 존재여부 검증
-		validateHobbiesExistence(requestDto.hobbies());
-		stateService.validateStateExistence(requestDto.state());
+		try {
+			validateHobbiesExistence(requestDto.hobbies());
+		} catch (NotFoundHobbyException exception) {
+			log.error(exception.getMessage());
+			log.error(exception.toString());
+			throw exception;
+		}
+		try {
+			stateService.validateStateExistence(requestDto.state());
+		} catch (NotFoundStateException exception) {
+			log.error(exception.getMessage());
+			log.error(exception.toString());
+			throw exception;
+		}
 
 		// Dto -> Entity
 		Post post = Post.of(requestDto, user);
