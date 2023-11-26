@@ -12,10 +12,17 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 public class State {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(nullable = false)
-    private String si;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(nullable = false, name = "do")
+	private String stateDo;
+
+	@Column(nullable = false, name = "si")
+	private String stateSi;
+
+	@Column(nullable = false, name = "gu")
+	private String stateGu;
 }

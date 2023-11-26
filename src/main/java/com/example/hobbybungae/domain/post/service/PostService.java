@@ -21,64 +21,71 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostService {
 
-    private final PostRepository postRepository;
-    private final HobbyRepository hobbyRepository;
-    private final PostHobbyRepository postHobbyRepository;
+	private final PostRepository postRepository;
 
-    public PostResponseDto addPost(PostRequestDto requestDto) throws NotFoundHobbyException {
-        // 취미카테고리 & 지역 데이터 존재여부 검증
-        validateHobbyExistence(requestDto.getHobbies());
+	private final HobbyRepository hobbyRepository;
 
-        // Dto -> Entity
-        Post post = new Post(requestDto);
-        Post savePost = postRepository.save(post);
-        return new PostResponseDto(savePost);
-    }
+	private final PostHobbyRepository postHobbyRepository;
 
-    void validateHobbyExistence(List<Hobby> hobbies) throws NotFoundHobbyException {
-        for(Hobby hobby : hobbies)
-            if (hobbyRepository.findByHobbyName(hobby.getHobbyName()).isEmpty()) {
-                throw new NotFoundHobbyException("hobby", hobby.getHobbyName(), "선택한 취미 카테고리가 없습니다");
-            }
-    }
+	public PostResponseDto addPost(PostRequestDto requestDto) throws NotFoundHobbyException {
+		// 취미카테고리 & 지역 데이터 존재여부 검증
+		validateHobbiesExistence(requestDto.getHobbies());
 
-    public PostResponseDto getPost(Long postId) {
-        Post post = getPostEntity(postId);
-        return new PostResponseDto(post);
-    }
+		// Dto -> Entity
+		Post post = new Post(requestDto);
+		Post savePost = postRepository.save(post);
+		return new PostResponseDto(savePost);
+	}
 
-    public List<PostResponseDto> getPosts() {
-        return postRepository.findAllByOrderByCreatedAtDesc().stream()
-                .map(PostResponseDto::new)
-                .collect(Collectors.toList());
-    }
+	void validateHobbiesExistence(List<Hobby> hobbies) throws NotFoundHobbyException {
+		for (Hobby hobby : hobbies) {
+			validateHobbyExistence(hobby);
+		}
+	}
 
-    @Transactional
-    public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) throws InvalidPostModifierException {
-        Post post = getPostEntity(postId);
+	void validateHobbyExistence(Hobby hobby) {
+		if (hobbyRepository.findByHobbyName(hobby.getHobbyName()).isEmpty()) {
+			throw new NotFoundHobbyException("hobby", hobby.getHobbyName(), "선택한 취미 카테고리가 없습니다");
+		}
+	}
 
-        validateUserIsAuthor(post.getUser().getId(), user.getId());
+	@Transactional(readOnly = true)
+	public PostResponseDto getPost(Long postId) {
+		Post post = getPostEntity(postId);
+		return new PostResponseDto(post);
+	}
 
-//        post.update(requestDto);
-//        return new PostResponseDto(post);
-//        Post post = getPostEntity(postId);
-        post.update(requestDto);
-        return new PostResponseDto(post);
-    }
+	@Transactional(readOnly = true)
+	public List<PostResponseDto> getPosts() {
+		return postRepository.findAllByOrderByCreatedAtDesc().stream()
+			.map(PostResponseDto::new)
+			.collect(Collectors.toList());
+	}
 
-    public void deletePost(Long postId, User user) {
-        Post post = getPostEntity(postId);
-        postRepository.delete(post);
-    }
+	@Transactional
+	public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user)
+		throws InvalidPostModifierException {
+		Post post = getPostEntity(postId);
+		validateUserIsAuthor(post.getUser().getId(), user.getId());
+		post.update(requestDto);
+		return new PostResponseDto(post);
+	}
 
-    public Post getPostEntity(Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundPostException("postId", postId.toString(), "주어진 id에 해당하는 게시글이 존재하지 않음"));
-    }
+	public void deletePost(Long postId, User user) {
+		Post post = getPostEntity(postId);
+		postRepository.delete(post);
+	}
 
-    void validateUserIsAuthor(Long postAuthorId, Long loggedInUserId) throws InvalidPostModifierException {
-        if (!postAuthorId.equals(loggedInUserId)) {
-            throw new InvalidPostModifierException("postAuthor", postAuthorId.toString(), "사용자는 이 게시물을 업데이트/삭제할 권한이 없습니다.");
-        }
-    }
+	@Transactional(readOnly = true)
+	public Post getPostEntity(Long postId) {
+		return postRepository.findById(postId)
+			.orElseThrow(() -> new NotFoundPostException("postId", postId.toString(), "주어진 id에 해당하는 게시글이 존재하지 않음"));
+	}
+
+	void validateUserIsAuthor(Long postAuthorId, Long loggedInUserId) throws InvalidPostModifierException {
+		if (!postAuthorId.equals(loggedInUserId)) {
+			throw new InvalidPostModifierException("postAuthor", postAuthorId.toString(),
+				"사용자는 이 게시물을 업데이트/삭제할 권한이 없습니다.");
+		}
+	}
 }

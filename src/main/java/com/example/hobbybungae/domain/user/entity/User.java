@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,15 +23,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User extends TimeStamp {
 
-//    @OneToMany(targetEntity = Post.class, mappedBy = "user", cascade = CascadeType.REMOVE)
-//    List<Post> posts;
-
-//    @OneToMany(targetEntity = Comment.class, mappedBy = "user", cascade = CascadeType.REMOVE)
-//    List<Comment> comments;
-
     @OneToMany(targetEntity = UserHobby.class, mappedBy = "user")
-    private List<UserHobby> userHobbyList = new ArrayList<>();
+    private final List<UserHobby> userHobbyList = new ArrayList<>();
 
+    @OneToMany(targetEntity = Post.class, mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<Post> posts = new ArrayList<>();
+
+    @OneToMany(targetEntity = Comment.class, mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<Comment> comments = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -54,5 +54,21 @@ public class User extends TimeStamp {
         this.name = name;
         this.introduction = introduction;
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User user)) {
+            return false;
+        }
+        return getId().equals(user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
