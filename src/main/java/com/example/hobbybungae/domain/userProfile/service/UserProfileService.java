@@ -21,49 +21,56 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserProfileService {
 
-	private final UserRepository userRepository;
-	private final UserHobbyRepository userHobbyRepository;
-	private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final UserHobbyRepository userHobbyRepository;
+    private final PasswordEncoder passwordEncoder;
 
-	private static void validateId(Long inputId, Long signedInUserId) {
-		if (!Objects.equals(inputId, signedInUserId)) {
-			throw new NotMatchingIdException();
-		}
-	}
+    private static void validateId(Long inputId, Long signedInUserId) {
+        if (!Objects.equals(inputId, signedInUserId)) {
+            throw new NotMatchingIdException();
+        }
+    }
 
-	// 사용자 프로필 조회
-	public UserProfileResponseDto getUser(Long id, User inputUser) {
-		validateId(id, inputUser.getId());
-		User user = getUserEntity(id);
-		return UserProfileResponseDto.of(user);
-	}
+    // 사용자 프로필 조회
+    public UserProfileResponseDto getUser(Long id, User inputUser) {
+        validateId(id, inputUser.getId());
+        User user = getUserEntity(id);
+        return UserProfileResponseDto.of(user);
+    }
 
-	// Update Password
-	@Transactional
-	public UserProfileResponseDto updateUser(Long id, UserProfileUpdateRequestDto requestDto, User inputUser) {
-		validateId(id, inputUser.getId());
+    // Update Password
+    @Transactional
+    public UserProfileResponseDto updateUser(Long id, UserProfileUpdateRequestDto requestDto,
+        User inputUser) {
+        validateId(id, inputUser.getId());
         if (!requestDto.getPassword().isEmpty()) {
-            String inputPassword = requestDto.getPasswordReconfirm();
-            if(!passwordEncoder.matches(inputPassword, inputUser.getPassword())) {
+            String inputIdName = requestDto.idName();
+            if (!inputIdName.equals(requestDto.idName())) {
+                
+            }
+            String inputPassword = requestDto.passwordReconfirm();
+            if (!passwordEncoder.matches(inputPassword, inputUser.getPassword())) {
                 throw new NotMatchingPasswordException();
             }
-            //inputUser.updatePassword(passwordEncoder.encode(requestDto.getPassword())); // 지훈님 User에 만들어야함
+            inputUser.updatePassword(
+                passwordEncoder.encode(requestDto.getPassword())); // 지훈님 User에 만들어야함
         }
-		//inputUser.update(requestDto);
+        inputUser.update(requestDto);
 
-		//현재 유저의 취미를 모두 삭제하고 새로 등록
-		List<UserHobby> userHobbyList = userHobbyRepository.findAllByUserId(id);
-		userHobbyRepository.deleteAll(userHobbyList);
-		List<Hobby> newHobbyList = requestDto.getHobbyList();
-		for(Hobby hobby : newHobbyList)
-			inputUser.addHobby(hobby);
+        //현재 유저의 취미를 모두 삭제하고 새로 등록
+        List<UserHobby> userHobbyList = userHobbyRepository.findAllByUserId(id);
+        userHobbyRepository.deleteAll(userHobbyList);
+        List<Hobby> newHobbyList = requestDto.getHobbyList();
+        for (Hobby hobby : newHobbyList) {
+            inputUser.addHobby(hobby);
+        }
 
-		return UserProfileResponseDto.of(inputUser);
-	}
+        return UserProfileResponseDto.of(inputUser);
+    }
 
-	@Transactional(readOnly = true)
-	public User getUserEntity(Long userId) {
-		return userRepository.findById(userId)
-			.orElseThrow(() -> new ProfileUserNotFoundException("user_id", userId.toString()));
-	}
+    @Transactional(readOnly = true)
+    public User getUserEntity(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new ProfileUserNotFoundException("user_id", userId.toString()));
+    }
 }
