@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostService {
 
 	private final PostRepository postRepository;
@@ -34,7 +35,7 @@ public class PostService {
 		stateService.validateStateExistence(requestDto.getState());
 
 		// Dto -> Entity
-		Post post = new Post(requestDto);
+		Post post = Post.of(requestDto);
 		Post savePost = postRepository.save(post);
 		return new PostResponseDto(savePost);
 	}
@@ -58,7 +59,6 @@ public class PostService {
 			.collect(Collectors.toList());
 	}
 
-	@Transactional
 	public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user)
 		throws InvalidPostModifierException {
 		Post post = getPostById(postId);
