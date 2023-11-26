@@ -37,10 +37,10 @@ public class PostHobby {
 	}
 
 	/**
-	 * Hobby입력에 대한 Post 생성 연관관계 편의 메서드
+	 * Hobby 입력에 대한 Post 생성 연관관계 편의 메서드
 	 *
 	 * @param post  생성한 Post
-	 * @param hobby Post생성을 위한 입력된 Hobby
+	 * @param hobby Post 생성을 위한 입력된 Hobby
 	 */
 	public static PostHobby addPostAndHobby(Post post, Hobby hobby) {
 		PostHobby postHobby = new PostHobby(post, hobby);
