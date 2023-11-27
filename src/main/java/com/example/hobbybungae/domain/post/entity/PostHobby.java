@@ -1,7 +1,9 @@
 package com.example.hobbybungae.domain.post.entity;
 
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,7 +28,7 @@ public class PostHobby {
 	@JoinColumn(name = "post_id", nullable = false)
 	private Post post;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "hobby_id", nullable = false)
 	private Hobby hobby;
 

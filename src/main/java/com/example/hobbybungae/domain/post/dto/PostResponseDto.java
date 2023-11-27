@@ -6,9 +6,11 @@ import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.post.entity.PostHobby;
 import com.example.hobbybungae.domain.state.entity.State;
 import com.example.hobbybungae.domain.user.entity.User;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@JsonSerialize
 public record PostResponseDto(
 	Long id,
 	String title,

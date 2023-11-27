@@ -1,10 +1,11 @@
 package com.example.hobbybungae.domain.user.dto.response;
 
 
-import com.example.hobbybungae.domain.user.entity.User;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+@JsonSerialize
 public record UserResponseDto(
-        String idName,
-        String name) {
+	String idName,
+	String name) {
 
 }

@@ -5,9 +5,10 @@ import com.example.hobbybungae.domain.user.repository.UserRepository;
 import com.example.hobbybungae.domain.userProfile.dto.UserProfileResponseDto;
 import com.example.hobbybungae.domain.userProfile.dto.UserProfileUpdateRequestDto;
 import com.example.hobbybungae.domain.userProfile.exception.NotMatchingIdException;
-import com.example.hobbybungae.domain.userProfile.exception.NotMatchingPasswordException;
 import com.example.hobbybungae.domain.userProfile.exception.ProfileUserNotFoundException;
+import com.example.hobbybungae.domain.userProfile.helper.PasswordCreator;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserProfileService {
 
 	private final UserRepository userRepository;
@@ -23,7 +25,7 @@ public class UserProfileService {
 
 	private static void validateId(Long inputId, Long signedInUserId) {
 		if (!Objects.equals(inputId, signedInUserId)) {
-			throw new NotMatchingIdException();
+			throw new NotMatchingIdException("user.id", signedInUserId.toString());
 		}
 	}
 
@@ -41,26 +43,14 @@ public class UserProfileService {
 	 * @param requestDto 프로필 수정요청 DTO
 	 * @param signInUser 로그인한 프로필 주인 사용자
 	 * @return 수정된 사용자 프로필 데이터
-	 * <p>
-	 * Validation은 따로 분리하는 게 좋아보임/
-	 * @author 임지훈
 	 */
-	// Update Password
-	@Transactional
 	public UserProfileResponseDto updateUser(Long id, UserProfileUpdateRequestDto requestDto,
 		User signInUser) {
-		/* VALIDATION */
-		/* !! 분리요망 !! */
 		validateId(id, signInUser.getId());
-		if (!requestDto.password().isEmpty()) {
-			String inputPassword = requestDto.passwordReconfirm();
-			if (!passwordEncoder.matches(inputPassword, signInUser.getPassword())) {
-				throw new NotMatchingPasswordException();
-			}
-			signInUser.updatePassword(passwordEncoder.encode(requestDto.password())); // 지훈님 User에 만들어야함
-		}
+		Optional<String> encodePasswordOrNull = PasswordCreator.createEncodePasswordOrNull(signInUser, requestDto,
+			passwordEncoder);
 
-		signInUser.update(requestDto);
+		signInUser.update(requestDto, encodePasswordOrNull.orElse(signInUser.getPassword()));
 
 		return UserProfileResponseDto.of(signInUser);
 	}

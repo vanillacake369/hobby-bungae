@@ -13,6 +13,7 @@ public enum ErrorCode {
 	INVALID_PARAM(HttpStatus.BAD_REQUEST, "잘못된 형식의 입력값입니다."),
 	ACCESS_DENIED(HttpStatus.FORBIDDEN, "권한이 필요한 요청입니다."),
 	NOT_FOUND_USER(HttpStatus.NOT_FOUND, "찾으시는 회원은 존재하지 않습니다."),
+	NOT_MATCHING_USER(HttpStatus.NOT_FOUND, "해당 아이템의 소유자가 아니십니다."),
 	/* PROFILE */
 	NOT_FOUND_PROFILE_USER(HttpStatus.NOT_FOUND, "선택하신 프로필은 존재하지 않는 프로필입니다."),
 	DUPLICATED_USER(HttpStatus.CONFLICT, "동일한 아이디의 중복회원 존재합니다."),

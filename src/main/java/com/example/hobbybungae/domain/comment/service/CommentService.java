@@ -17,11 +17,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentService {
 
 	private final CommentRepository commentRepository;
 
 	private final PostService postService;
+
+	@Transactional(readOnly = true)
+	public List<CommentResponseDto> getComments(Long postId) {
+		Post post = postService.getPostById(postId);
+
+		return commentRepository.findAllByPost(post)
+			.stream().map(CommentResponseDto::new).toList();
+	}
+
+	@Transactional(readOnly = true)
+	public Comment getCommentById(Long commentId) {
+		return commentRepository.findById(commentId).orElseThrow(
+			() -> new NotFoundCommentException("comment's id", commentId.toString())
+		);
+	}
 
 	public CommentResponseDto postComment(Long postId, CommentRequestDto requestDto, User user) {
 		Post post = postService.getPostById(postId);
@@ -30,16 +46,8 @@ public class CommentService {
 		return new CommentResponseDto(saveComment);
 	}
 
-	public List<CommentResponseDto> getComments(Long postId) {
-		Post post = postService.getPostById(postId);
-
-		return commentRepository.findAllByPost(post)
-			.stream().map(CommentResponseDto::new).toList();
-	}
-
-	@Transactional
 	public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto, User user) {
-		Comment comment = getCommentEntity(commentId);
+		Comment comment = getCommentById(commentId);
 		checkPost(comment, postId);
 		checkUser(comment, user.getIdName());
 
@@ -50,18 +58,11 @@ public class CommentService {
 
 
 	public void deleteComment(Long postId, Long commentId, User user) {
-		Comment comment = getCommentEntity(commentId);
+		Comment comment = getCommentById(commentId);
 		checkPost(comment, postId);
 		checkUser(comment, user.getIdName());
 
 		commentRepository.delete(comment);
-	}
-
-	@Transactional(readOnly = true)
-	public Comment getCommentEntity(Long commentId) {
-		return commentRepository.findById(commentId).orElseThrow(
-			() -> new NotFoundCommentException("comment's id", commentId.toString())
-		);
 	}
 
 	public void checkPost(Comment comment, Long postId) {

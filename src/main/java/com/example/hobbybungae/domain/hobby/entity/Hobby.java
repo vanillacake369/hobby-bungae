@@ -2,7 +2,9 @@ package com.example.hobbybungae.domain.hobby.entity;
 
 import com.example.hobbybungae.domain.post.entity.PostHobby;
 import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
-import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,14 +22,19 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "hobby")
 @NoArgsConstructor
+@JsonSerialize
+@JsonDeserialize
 public class Hobby {
 
-	@OneToMany(targetEntity = PostHobby.class, mappedBy = "hobby", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
+	@OneToMany(targetEntity = PostHobby.class, mappedBy = "hobby")
 	private final List<PostHobby> postHobbyList = new ArrayList<>();
 
-	@OneToMany(targetEntity = UserHobby.class, mappedBy = "hobby", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
+	@OneToMany(targetEntity = UserHobby.class, mappedBy = "hobby")
 	private final List<UserHobby> userHobbyList = new ArrayList<>();
 
+	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -38,15 +45,5 @@ public class Hobby {
 	@Builder
 	public Hobby(String hobbyName) {
 		this.hobbyName = hobbyName;
-	}
-
-	@Override
-	public String toString() {
-		return "Hobby{" +
-			"postHobbyList=" + postHobbyList +
-			", userHobbyList=" + userHobbyList +
-			", id=" + id +
-			", hobbyName='" + hobbyName + '\'' +
-			'}';
 	}
 }

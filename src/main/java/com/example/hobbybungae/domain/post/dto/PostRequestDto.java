@@ -2,20 +2,15 @@ package com.example.hobbybungae.domain.post.dto;
 
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.state.entity.State;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
-import lombok.Getter;
 
+@JsonDeserialize
+public record PostRequestDto(
+	String title,
+	String content,
+	State state,
+	List<Hobby> hobbies
+) {
 
-@Getter
-public class PostRequestDto {
-
-	private String title;
-
-	private String content;
-
-	private State state;
-
-	private String author;
-
-	private List<Hobby> hobbies;
 }

@@ -15,11 +15,13 @@ import com.example.hobbybungae.domain.user.entity.User;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class PostService {
 
@@ -29,22 +31,46 @@ public class PostService {
 
 	private final StateService stateService;
 
+	static void validateUserIsAuthor(Long postAuthorId, Long loggedInUserId) throws InvalidPostModifierException {
+		if (!postAuthorId.equals(loggedInUserId)) {
+			throw new InvalidPostModifierException("postAuthor", postAuthorId.toString(),
+				"사용자는 이 게시물을 업데이트/삭제할 권한이 없습니다.");
+		}
+	}
+
+	void validateHobbiesExistence(List<Hobby> hobbies) throws NotFoundHobbyException {
+		log.info("취미 검증 시작");
+		for (Hobby hobby : hobbies) {
+			hobbyService.validateHobbyExistence(hobby);
+		}
+		log.info("취미 검증 통과");
+	}
+
 	public PostResponseDto addPost(PostRequestDto requestDto, User user)
 		throws NotFoundHobbyException, NotFoundStateException {
+		log.info("Post Service :: addPost");
+
 		// 취미카테고리 & 지역 데이터 존재여부 검증
-		validateHobbiesExistence(requestDto.getHobbies());
-		stateService.validateStateExistence(requestDto.getState());
+		try {
+			validateHobbiesExistence(requestDto.hobbies());
+		} catch (NotFoundHobbyException exception) {
+			log.error(exception.getMessage());
+			log.error(exception.toString());
+			throw exception;
+		}
+		try {
+			stateService.validateStateExistence(requestDto.state());
+		} catch (NotFoundStateException exception) {
+			log.error(exception.getMessage());
+			log.error(exception.toString());
+			throw exception;
+		}
 
 		// Dto -> Entity
 		Post post = Post.of(requestDto, user);
 		Post savePost = postRepository.save(post);
+		log.info("Post Service **COMPLETED** :: addPost");
 		return new PostResponseDto(savePost);
-	}
-
-	void validateHobbiesExistence(List<Hobby> hobbies) throws NotFoundHobbyException {
-		for (Hobby hobby : hobbies) {
-			hobbyService.validateHobbyExistence(hobby);
-		}
 	}
 
 	@Transactional(readOnly = true)
@@ -60,7 +86,6 @@ public class PostService {
 			.collect(Collectors.toList());
 	}
 
-	@Transactional
 	public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user)
 		throws InvalidPostModifierException {
 		Post post = getPostById(postId);
@@ -71,6 +96,7 @@ public class PostService {
 
 	public void deletePost(Long postId, User user) {
 		Post post = getPostById(postId);
+		validateUserIsAuthor(post.getUser().getId(), user.getId());
 		postRepository.delete(post);
 	}
 
@@ -78,12 +104,5 @@ public class PostService {
 	public Post getPostById(Long postId) {
 		return postRepository.findById(postId)
 			.orElseThrow(() -> new NotFoundPostException("postId", postId.toString(), "주어진 id에 해당하는 게시글이 존재하지 않음"));
-	}
-
-	void validateUserIsAuthor(Long postAuthorId, Long loggedInUserId) throws InvalidPostModifierException {
-		if (!postAuthorId.equals(loggedInUserId)) {
-			throw new InvalidPostModifierException("postAuthor", postAuthorId.toString(),
-				"사용자는 이 게시물을 업데이트/삭제할 권한이 없습니다.");
-		}
 	}
 }

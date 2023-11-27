@@ -7,9 +7,11 @@ import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.post.dto.PostRequestDto;
 import com.example.hobbybungae.domain.state.entity.State;
 import com.example.hobbybungae.domain.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,18 +34,20 @@ import lombok.Setter;
 @Entity
 public class Post extends TimeStamp {
 
+	@JsonIgnore
 	@OneToMany(targetEntity = PostHobby.class, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<PostHobby> postHobbies = new ArrayList<>();
 
+	@JsonIgnore
 	@OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<Comment> comments = new ArrayList<>();
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
 	@Setter(AccessLevel.NONE)
 	@JoinColumn(name = "state_id")
 	State state;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@Setter(AccessLevel.NONE)
 	@JoinColumn(name = "user_id")
 	User user;
@@ -65,21 +69,21 @@ public class Post extends TimeStamp {
 	}
 
 	private Post(PostRequestDto requestDto) {
-		this.title = requestDto.getTitle();
-		this.contents = requestDto.getContent();
-		this.state = requestDto.getState();
+		this.title = requestDto.title();
+		this.contents = requestDto.content();
+		this.state = requestDto.state();
 		// 각 Hobby들에 대한 연관관계 저장
-		List<Hobby> hobbies = requestDto.getHobbies();
+		List<Hobby> hobbies = requestDto.hobbies();
 		hobbies.forEach(this::addHobby);
 	}
 
 	private Post(PostRequestDto requestDto, User user) {
-		this.title = requestDto.getTitle();
-		this.contents = requestDto.getContent();
-		this.state = requestDto.getState();
+		this.title = requestDto.title();
+		this.contents = requestDto.content();
+		this.state = requestDto.state();
 		this.user = user;
 		// 각 Hobby들에 대한 연관관계 저장
-		List<Hobby> hobbies = requestDto.getHobbies();
+		List<Hobby> hobbies = requestDto.hobbies();
 		hobbies.forEach(this::addHobby);
 	}
 
@@ -92,14 +96,14 @@ public class Post extends TimeStamp {
 	}
 
 	public void update(PostRequestDto requestDto, User user) {
-		this.title = requestDto.getTitle();
-		this.contents = requestDto.getContent();
-		this.state = requestDto.getState();
+		this.title = requestDto.title();
+		this.contents = requestDto.content();
+		this.state = requestDto.state();
 		this.user = user;
 		// 기존 연관된 취미와의 연관관계 끊기
 		removeHobbies();
 		// 각 Hobby들에 대한 연관관계 저장
-		List<Hobby> hobbies = requestDto.getHobbies();
+		List<Hobby> hobbies = requestDto.hobbies();
 		hobbies.forEach(this::addHobby);
 	}
 
@@ -159,16 +163,4 @@ public class Post extends TimeStamp {
 		return Objects.hash(getId());
 	}
 
-	@Override
-	public String toString() {
-		return "Post{" +
-			"postHobbyList=" + postHobbies +
-			", comments=" + comments +
-			", state=" + state +
-			", user=" + user +
-			", id=" + id +
-			", title='" + title + '\'' +
-			", contents='" + contents + '\'' +
-			'}';
-	}
 }

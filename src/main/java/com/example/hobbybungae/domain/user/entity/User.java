@@ -69,6 +69,32 @@ public class User extends TimeStamp {
 		userHobbies.add(userHobby);
 	}
 
+	/**
+	 * User와 기존에 연관되어있는 UserHobby들을 탐색한 뒤, Hobby의 연관관계 제거
+	 */
+	public void update(UserProfileUpdateRequestDto requestDto, String password) {
+		this.idName = requestDto.idName();
+		this.name = requestDto.name();
+		this.introduction = requestDto.introduction();
+		this.password = password;
+		// 기존 연관된 취미와의 연관관계 끊기
+		removeHobbies();
+		// 각 Hobby들에 대한 연관관계 저장
+		List<Hobby> hobbies = requestDto.hobbies();
+		hobbies.forEach(this::addHobby);
+	}
+
+	public void removeHobbies() {
+		if (!userHobbies.isEmpty()) {
+			userHobbies.forEach(userHobby ->
+				userHobby.getHobby()
+					.getUserHobbyList()
+					.remove(userHobby)
+			);
+		}
+		userHobbies.clear();
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -83,49 +109,5 @@ public class User extends TimeStamp {
 	@Override
 	public int hashCode() {
 		return Objects.hash(getId());
-	}
-
-	@Override
-	public String toString() {
-		return "User{" +
-			"userHobbyList=" + userHobbies +
-			", posts=" + posts +
-			", comments=" + comments +
-			", id=" + id +
-			", idName='" + idName + '\'' +
-			", name='" + name + '\'' +
-			", introduction='" + introduction + '\'' +
-			", password='" + password + '\'' +
-			'}';
-	}
-
-	public void update(UserProfileUpdateRequestDto requestDto) {
-		this.idName = requestDto.idName();
-		this.name = requestDto.name();
-		this.introduction = requestDto.introduction();
-		// 기존 연관된 취미와의 연관관계 끊기
-		removeHobbies();
-		// 각 Hobby들에 대한 연관관계 저장
-		List<Hobby> hobbies = requestDto.hobbies();
-		hobbies.forEach(this::addHobby);
-	}
-
-	/**
-	 * User와 기존에 연관되어있는 UserHobby들을 탐색한 뒤, Hobby의 연관관계 제거
-	 */
-	public void removeHobbies() {
-		if (!userHobbies.isEmpty()) {
-			userHobbies.forEach(userHobby ->
-				userHobby.getHobby()
-					.getUserHobbyList()
-					.remove(userHobby)
-			);
-		}
-		userHobbies.clear();
-	}
-
-
-	public void updatePassword(String password) {
-		this.password = password;
 	}
 }

@@ -3,7 +3,7 @@ package com.example.hobbybungae.domain.state.repository;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.hobbybungae.domain.state.entity.State;
-import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +24,10 @@ class StateRepositoryTest {
 	@DisplayName("저장한 시들을 확인합니다.")
 	public void 도시데이터확인() {
 		// WHEN
-		List<State> all = stateRepository.findAll();
+		Optional<State> foundState = stateRepository.findByStateDoAndStateSiAndStateGu("경기도", "수원시",
+			"장안구");
 
 		// THEN
-		boolean hasSeoul = all.stream()
-			.map(State::getStateSi)
-			.anyMatch(si -> si.equals("서울특별시"));
-		assertTrue(hasSeoul);
+		assertTrue(foundState.isPresent());
 	}
 }
