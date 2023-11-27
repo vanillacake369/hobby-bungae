@@ -33,13 +33,4 @@ public class State {
 		this.stateSi = stateSi;
 		this.stateGu = stateGu;
 	}
-
-	@Override
-	public String toString() {
-		return "State{" +
-			"stateDo='" + stateDo + '\'' +
-			", stateSi='" + stateSi + '\'' +
-			", stateGu='" + stateGu + '\'' +
-			'}';
-	}
 }

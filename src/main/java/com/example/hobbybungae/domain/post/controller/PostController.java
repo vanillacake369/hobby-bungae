@@ -4,6 +4,7 @@ import com.example.hobbybungae.domain.post.dto.PostRequestDto;
 import com.example.hobbybungae.domain.post.dto.PostResponseDto;
 import com.example.hobbybungae.domain.post.service.PostService;
 import com.example.hobbybungae.security.UserDetailsImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -45,12 +46,15 @@ public class PostController {
 	}
 
 	@PostMapping
+//	public String addPost(@RequestBody PostRequestDto requestDto,
+//	public PostResponseDto addPost(@RequestBody PostRequestDto requestDto,
 	public ResponseEntity<PostResponseDto> addPost(@RequestBody PostRequestDto requestDto,
-		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		@AuthenticationPrincipal UserDetailsImpl userDetails) throws JsonProcessingException {
 		log.info("Post Controller :: addPost");
 		PostResponseDto responseDto = postService.addPost(requestDto, userDetails.getUser());
 		log.info("Post Controller **COMPLETED** :: addPost");
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+//		return objectMapper.writeValueAsString(requestDto);
 	}
 
 	@PutMapping("/{postId}")

@@ -110,18 +110,4 @@ public class User extends TimeStamp {
 	public int hashCode() {
 		return Objects.hash(getId());
 	}
-
-	@Override
-	public String toString() {
-		return "User{" +
-			"userHobbyList=" + userHobbies +
-			", posts=" + posts +
-			", comments=" + comments +
-			", id=" + id +
-			", idName='" + idName + '\'' +
-			", name='" + name + '\'' +
-			", introduction='" + introduction + '\'' +
-			", password='" + password + '\'' +
-			'}';
-	}
 }
