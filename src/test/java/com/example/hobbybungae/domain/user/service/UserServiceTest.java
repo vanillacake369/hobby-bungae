@@ -7,13 +7,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.example.hobbybungae.domain.comment.entity.Comment;
 import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.user.dto.request.UserSignUpRequestDto;
+import com.example.hobbybungae.domain.user.dto.request.VerifyNicknameRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
+import com.example.hobbybungae.domain.user.dto.response.VerifyNicknameResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
-import com.example.hobbybungae.domain.user.exception.DuplicatedUserException;
+import com.example.hobbybungae.domain.user.exception.DuplicatedIdNameException;
+import com.example.hobbybungae.domain.user.exception.DuplicatedNickNameException;
 import com.example.hobbybungae.domain.user.exception.NotMachingPasswordReconfirm;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
 import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
 import com.example.hobbybungae.global_exception.ErrorCode;
+import java.util.Objects;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -117,6 +121,51 @@ class UserServiceTest {
 		assertTrue(hasNicknameInPassword);
 	}
 
+	@Test
+	@DisplayName("중복 닉네임 입력 오류에 대해 검증합니다.")
+	public void 중복닉네임_검증() {
+		// GIVEN
+		UserSignUpRequestDto sameNickNameRequest = UserSignUpRequestDto.builder()
+			.nickName("sameNickName")
+			.build();
+
+		// WHEN
+		DuplicatedNickNameException exception = assertThrows(
+			DuplicatedNickNameException.class, () ->
+				userService.signUp(sameNickNameRequest)
+		);
+
+		// THEN
+		assertEquals(exception.getErrorCode().getCode(), HttpStatus.BAD_REQUEST);
+		assertEquals(exception.getErrorCode().getMessage(), ErrorCode.DUPLICATED_NICK_NAME.getMessage());
+	}
+
+	@Test
+	@DisplayName("확인 버튼을 눌러 중복 닉네임 입력 오류에 대해 검증합니다.")
+	public void 확인버튼_중복닉네임_검증() {
+		// GIVEN
+		VerifyNicknameRequestDto notDuplicatedNickNameRequest = VerifyNicknameRequestDto.builder()
+			.nickName("can00tDupliCated")
+			.build();
+		VerifyNicknameRequestDto duplicatedNickNameRequest = VerifyNicknameRequestDto.builder()
+			.nickName("sameNickName")
+			.build();
+
+		// WHEN
+		ResponseEntity<VerifyNicknameResponseDto> responseOfHappyCase = userService.verifyNicknameDuplication(
+			notDuplicatedNickNameRequest);
+		DuplicatedNickNameException exception = assertThrows(
+			DuplicatedNickNameException.class, () ->
+				userService.verifyNicknameDuplication(duplicatedNickNameRequest)
+		);
+
+		// THEN
+		assertEquals(responseOfHappyCase.getStatusCode(), HttpStatus.OK);
+		assertTrue(Objects.requireNonNull(responseOfHappyCase.getBody()).isNotDuplicatedNickname());
+		assertEquals(exception.getErrorCode().getCode(), HttpStatus.BAD_REQUEST);
+		assertEquals(exception.getErrorCode().getMessage(), ErrorCode.DUPLICATED_NICK_NAME.getMessage());
+	}
+
 	@ParameterizedTest
 	@DisplayName("닉네임이 비밀번호 안에 있는지에 대해 형식검증합니다.")
 	@MethodSource("invalidPasswordSignUpRequest")
@@ -144,7 +193,7 @@ class UserServiceTest {
 		// WHEN
 		userService.validatePasswordReconfirmation(requestDtoHappyCase.password(),
 			requestDtoHappyCase.passwordReconfirm());
-		
+
 		NotMachingPasswordReconfirm exception = assertThrows(NotMachingPasswordReconfirm.class, () ->
 			userService.validatePasswordReconfirmation(requestDtoErrorCase.password(),
 				requestDtoErrorCase.passwordReconfirm())
@@ -159,11 +208,11 @@ class UserServiceTest {
 	@MethodSource("duplicatedUserSignUpRequest")
 	public void 회원가입_언해피케이스_중복회원(UserSignUpRequestDto requestDto) {
 		// WHEN
-		DuplicatedUserException duplicatedUserException = assertThrows(DuplicatedUserException.class, () ->
+		DuplicatedIdNameException duplicatedIdNameException = assertThrows(DuplicatedIdNameException.class, () ->
 			userService.signUp(requestDto)
 		);
 		// THEN
-		assertEquals(duplicatedUserException.getErrorCode(), ErrorCode.DUPLICATED_USER);
+		assertEquals(duplicatedIdNameException.getErrorCode(), ErrorCode.DUPLICATED_ID_NAME);
 	}
 
 	@ParameterizedTest

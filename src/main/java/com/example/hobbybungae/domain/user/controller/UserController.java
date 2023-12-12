@@ -1,7 +1,9 @@
 package com.example.hobbybungae.domain.user.controller;
 
 import com.example.hobbybungae.domain.user.dto.request.UserSignUpRequestDto;
+import com.example.hobbybungae.domain.user.dto.request.VerifyNicknameRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
+import com.example.hobbybungae.domain.user.dto.response.VerifyNicknameResponseDto;
 import com.example.hobbybungae.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +23,10 @@ public class UserController {
 	@PostMapping
 	public ResponseEntity<UserResponseDto> signUp(@RequestBody @Valid UserSignUpRequestDto requestDto) {
 		return userService.signUp(requestDto);
+	}
+
+	@PostMapping("/verify/nickname")
+	public ResponseEntity<VerifyNicknameResponseDto> verifyNicknameDuplication(@RequestBody @Valid VerifyNicknameRequestDto requestDto) {
+		return userService.verifyNicknameDuplication(requestDto);
 	}
 }
