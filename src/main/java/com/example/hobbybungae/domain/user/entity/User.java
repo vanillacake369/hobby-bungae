@@ -44,6 +44,9 @@ public class User extends TimeStamp {
 	@Column(nullable = false)
 	private String name;
 
+	@Column(nullable = false)
+	private String nickName;
+
 	@Column
 	private String introduction;
 
@@ -51,17 +54,17 @@ public class User extends TimeStamp {
 	private String password;
 
 	@Builder
-	public User(Long id, String idName, String name, String introduction, String password) {
+	public User(Long id, String idName, String name, String nickName, String introduction, String password) {
 		this.id = id;
 		this.idName = idName;
 		this.name = name;
+		this.nickName = nickName;
 		this.introduction = introduction;
 		this.password = password;
 	}
 
 	/**
 	 * User와 다대다 연관관계의 Hobby를 입력받아 연관관계 해결
-	 *
 	 * @param hobby 입력된 Hobby
 	 */
 	public void addHobby(Hobby hobby) {

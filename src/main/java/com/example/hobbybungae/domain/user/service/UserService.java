@@ -1,6 +1,6 @@
 package com.example.hobbybungae.domain.user.service;
 
-import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
+import com.example.hobbybungae.domain.user.dto.request.UserSignUpRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.exception.DuplicatedUserException;
@@ -19,16 +19,11 @@ public class UserService {
 
 	private static final String DUPLICATED_USER_ERROR_MESSAGE = "중복되지 않는 아이디를 확인해주시길 바랍니다.";
 
-	//    private final ProfileService profileService;
 	private final UserRepository userRepository;
 
 	private final PasswordEncoder passwordEncoder;
 
-	public boolean hasDuplicatedUser(String idName) {
-		return userRepository.findByIdName(idName).isPresent();
-	}
-
-	public ResponseEntity<UserResponseDto> signUp(UserRequestDto requestDto) throws DuplicatedUserException {
+	public ResponseEntity<UserResponseDto> signUp(UserSignUpRequestDto requestDto) throws DuplicatedUserException {
 		verifyDuplicatedUser(requestDto);
 
 		User newUser = User.builder()
@@ -41,9 +36,24 @@ public class UserService {
 		return new ResponseEntity<>(new UserResponseDto(newUser.getIdName(), newUser.getName()), HttpStatus.OK);
 	}
 
-	private void verifyDuplicatedUser(UserRequestDto requestDto) throws DuplicatedUserException {
-		if (hasDuplicatedUser(requestDto.idName())) {
+	private void verifyDuplicatedUser(UserSignUpRequestDto requestDto) throws DuplicatedUserException {
+		if (hasDuplicatedIdName(requestDto.idName())
+			&& hasDuplicatedNickName(requestDto.nickName())
+			&& hasNicknameInPassword(requestDto.password(), requestDto.nickName())
+		) {
 			throw new DuplicatedUserException("id_name", requestDto.idName(), DUPLICATED_USER_ERROR_MESSAGE);
 		}
+	}
+
+	boolean hasNicknameInPassword(String password, String nickName) {
+		return password.contains(nickName);
+	}
+
+	boolean hasDuplicatedIdName(String idName) {
+		return userRepository.findByIdName(idName).isPresent();
+	}
+
+	boolean hasDuplicatedNickName(String nickName) {
+		return userRepository.findByNickName(nickName).isPresent();
 	}
 }
