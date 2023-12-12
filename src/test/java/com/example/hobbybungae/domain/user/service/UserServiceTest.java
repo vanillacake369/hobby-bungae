@@ -10,6 +10,7 @@ import com.example.hobbybungae.domain.user.dto.request.UserSignUpRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.exception.DuplicatedUserException;
+import com.example.hobbybungae.domain.user.exception.NotMachingPasswordReconfirm;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
 import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
 import com.example.hobbybungae.global_exception.ErrorCode;
@@ -17,6 +18,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -124,6 +126,32 @@ class UserServiceTest {
 
 		// THEN
 		assertTrue(hasNicknameInPassword);
+	}
+
+	@Test
+	@DisplayName("비밀번호 입력값과 비밀번호 재확인 입력값이 서로 동일한지 검증합니다.")
+	public void 비밀번호_재확인검증() {
+		// GIVEN
+		UserSignUpRequestDto requestDtoHappyCase = UserSignUpRequestDto.builder()
+			.password("password123")
+			.passwordReconfirm("password123")
+			.build();
+		UserSignUpRequestDto requestDtoErrorCase = UserSignUpRequestDto.builder()
+			.password("password123")
+			.passwordReconfirm("notSamePassword123")
+			.build();
+
+		// WHEN
+		userService.validatePasswordReconfirmation(requestDtoHappyCase.password(),
+			requestDtoHappyCase.passwordReconfirm());
+		
+		NotMachingPasswordReconfirm exception = assertThrows(NotMachingPasswordReconfirm.class, () ->
+			userService.validatePasswordReconfirmation(requestDtoErrorCase.password(),
+				requestDtoErrorCase.passwordReconfirm())
+		);
+
+		// THEN
+		assertEquals(exception.getErrorCode().getCode(), HttpStatus.BAD_REQUEST);
 	}
 
 	@ParameterizedTest
