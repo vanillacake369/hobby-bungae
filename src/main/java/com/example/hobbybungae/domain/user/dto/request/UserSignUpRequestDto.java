@@ -28,7 +28,7 @@ public record UserSignUpRequestDto(
 	@NotBlank
 	@Pattern(regexp = "^[가-힣a-zA-Z0-9\\S]*$") // 특수문자 O
 	@Size(min = 8, max = 32)
-	String passwordConfirm
+	String passwordReconfirm
 
 ) {
 

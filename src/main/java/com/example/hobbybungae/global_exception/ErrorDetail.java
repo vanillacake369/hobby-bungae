@@ -3,14 +3,15 @@ package com.example.hobbybungae.global_exception;
 
 import java.util.List;
 import java.util.Objects;
-import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@NoArgsConstructor
 public class ErrorDetail {
 
 	private String field;
@@ -18,12 +19,6 @@ public class ErrorDetail {
 	private String value;
 
 	private String reason;
-
-	public ErrorDetail(String field, String value, String reason) {
-		this.field = field;
-		this.value = value;
-		this.reason = reason;
-	}
 
 	public ErrorDetail(String field, String value) {
 		this.field = field;

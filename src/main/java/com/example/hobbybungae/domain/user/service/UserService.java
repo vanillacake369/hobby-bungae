@@ -4,6 +4,7 @@ import com.example.hobbybungae.domain.user.dto.request.UserSignUpRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.exception.DuplicatedUserException;
+import com.example.hobbybungae.domain.user.exception.NotMachingPasswordReconfirm;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class UserService {
 
 	public ResponseEntity<UserResponseDto> signUp(UserSignUpRequestDto requestDto) throws DuplicatedUserException {
 		verifyDuplicatedUser(requestDto);
+		validatePasswordReconfirmation(requestDto.password(), requestDto.passwordReconfirm());
 
 		User newUser = User.builder()
 			.idName(requestDto.idName())
@@ -34,6 +36,12 @@ public class UserService {
 		userRepository.save(newUser);
 
 		return new ResponseEntity<>(new UserResponseDto(newUser.getIdName(), newUser.getName()), HttpStatus.OK);
+	}
+
+	void validatePasswordReconfirmation(String password, String passwordConfirm) {
+		if (!password.equals(passwordConfirm)) {
+			throw new NotMachingPasswordReconfirm();
+		}
 	}
 
 	private void verifyDuplicatedUser(UserSignUpRequestDto requestDto) throws DuplicatedUserException {
