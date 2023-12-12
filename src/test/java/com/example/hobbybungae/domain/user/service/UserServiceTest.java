@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.hobbybungae.domain.comment.entity.Comment;
 import com.example.hobbybungae.domain.post.entity.Post;
-import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
+import com.example.hobbybungae.domain.user.dto.request.UserSignUpRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.exception.DuplicatedUserException;
@@ -44,37 +44,39 @@ class UserServiceTest {
 	@Autowired
 	private UserService userService;
 
-	public static Stream<Arguments> getDuplicatedUser() {
+	public static Stream<Arguments> duplicatedUserSignUpRequest() {
 		return Stream.of(
 			Arguments.of(
-				User.builder()
+				UserSignUpRequestDto.builder()
 					.idName("jihoon9898")
 					.name("jihoon")
+					.nickName("sameNickName")
 					.password("1234")
 					.build()
 			)
 		);
 	}
 
-	public static Stream<Arguments> createNewUserSuccess() {
+	public static Stream<Arguments> invalidPasswordSignUpRequest() {
 		return Stream.of(
 			Arguments.of(
-				UserRequestDto.builder()
+				UserSignUpRequestDto.builder()
+					.idName("userIdName23")
+					.name("userName")
+					.nickName("notSameNickName")
+					.password("qweQWnotSameNickName!@$")
+					.build()
+			)
+		);
+	}
+
+	public static Stream<Arguments> signUpRequestOfHappyCase() {
+		return Stream.of(
+			Arguments.of(
+				UserSignUpRequestDto.builder()
 					.idName("sparta1234")
 					.name("happyhappy")
 					.password("1234qwer")
-					.build()
-			)
-		);
-	}
-
-	public static Stream<Arguments> createNewUserDuplicated() {
-		return Stream.of(
-			Arguments.of(
-				UserRequestDto.builder()
-					.idName("jihoon9898")
-					.name("jihoon")
-					.password("1234")
 					.build()
 			)
 		);
@@ -86,6 +88,7 @@ class UserServiceTest {
 		User user = User.builder()
 			.idName("jihoon9898")
 			.name("jihoon")
+			.nickName("sameNickName")
 			.password("1234")
 			.build();
 		userRepository.save(user);
@@ -99,36 +102,50 @@ class UserServiceTest {
 
 	@ParameterizedTest
 	@DisplayName("중복회원을 검증합니다.")
-	@MethodSource("getDuplicatedUser")
-	public void 중복회원_검증(User user) {
+	@MethodSource("duplicatedUserSignUpRequest")
+	public void 중복회원_검증(UserSignUpRequestDto requestDto) {
 		// WHEN
-		String idName = user.getIdName();
-		boolean hasDuplicatedUser = userService.hasDuplicatedUser(idName);
+		boolean hasDuplicatedIdName = userService.hasDuplicatedIdName(requestDto.idName());
+		boolean hasDuplicatedNickName = userService.hasDuplicatedNickName(requestDto.nickName());
+		boolean hasNicknameInPassword = userService.hasNicknameInPassword(requestDto.password(), requestDto.nickName());
 
 		// THEN
-		assertTrue(hasDuplicatedUser);
+		assertTrue(hasDuplicatedIdName);
+		assertTrue(hasDuplicatedNickName);
+		assertTrue(hasNicknameInPassword);
 	}
 
 	@ParameterizedTest
-	@DisplayName("새로운 회원이 회원가입에 성공합니다.")
-	@MethodSource("createNewUserSuccess")
-	public void 회원가입_해피케이스(UserRequestDto requestDto) {
+	@DisplayName("닉네임이 비밀번호 안에 있는지에 대해 형식검증합니다.")
+	@MethodSource("invalidPasswordSignUpRequest")
+	public void 비밀번호_형식검증(UserSignUpRequestDto requestDto) {
 		// WHEN
-		ResponseEntity<UserResponseDto> response = userService.signUp(requestDto);
+		boolean hasNicknameInPassword = userService.hasNicknameInPassword(requestDto.password(), requestDto.nickName());
 
 		// THEN
-		assertEquals(response.getStatusCode(), HttpStatus.OK);
+		assertTrue(hasNicknameInPassword);
 	}
 
 	@ParameterizedTest
 	@DisplayName("중복된 회원은 회원가입에 실패합니다.")
-	@MethodSource("createNewUserDuplicated")
-	public void 회원가입_언해피케이스_중복회원(UserRequestDto requestDto) {
+	@MethodSource("duplicatedUserSignUpRequest")
+	public void 회원가입_언해피케이스_중복회원(UserSignUpRequestDto requestDto) {
 		// WHEN
 		DuplicatedUserException duplicatedUserException = assertThrows(DuplicatedUserException.class, () ->
 			userService.signUp(requestDto)
 		);
 		// THEN
 		assertEquals(duplicatedUserException.getErrorCode(), ErrorCode.DUPLICATED_USER);
+	}
+
+	@ParameterizedTest
+	@DisplayName("새로운 회원이 회원가입에 성공합니다.")
+	@MethodSource("signUpRequestOfHappyCase")
+	public void 회원가입_해피케이스(UserSignUpRequestDto requestDto) {
+		// WHEN
+		ResponseEntity<UserResponseDto> response = userService.signUp(requestDto);
+
+		// THEN
+		assertEquals(response.getStatusCode(), HttpStatus.OK);
 	}
 }
