@@ -1,6 +1,6 @@
 package com.example.hobbybungae.security;
 
-import com.example.hobbybungae.domain.user.dto.request.UserRequestDto;
+import com.example.hobbybungae.domain.user.dto.request.UserSignUpRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,62 +17,64 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private final JwtUtil jwtUtil;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-        setFilterProcessesUrl("/hobby-bungae/v1/users/signin");
-    }
+	private final JwtUtil jwtUtil;
 
-    @Override
-    public Authentication attemptAuthentication(
-            HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        try {
-            UserRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), UserRequestDto.class);
+	public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+		this.jwtUtil = jwtUtil;
+		setFilterProcessesUrl("/hobby-bungae/v1/users/signin");
+	}
 
-            return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            requestDto.idName(),
-                            requestDto.password(),
-                            null
-                    )
-            );
-        } catch (IOException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage());
-        }
-    }
+	@Override
+	public Authentication attemptAuthentication(
+		HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+		try {
+			UserSignUpRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
+				UserSignUpRequestDto.class);
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-                                            Authentication authResult) throws IOException {
-        User user = ((UserDetailsImpl) authResult.getPrincipal()).getUser();
-        UserResponseDto userResponseDto = new UserResponseDto(user.getIdName(), user.getName());
+			return getAuthenticationManager().authenticate(
+				new UsernamePasswordAuthenticationToken(
+					requestDto.idName(),
+					requestDto.password(),
+					null
+				)
+			);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+			throw new RuntimeException(e.getMessage());
+		}
+	}
 
-        String token = jwtUtil.createToken(user.getIdName());
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+	@Override
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+		Authentication authResult) throws IOException {
+		User user = ((UserDetailsImpl) authResult.getPrincipal()).getUser();
+		UserResponseDto userResponseDto = new UserResponseDto(user.getIdName(), user.getName());
 
-        ObjectMapper objectMapper = new ObjectMapper();
+		String token = jwtUtil.createToken(user.getIdName());
+		response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
 
-        String result = objectMapper.writeValueAsString(userResponseDto);
+		ObjectMapper objectMapper = new ObjectMapper();
 
-        response.setStatus(HttpStatus.OK.value());
-        response.setContentType("application/json");
-        response.setCharacterEncoding("utf-8");
-        response.getWriter().write(result);
-    }
+		String result = objectMapper.writeValueAsString(userResponseDto);
 
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                              AuthenticationException failed) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
+		response.setStatus(HttpStatus.OK.value());
+		response.setContentType("application/json");
+		response.setCharacterEncoding("utf-8");
+		response.getWriter().write(result);
+	}
 
-        String result = objectMapper.writeValueAsString("회원을 찾을 수 없습니다.");
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+		AuthenticationException failed) throws IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType("application/json");
-        response.setCharacterEncoding("utf-8");
-        response.getWriter().write(result);
-    }
+		String result = objectMapper.writeValueAsString("회원을 찾을 수 없습니다.");
+
+		response.setStatus(HttpStatus.UNAUTHORIZED.value());
+		response.setContentType("application/json");
+		response.setCharacterEncoding("utf-8");
+		response.getWriter().write(result);
+	}
 
 }
