@@ -34,20 +34,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Import({UserService.class, UserValidator.class, BCryptPasswordEncoder.class, User.class, UserHobby.class, Post.class,
+@Import({UserSignUpService.class, UserValidator.class, BCryptPasswordEncoder.class, User.class, UserHobby.class, Post.class,
 	Comment.class})
-class UserServiceTest {
+class UserSignUpServiceTest {
 
 	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
-	private UserService userService;
+	private UserSignUpService userSignUpService;
 
 	public static Stream<Arguments> duplicatedUserSignUpRequest() {
 		return Stream.of(
@@ -78,7 +77,6 @@ class UserServiceTest {
 	}
 
 	@BeforeEach
-	@Transactional
 	void setUp() {
 		User user = User.builder()
 			.idName("jihoon9898")
@@ -91,7 +89,6 @@ class UserServiceTest {
 	}
 
 	@AfterEach
-	@Transactional
 	void tearDown() {
 		userRepository.deleteAll();
 	}
@@ -107,7 +104,7 @@ class UserServiceTest {
 		// WHEN
 		DuplicatedNickNameException exception = assertThrows(
 			DuplicatedNickNameException.class, () ->
-				userService.signUp(sameNickNameRequest)
+				userSignUpService.signUp(sameNickNameRequest)
 		);
 
 		// THEN
@@ -127,11 +124,11 @@ class UserServiceTest {
 			.build();
 
 		// WHEN
-		ResponseEntity<VerifyNicknameResponseDto> responseOfHappyCase = userService.verifyNicknameDuplication(
+		ResponseEntity<VerifyNicknameResponseDto> responseOfHappyCase = userSignUpService.verifyNicknameDuplication(
 			notDuplicatedNickNameRequest);
 		DuplicatedNickNameException exception = assertThrows(
 			DuplicatedNickNameException.class, () ->
-				userService.verifyNicknameDuplication(duplicatedNickNameRequest)
+				userSignUpService.verifyNicknameDuplication(duplicatedNickNameRequest)
 		);
 
 		// THEN
@@ -147,7 +144,7 @@ class UserServiceTest {
 	public void 회원가입_언해피케이스_중복회원(UserSignUpRequestDto requestDto) {
 		// WHEN
 		DuplicatedIdNameException duplicatedIdNameException = assertThrows(DuplicatedIdNameException.class, () ->
-			userService.signUp(requestDto)
+			userSignUpService.signUp(requestDto)
 		);
 		// THEN
 		assertEquals(duplicatedIdNameException.getErrorCode(), ErrorCode.DUPLICATED_ID_NAME);
@@ -158,9 +155,9 @@ class UserServiceTest {
 	@MethodSource("signUpRequestOfHappyCase")
 	public void 회원가입_해피케이스(UserSignUpRequestDto requestDto) {
 		// WHEN
-		ResponseEntity<UserResponseDto> response = userService.signUp(requestDto);
+		ResponseEntity<UserResponseDto> response = userSignUpService.signUp(requestDto);
 
 		// THEN
-		assertEquals(response.getStatusCode(), HttpStatus.OK);
+		assertEquals(response.getStatusCode(), HttpStatus.CREATED);
 	}
 }

@@ -14,4 +14,8 @@ public class NotFoundUserException extends DomainException {
 	public NotFoundUserException(String field, String value) {
 		super(ErrorCode.NOT_FOUND_USER, new ErrorDetail(field, value));
 	}
+
+	public NotFoundUserException() {
+		super(ErrorCode.NOT_FOUND_USER, new ErrorDetail());
+	}
 }

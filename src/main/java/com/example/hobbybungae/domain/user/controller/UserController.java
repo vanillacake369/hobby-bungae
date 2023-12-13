@@ -1,10 +1,12 @@
 package com.example.hobbybungae.domain.user.controller;
 
+import com.example.hobbybungae.domain.user.dto.request.UserLogInRequestDto;
 import com.example.hobbybungae.domain.user.dto.request.UserSignUpRequestDto;
 import com.example.hobbybungae.domain.user.dto.request.VerifyNicknameRequestDto;
 import com.example.hobbybungae.domain.user.dto.response.UserResponseDto;
 import com.example.hobbybungae.domain.user.dto.response.VerifyNicknameResponseDto;
-import com.example.hobbybungae.domain.user.service.UserService;
+import com.example.hobbybungae.domain.user.service.UserLogInService;
+import com.example.hobbybungae.domain.user.service.UserSignUpService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +20,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/hobby-bungae/v1/users")
 public class UserController {
 
-	private final UserService userService;
+	private final UserSignUpService userSignUpService;
+	private final UserLogInService userLogInService;
 
 	@PostMapping
 	public ResponseEntity<UserResponseDto> signUp(@RequestBody @Valid UserSignUpRequestDto requestDto) {
-		return userService.signUp(requestDto);
+		return userSignUpService.signUp(requestDto);
 	}
 
 	@PostMapping("/verify/nickname")
 	public ResponseEntity<VerifyNicknameResponseDto> verifyNicknameDuplication(@RequestBody @Valid VerifyNicknameRequestDto requestDto) {
-		return userService.verifyNicknameDuplication(requestDto);
+		return userSignUpService.verifyNicknameDuplication(requestDto);
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<UserResponseDto> login(@RequestBody @Valid UserLogInRequestDto userLogInRequestDto) {
+		return userLogInService.login(userLogInRequestDto);
 	}
 }

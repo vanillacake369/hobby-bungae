@@ -8,11 +8,9 @@ import com.example.hobbybungae.domain.user.exception.NotMachingPasswordReconfirm
 import com.example.hobbybungae.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UserValidator {
 
 	private final UserRepository userRepository;

@@ -12,12 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
-public class UserService {
+public class UserSignUpService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -37,7 +35,7 @@ public class UserService {
 			.build();
 		userRepository.save(newUser);
 
-		return new ResponseEntity<>(new UserResponseDto(newUser.getIdName(), newUser.getName()), HttpStatus.OK);
+		return new ResponseEntity<>(new UserResponseDto(newUser.getIdName(), newUser.getName()), HttpStatus.CREATED);
 	}
 
 	public ResponseEntity<VerifyNicknameResponseDto> verifyNicknameDuplication(VerifyNicknameRequestDto requestDto) {
