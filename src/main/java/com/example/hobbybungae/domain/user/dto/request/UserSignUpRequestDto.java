@@ -1,5 +1,6 @@
 package com.example.hobbybungae.domain.user.dto.request;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -21,6 +22,10 @@ public record UserSignUpRequestDto(
 	String nickName,
 
 	@NotBlank
+	@Email
+	String email,
+
+	@NotBlank
 	@Pattern(regexp = "^[가-힣a-zA-Z0-9\\S]*$") // 특수문자 O
 	@Size(min = 8, max = 32)
 	String password,
@@ -28,8 +33,10 @@ public record UserSignUpRequestDto(
 	@NotBlank
 	@Pattern(regexp = "^[가-힣a-zA-Z0-9\\S]*$") // 특수문자 O
 	@Size(min = 8, max = 32)
-	String passwordReconfirm
+	String passwordReconfirm,
 
+	@Size(max = 300)
+	String introduction
 ) {
 
 }

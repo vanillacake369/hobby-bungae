@@ -13,7 +13,6 @@ import com.example.hobbybungae.domain.user.dto.response.VerifyNicknameResponseDt
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.exception.DuplicatedIdNameException;
 import com.example.hobbybungae.domain.user.exception.DuplicatedNickNameException;
-import com.example.hobbybungae.domain.user.exception.NotMachingPasswordReconfirm;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
 import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
 import com.example.hobbybungae.global_exception.ErrorCode;
@@ -40,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Import({UserService.class, BCryptPasswordEncoder.class, User.class, UserHobby.class, Post.class,
+@Import({UserService.class, UserValidator.class, BCryptPasswordEncoder.class, User.class, UserHobby.class, Post.class,
 	Comment.class})
 class UserServiceTest {
 
@@ -63,26 +62,16 @@ class UserServiceTest {
 		);
 	}
 
-	public static Stream<Arguments> invalidPasswordSignUpRequest() {
-		return Stream.of(
-			Arguments.of(
-				UserSignUpRequestDto.builder()
-					.idName("userIdName23")
-					.name("userName")
-					.nickName("notSameNickName")
-					.password("qweQWnotSameNickName!@$")
-					.build()
-			)
-		);
-	}
-
 	public static Stream<Arguments> signUpRequestOfHappyCase() {
 		return Stream.of(
 			Arguments.of(
 				UserSignUpRequestDto.builder()
 					.idName("sparta1234")
 					.name("happyhappy")
+					.nickName("ratani123")
+					.email("ratanimail123@mail.com")
 					.password("1234qwer")
+					.passwordReconfirm("1234qwer")
 					.build()
 			)
 		);
@@ -96,6 +85,7 @@ class UserServiceTest {
 			.name("jihoon")
 			.nickName("sameNickName")
 			.password("1234")
+			.email("jihoonmail@mail.com")
 			.build();
 		userRepository.save(user);
 	}
@@ -104,21 +94,6 @@ class UserServiceTest {
 	@Transactional
 	void tearDown() {
 		userRepository.deleteAll();
-	}
-
-	@ParameterizedTest
-	@DisplayName("중복회원을 검증합니다.")
-	@MethodSource("duplicatedUserSignUpRequest")
-	public void 중복회원_검증(UserSignUpRequestDto requestDto) {
-		// WHEN
-		boolean hasDuplicatedIdName = userService.hasDuplicatedIdName(requestDto.idName());
-		boolean hasDuplicatedNickName = userService.hasDuplicatedNickName(requestDto.nickName());
-		boolean hasNicknameInPassword = userService.hasNicknameInPassword(requestDto.password(), requestDto.nickName());
-
-		// THEN
-		assertTrue(hasDuplicatedIdName);
-		assertTrue(hasDuplicatedNickName);
-		assertTrue(hasNicknameInPassword);
 	}
 
 	@Test
@@ -164,43 +139,6 @@ class UserServiceTest {
 		assertTrue(Objects.requireNonNull(responseOfHappyCase.getBody()).isNotDuplicatedNickname());
 		assertEquals(exception.getErrorCode().getCode(), HttpStatus.BAD_REQUEST);
 		assertEquals(exception.getErrorCode().getMessage(), ErrorCode.DUPLICATED_NICK_NAME.getMessage());
-	}
-
-	@ParameterizedTest
-	@DisplayName("닉네임이 비밀번호 안에 있는지에 대해 형식검증합니다.")
-	@MethodSource("invalidPasswordSignUpRequest")
-	public void 비밀번호_형식검증(UserSignUpRequestDto requestDto) {
-		// WHEN
-		boolean hasNicknameInPassword = userService.hasNicknameInPassword(requestDto.password(), requestDto.nickName());
-
-		// THEN
-		assertTrue(hasNicknameInPassword);
-	}
-
-	@Test
-	@DisplayName("비밀번호 입력값과 비밀번호 재확인 입력값이 서로 동일한지 검증합니다.")
-	public void 비밀번호_재확인검증() {
-		// GIVEN
-		UserSignUpRequestDto requestDtoHappyCase = UserSignUpRequestDto.builder()
-			.password("password123")
-			.passwordReconfirm("password123")
-			.build();
-		UserSignUpRequestDto requestDtoErrorCase = UserSignUpRequestDto.builder()
-			.password("password123")
-			.passwordReconfirm("notSamePassword123")
-			.build();
-
-		// WHEN
-		userService.validatePasswordReconfirmation(requestDtoHappyCase.password(),
-			requestDtoHappyCase.passwordReconfirm());
-
-		NotMachingPasswordReconfirm exception = assertThrows(NotMachingPasswordReconfirm.class, () ->
-			userService.validatePasswordReconfirmation(requestDtoErrorCase.password(),
-				requestDtoErrorCase.passwordReconfirm())
-		);
-
-		// THEN
-		assertEquals(exception.getErrorCode().getCode(), HttpStatus.BAD_REQUEST);
 	}
 
 	@ParameterizedTest
