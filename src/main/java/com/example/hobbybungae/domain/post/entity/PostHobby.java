@@ -1,7 +1,6 @@
 package com.example.hobbybungae.domain.post.entity;
 
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +27,9 @@ public class PostHobby {
 	@JoinColumn(name = "post_id", nullable = false)
 	private Post post;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+//	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+//	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "hobby_id", nullable = false)
 	private Hobby hobby;
 
@@ -40,7 +41,6 @@ public class PostHobby {
 
 	/**
 	 * Hobby 입력에 대한 Post 생성 연관관계 편의 메서드
-	 *
 	 * @param post  생성한 Post
 	 * @param hobby Post 생성을 위한 입력된 Hobby
 	 */

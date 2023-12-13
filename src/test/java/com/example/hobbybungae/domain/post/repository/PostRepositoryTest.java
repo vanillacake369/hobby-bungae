@@ -12,6 +12,8 @@ import com.example.hobbybungae.domain.post.exception.NotFoundPostException;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
 import java.util.List;
+import java.util.Objects;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,12 +22,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Transactional
+//@Transactional
 class PostRepositoryTest {
 
 	@Autowired
@@ -49,6 +50,12 @@ class PostRepositoryTest {
 			.contents("postContents")
 			.build();
 		this.post = postRepository.save(post);
+	}
+
+	@AfterEach
+	void tearDown() {
+		postRepository.deleteAll();
+		postHobbyRepository.deleteAll();
 	}
 
 	@Test
@@ -126,5 +133,48 @@ class PostRepositoryTest {
 		assertFalse(hasSoccer);
 		assertFalse(hasSoccerRelatesThisPost);
 		assertFalse(hasBaseballRelatesThisPost);
+	}
+
+	@Test
+	@DisplayName("PostHobby 중간조인테이블에서 데이터 삭제 시, left over entity가 존재합니다.")
+	public void 중간조인테이블_데이터삭제_leftover_entity존재() {
+		// GIVEN
+		Hobby hobbyBaseball = Hobby.builder().hobbyName("야구").build();
+		Hobby hobbySoccer = Hobby.builder().hobbyName("축구").build();
+		hobbyRepository.save(hobbyBaseball);
+		hobbyRepository.save(hobbySoccer);
+		post.addHobby(hobbyBaseball);
+		post.addHobby(hobbySoccer);
+
+		// WHEN
+		PostHobby postHobbyOfBaseball = post.getPostHobbies().stream()
+			.filter(postHobby -> postHobby.getHobby().equals(hobbyBaseball))
+			.findAny()
+			.get();
+		PostHobby postHobbyOfSoccer = post.getPostHobbies().stream()
+			.filter(postHobby -> postHobby.getHobby().equals(hobbySoccer))
+			.findAny()
+			.get();
+		assert postHobbyOfBaseball != null;
+		assert postHobbyOfSoccer != null;
+		postHobbyRepository.deleteAll();
+
+		// THEN
+		Post postOfHobbyBaseball = hobbyBaseball.getPostHobbyList().stream()
+			.filter(postHobby -> Objects.equals(postHobby.getPost().getId(), post.getId()))
+			.findAny()
+			.orElseThrow(
+				() -> new NotFoundPostException("post", "hobbyBaseball에 대한 게시글 찾기 실패")
+			)
+			.getPost();
+		Post postOfHobbySoccer = hobbySoccer.getPostHobbyList().stream()
+			.filter(postHobby -> Objects.equals(postHobby.getPost().getId(), post.getId()))
+			.findAny()
+			.orElseThrow(
+				() -> new NotFoundPostException("post", "hobbySoccer에 대한 게시글 찾기 실패")
+			)
+			.getPost();
+		assertEquals(postOfHobbySoccer, post);
+		assertEquals(postOfHobbyBaseball, post);
 	}
 }
