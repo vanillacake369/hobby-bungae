@@ -19,19 +19,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostHobby {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id", nullable = false)
 	private Post post;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-//	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
-//	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+	//	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "hobby_id", nullable = false)
 	private Hobby hobby;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
 	@Builder
 	public PostHobby(Post post, Hobby hobby) {
@@ -46,7 +45,7 @@ public class PostHobby {
 	 */
 	public static PostHobby addPostAndHobby(Post post, Hobby hobby) {
 		PostHobby postHobby = new PostHobby(post, hobby);
-		postHobby.hobby.getPostHobbyList().add(postHobby);
+		postHobby.hobby.getPostHobbies().add(postHobby);
 		return postHobby;
 	}
 }

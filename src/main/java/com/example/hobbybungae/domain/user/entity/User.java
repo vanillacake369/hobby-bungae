@@ -84,7 +84,7 @@ public class User extends TimeStamp {
 		if (!userHobbies.isEmpty()) {
 			userHobbies.forEach(userHobby ->
 				userHobby.getHobby()
-					.getUserHobbyList()
+					.getUserHobbies()
 					.remove(userHobby)
 			);
 		}

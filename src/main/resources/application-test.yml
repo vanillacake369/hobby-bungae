@@ -1,34 +1,4 @@
 spring:
-  profiles:
-    default: local
-  # DATABASE
-  datasource:
-    url: ${DB_URL}
-    driverClassName: com.mysql.cj.jdbc.Driver
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
-  # JPA
-  jpa:
-    properties:
-      hibernate:
-        # INIT
-        ddl-auto: create-drop
-        # DEV
-        # ddl-auto: update # Only 'create' when init
-        show_sql: true
-    show-sql: true
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    generate-ddl: true
-
-# JWT
-jwt:
-  secret:
-    key:
-      ${JWT_KEY}
-
----
-
-spring:
   config:
     activate:
       on-profile: test
@@ -44,7 +14,7 @@ spring:
     properties:
       hibernate:
         # INIT
-        ddl-auto: create-drop
+        # ddl-auto: create-drop
         # DEV
         # ddl-auto: update # Only 'create' when init
         show_sql: true

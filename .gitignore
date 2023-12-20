@@ -37,4 +37,7 @@ out/
 .vscode/
 
 ### application.yml ###
-application.ymlhobbybungae-key.pem
+application.yml
+
+### AWS EC2 Key ###
+hobbybungae-key.pem

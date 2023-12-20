@@ -42,7 +42,7 @@ public class Post extends TimeStamp {
 	@OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<Comment> comments = new ArrayList<>();
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@Setter(AccessLevel.NONE)
 	@JoinColumn(name = "state_id")
 	State state;
@@ -63,9 +63,11 @@ public class Post extends TimeStamp {
 	private String contents;
 
 	@Builder
-	public Post(String title, String contents) {
+	public Post(Long id, String title, String contents, User user) {
+		this.id = id;
 		this.title = title;
 		this.contents = contents;
+		this.user = user;
 	}
 
 	private Post(PostRequestDto requestDto) {
@@ -114,7 +116,7 @@ public class Post extends TimeStamp {
 		if (!postHobbies.isEmpty()) {
 			postHobbies.forEach(postHobby ->
 				postHobby.getHobby()
-					.getPostHobbyList()
+					.getPostHobbies()
 					.remove(postHobby)
 			);
 		}
@@ -123,18 +125,16 @@ public class Post extends TimeStamp {
 
 	/**
 	 * Post와 다대다 연관관계의 Hobby를 입력받아 연관관계 해결
-	 *
 	 * @param hobby 입력된 Hobby
 	 */
 	public void addHobby(Hobby hobby) {
 		// 새로운 연관관계 추가
-		PostHobby postHobby = PostHobby.addPostAndHobby(this, hobby);
-		postHobbies.add(postHobby);
+		PostHobby postHobby = PostHobby.addPostAndHobby(this, hobby); // 새로운 인스턴스 생성 & hobby에 대해서 PostHobby 추가
+		postHobbies.add(postHobby); // post에 대해서 PostHobby 추가
 	}
 
 	/**
 	 * Post와 1대다 관계의 User를 입력받아 연관관계 해결
-	 *
 	 * @param user 로그인 된 User
 	 */
 	public void setAuthor(User user) {
