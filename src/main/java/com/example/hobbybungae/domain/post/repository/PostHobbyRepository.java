@@ -21,6 +21,9 @@ public interface PostHobbyRepository extends JpaRepository<PostHobby, Long> {
 
 	@Modifying
 	@Query("DELETE FROM PostHobby ph")
-		// 쿼리를 객체지향적으로 생성 => 각 sql에 맞는 쿼리로 변환해서 실행
-	void deleteAll();
+	void deleteAllByJpql();
+
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM PostHobby ph")
+	void deleteAllByJpqlSyncPersistence();
 }

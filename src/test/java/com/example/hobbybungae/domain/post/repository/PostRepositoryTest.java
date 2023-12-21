@@ -2,6 +2,8 @@ package com.example.hobbybungae.domain.post.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
@@ -12,17 +14,24 @@ import com.example.hobbybungae.domain.post.entity.PostHobby;
 import com.example.hobbybungae.domain.post.exception.NotFoundPostException;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
+import org.springframework.data.util.ProxyUtils;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.util.Assert;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -42,6 +51,9 @@ class PostRepositoryTest {
 	@Autowired
 	UserRepository userRepository;
 
+	@PersistenceContext
+	private EntityManager entityManager;
+
 	private Post post = null;
 	private User user = null;
 
@@ -57,15 +69,7 @@ class PostRepositoryTest {
 			.build();
 		Post post = new Post(1L, "postTitle", "postContents", user);
 		this.user = userRepository.save(user);
-		/**
-		 * Hibernate: select u1_0.id,u1_0.created_at,u1_0.email,u1_0.id_name,u1_0.introduction,u1_0.modified_at,u1_0.name,u1_0.nick_name,u1_0.password,c1_0.user_id,c1_0.id,c1_0.post_id,c1_0.text from user u1_0 left join comment c1_0 on u1_0.id=c1_0.user_id where u1_0.id=?
-		 * Hibernate: insert into user (created_at,email,id_name,introduction,modified_at,name,nick_name,password) values (?,?,?,?,?,?,?,?)
-		 */
 		this.post = postRepository.save(post);
-		/**
-		 * Hibernate: select p1_0.id,p1_0.contents,p1_0.created_at,p1_0.modified_at,p1_0.state_id,p1_0.title,p1_0.user_id,c1_0.post_id,c1_0.id,c1_0.text,c1_0.user_id from post p1_0 left join comment c1_0 on p1_0.id=c1_0.post_id where p1_0.id=?
-		 * Hibernate: insert into post (contents,created_at,modified_at,state_id,title,user_id) values (?,?,?,?,?,?)
-		 */
 	}
 
 	@AfterEach
@@ -77,7 +81,19 @@ class PostRepositoryTest {
 	}
 
 	@Test
-	@DisplayName("PostHobby 중간조인테이블에서 데이터 삭제 이후 조회 시, left over entity가 존재합니다.")
+	@DisplayName("postHobbyRepo에 대하여 어떤 구현체를 autowired 하는지 확인합니다.")
+	public void postHobbyRepoImpl_확인() {
+		// WHEN
+		Class<?> postHobbyRepoImpl = AopProxyUtils.ultimateTargetClass(postHobbyRepository);
+		Class<?> postHobbyRepoInterface = AopProxyUtils.proxiedUserInterfaces(postHobbyRepository)[0];
+
+		// THEN
+		System.out.println("postHobbyRepoImpl = " + postHobbyRepoImpl);
+		System.out.println("postHobbyRepoImplClassInfo = " + postHobbyRepoInterface);
+	}
+
+	@Test
+	@DisplayName("PostHobby 중간조인테이블에서 데이터 삭제 이후, left over entity가 존재합니다.")
 	public void 중간조인테이블_데이터삭제_leftover_entity존재() {
 		// GIVEN
 		Hobby hobbyBaseball = Hobby.builder().hobbyName("야구").build();
@@ -86,21 +102,9 @@ class PostRepositoryTest {
 		hobbyRepository.save(hobbySoccer);
 		post.addHobby(hobbyBaseball);
 		post.addHobby(hobbySoccer);
-		/**
-		 * Hibernate: insert into hobby (hobby_name) values (?)
-		 * Hibernate: insert into hobby (hobby_name) values (?)
-		 * Hibernate: insert into post_hobby (hobby_id,post_id) values (?,?)
-		 * Hibernate: insert into post_hobby (hobby_id,post_id) values (?,?)
-		 */
 
 		// WHEN
-		postHobbyRepository.deleteAll(); // JPQL
-		/**
-		 * Hibernate: delete from post_hobby
-		 * Hibernate: select h1_0.id,h1_0.hobby_name from hobby h1_0 where h1_0.hobby_name=?
-		 * Hibernate: select h1_0.id,h1_0.hobby_name from hobby h1_0 where h1_0.hobby_name=?
-		 * Hibernate: delete from post_hobby
-		 */
+		postHobbyRepository.deleteAllByJpql();
 
 		// THEN
 		Hobby foundHobbyBaseball = hobbyRepository.findByHobbyName("야구").orElseThrow(NotFoundHobbyException::new);
@@ -111,13 +115,130 @@ class PostRepositoryTest {
 			.anyMatch(postHobby -> postHobby.getHobby().equals(foundHobbySoccer));
 		assertTrue(hasBaseballInPost);
 		assertTrue(hasSoccerLeftInPost);
-		/**
-		 * Hibernate: select p1_0.id,p1_0.contents,p1_0.created_at,p1_0.modified_at,p1_0.state_id,p1_0.title,p1_0.user_id from post p1_0
-		 * Hibernate: select h1_0.id,h1_0.hobby_name from hobby h1_0
-		 * Hibernate: select u1_0.id,u1_0.created_at,u1_0.email,u1_0.id_name,u1_0.introduction,u1_0.modified_at,u1_0.name,u1_0.nick_name,u1_0.password from user u1_0
-		 * Hibernate: select c1_0.user_id,c1_0.id,c1_0.post_id,c1_0.text from comment c1_0 where c1_0.user_id=?
-		 * Hibernate: select p1_0.user_id,p1_0.id,p1_0.contents,p1_0.created_at,p1_0.modified_at,p1_0.state_id,p1_0.title from post p1_0 where p1_0.user_id=?
-		 */
+	}
+
+	@Test
+	@DisplayName("PostHobby 중간조인테이블에서 영속성 sync 데이터 삭제 이후, left over entity가 존재하지 않습니다.")
+	public void 중간조인테이블_데이터삭제_영속성초기화() {
+		// GIVEN
+		Hobby hobbyBaseball = Hobby.builder().hobbyName("야구").build();
+		Hobby hobbySoccer = Hobby.builder().hobbyName("축구").build();
+		hobbyRepository.save(hobbyBaseball);
+		hobbyRepository.save(hobbySoccer);
+		post.addHobby(hobbyBaseball);
+		post.addHobby(hobbySoccer);
+
+		// WHEN
+		postHobbyRepository.deleteAllByJpqlSyncPersistence();
+
+		// THEN
+		Hobby foundHobbyBaseball = hobbyRepository.findByHobbyName("야구").orElseThrow(NotFoundHobbyException::new);
+		Hobby foundHobbySoccer = hobbyRepository.findByHobbyName("축구").orElseThrow(NotFoundHobbyException::new);
+		boolean hasBaseballInPost = post.getPostHobbies().stream()
+			.anyMatch(postHobby -> postHobby.getHobby().equals(foundHobbyBaseball));
+		boolean hasSoccerLeftInPost = post.getPostHobbies().stream()
+			.anyMatch(postHobby -> postHobby.getHobby().equals(foundHobbySoccer));
+		assertFalse(hasBaseballInPost);
+		assertFalse(hasSoccerLeftInPost);
+	}
+
+	@Test
+	@DisplayName("DELETE ALL POSTHOBBY CRUDRepo의 쿼리는 실행되지 않습니다.")
+	public void DELETE_ALL_POSTHOBBY테이블_CRUDRepo쿼리실행() {
+		// GIVEN
+		Hobby hobbyBaseball = Hobby.builder().hobbyName("야구").build();
+		Hobby hobbySoccer = Hobby.builder().hobbyName("축구").build();
+		hobbyRepository.save(hobbyBaseball);
+		hobbyRepository.save(hobbySoccer);
+		post.addHobby(hobbyBaseball); // 연관관계 편의메서드
+		post.addHobby(hobbySoccer);
+
+		// WHEN
+		postHobbyRepository.deleteAll(); // SimpleJpaRepository
+
+		// THEN
+		System.out.println("postHobbyRepository.findAll().size() = " + postHobbyRepository.findAll().size());
+		assertNotEquals(0, postHobbyRepository.findAll().size());
+	}
+
+	@Test
+	@DisplayName("SimpleJpaRepository의 DELETE문을  직접 실행해봅니다.")
+	public void SimpleJpaRepositoryDELETE문_직접실행() {
+		// GIVEN
+		// entityInformation
+		JpaEntityInformation<Post, ?> entityInformation = JpaEntityInformationSupport.getEntityInformation(Post.class, entityManager);
+
+		// WHEN
+		Assert.notNull(post, "Entity must not be null");
+
+		if (entityInformation.isNew(post)) {
+			return;
+		}
+
+		Class<?> type = ProxyUtils.getUserClass(post);
+
+		Post existing = (Post) entityManager.find(type, entityInformation.getId(post));
+		// if the entity to be deleted doesn't exist, delete is a NOOP
+		if (existing == null) {
+			return;
+		}
+
+		entityManager.remove(entityManager.contains(post) ? post : entityManager.merge(post)); // 쓰기 지연 저장소에 저장
+
+		// THEN
+		assertEquals(Post.class, type);
+		assertFalse(entityManager.contains(post));
+		assertNotNull(existing);
+	}
+
+	@Test
+	@DisplayName("SimpleJpaRepository의 DELETE문을  직접 실행한 이후, flush를 직접 하여 트랜잭션 종료 이전에 수행하도록 변경하여 수행해봅니다.")
+	public void SimpleJpaRepositoryDELETE문_직접실행_이후_flush() {
+		// GIVEN
+		// entityInformation
+		JpaEntityInformation<Post, ?> entityInformation = JpaEntityInformationSupport.getEntityInformation(Post.class, entityManager);
+
+		// WHEN
+		Assert.notNull(post, "Entity must not be null");
+
+		if (entityInformation.isNew(post)) {
+			return;
+		}
+
+		Class<?> type = ProxyUtils.getUserClass(post);
+
+		Post existing = (Post) entityManager.find(type, entityInformation.getId(post));
+		// if the entity to be deleted doesn't exist, delete is a NOOP
+		if (existing == null) {
+			return;
+		}
+
+		entityManager.remove(entityManager.contains(post) ? post : entityManager.merge(post));
+		entityManager.flush();
+
+		// THEN
+		assertEquals(Post.class, type);
+		assertFalse(entityManager.contains(post));
+		assertNotNull(existing);
+	}
+
+	@Test
+	@DisplayName("DELETE ALL POSTHOBBY JPQL 쿼리를 정상실행 합니다.")
+	public void DELETE_ALL_POSTHOBBY테이블_JPQL쿼리실행() {
+		// GIVEN
+		Hobby hobbyBaseball = Hobby.builder().hobbyName("야구").build();
+		Hobby hobbySoccer = Hobby.builder().hobbyName("축구").build();
+		hobbyRepository.save(hobbyBaseball);
+		hobbyRepository.save(hobbySoccer);
+		post.addHobby(hobbyBaseball); // 연관관계 편의메서드
+		post.addHobby(hobbySoccer);
+
+		// WHEN
+		postHobbyRepository.deleteAllByJpql(); // JPQL
+
+		// THEN
+		System.out.println("postHobbyRepository.findAll().size() = " + postHobbyRepository.findAll().size());
+		assertEquals(0, postHobbyRepository.findAll().size());
 	}
 
 	@Test
@@ -214,20 +335,5 @@ class PostRepositoryTest {
 		// THEN
 		List<PostHobby> all = postHobbyRepository.findAll();
 		assertEquals(0, all.size());
-	}
-
-	@Test
-	@DisplayName("DELETE ALL POSTHOBBY JPQL 쿼리를 정상실행 합니다.")
-	public void DELETE_ALL_POSTHOBBY테이블_JPQL쿼리실행() {
-		// GIVEN
-		Hobby hobbyBaseball = Hobby.builder().hobbyName("야구").build();
-		Hobby hobbySoccer = Hobby.builder().hobbyName("축구").build();
-		hobbyRepository.save(hobbyBaseball);
-		hobbyRepository.save(hobbySoccer);
-		post.addHobby(hobbyBaseball); // 연관관계 편의메서드
-		post.addHobby(hobbySoccer);
-
-		// WHEN
-		postHobbyRepository.deleteAll();
 	}
 }
