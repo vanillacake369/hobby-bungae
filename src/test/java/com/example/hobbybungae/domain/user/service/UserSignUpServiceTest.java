@@ -15,7 +15,7 @@ import com.example.hobbybungae.domain.user.exception.DuplicatedIdNameException;
 import com.example.hobbybungae.domain.user.exception.DuplicatedNickNameException;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
 import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
-import com.example.hobbybungae.global_exception.ErrorCode;
+import com.example.hobbybungae.global.exception.ErrorCode;
 import java.util.Objects;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;

@@ -16,7 +16,7 @@ import com.example.hobbybungae.domain.post.repository.PostRepository;
 import com.example.hobbybungae.domain.state.entity.State;
 import com.example.hobbybungae.domain.state.service.StateService;
 import com.example.hobbybungae.domain.user.entity.User;
-import com.example.hobbybungae.global_exception.ErrorCode;
+import com.example.hobbybungae.global.exception.ErrorCode;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;

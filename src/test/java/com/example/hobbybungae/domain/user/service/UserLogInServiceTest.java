@@ -12,7 +12,7 @@ import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.exception.NotFoundUserException;
 import com.example.hobbybungae.domain.user.exception.NotMachingPasswordException;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
-import com.example.hobbybungae.global_exception.ErrorCode;
+import com.example.hobbybungae.global.exception.ErrorCode;
 import com.example.hobbybungae.security.JwtUtil;
 import com.example.hobbybungae.security.UserDetailsServiceImpl;
 import java.util.Objects;

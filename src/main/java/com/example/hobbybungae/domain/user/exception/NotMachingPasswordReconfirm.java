@@ -1,8 +1,8 @@
 package com.example.hobbybungae.domain.user.exception;
 
 import com.example.hobbybungae.domain.common.DomainException;
-import com.example.hobbybungae.global_exception.ErrorCode;
-import com.example.hobbybungae.global_exception.ErrorDetail;
+import com.example.hobbybungae.global.exception.ErrorCode;
+import com.example.hobbybungae.global.exception.ErrorDetail;
 
 /* 패스워드 입력값과 패스워드 재확인 입력값이 서로 다른 경우 */
 public class NotMachingPasswordReconfirm extends DomainException {

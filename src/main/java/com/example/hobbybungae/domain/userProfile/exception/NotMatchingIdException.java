@@ -1,8 +1,8 @@
 package com.example.hobbybungae.domain.userProfile.exception;
 
 import com.example.hobbybungae.domain.common.DomainException;
-import com.example.hobbybungae.global_exception.ErrorCode;
-import com.example.hobbybungae.global_exception.ErrorDetail;
+import com.example.hobbybungae.global.exception.ErrorCode;
+import com.example.hobbybungae.global.exception.ErrorDetail;
 
 public class NotMatchingIdException extends DomainException {
 

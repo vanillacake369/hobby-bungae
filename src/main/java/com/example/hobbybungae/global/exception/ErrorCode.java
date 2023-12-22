@@ -1,4 +1,4 @@
-package com.example.hobbybungae.global_exception;
+package com.example.hobbybungae.global.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;

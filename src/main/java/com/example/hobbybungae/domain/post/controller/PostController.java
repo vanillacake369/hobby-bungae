@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,12 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 @RequestMapping("/hobby-bungae/v1/posts")
 @EnableWebMvc
 public class PostController {
@@ -40,21 +39,21 @@ public class PostController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<PostResponseDto>> getPosts() {
-		List<PostResponseDto> responseDto = postService.getPosts();
+	public ResponseEntity<List<PostResponseDto>> getPosts(
+		@RequestParam("page") int page,
+		@RequestParam("size") int size,
+		@RequestParam("sortBy") String sortBy,
+		@RequestParam("isAsc") boolean isAsc
+	) {
+		List<PostResponseDto> responseDto = postService.getPosts(page - 1, size, sortBy, isAsc);
 		return ResponseEntity.ok(responseDto);
 	}
 
 	@PostMapping
-//	public String addPost(@RequestBody PostRequestDto requestDto,
-//	public PostResponseDto addPost(@RequestBody PostRequestDto requestDto,
 	public ResponseEntity<PostResponseDto> addPost(@RequestBody PostRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) throws JsonProcessingException {
-		log.info("Post Controller :: addPost");
 		PostResponseDto responseDto = postService.addPost(requestDto, userDetails.getUser());
-		log.info("Post Controller **COMPLETED** :: addPost");
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-//		return objectMapper.writeValueAsString(requestDto);
 	}
 
 	@PutMapping("/{postId}")

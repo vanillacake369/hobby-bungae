@@ -13,9 +13,12 @@ import com.example.hobbybungae.domain.state.exception.NotFoundStateException;
 import com.example.hobbybungae.domain.state.service.StateService;
 import com.example.hobbybungae.domain.user.entity.User;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,10 +83,16 @@ public class PostService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<PostResponseDto> getPosts() {
-		return postRepository.findAllByOrderByCreatedAtDesc().stream()
+	public List<PostResponseDto> getPosts(int page, int size, String sortBy, boolean isAsc) {
+		Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+		Sort sort = Sort.by(direction, sortBy);
+		Pageable pageable = PageRequest.of(page, size, sort);
+
+		Page<Post> postList = postRepository.findAll(pageable);
+		List<PostResponseDto> responseDtos = postList.stream()
 			.map(PostResponseDto::new)
-			.collect(Collectors.toList());
+			.toList();
+		return responseDtos;
 	}
 
 	public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user)
@@ -105,4 +114,5 @@ public class PostService {
 		return postRepository.findById(postId)
 			.orElseThrow(() -> new NotFoundPostException("postId", postId.toString(), "주어진 id에 해당하는 게시글이 존재하지 않음"));
 	}
+
 }
