@@ -4,7 +4,8 @@ package com.example.hobbybungae.domain.post.entity;
 import com.example.hobbybungae.domain.comment.entity.Comment;
 import com.example.hobbybungae.domain.common.TimeStamp;
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
-import com.example.hobbybungae.domain.post.dto.PostRequestDto;
+import com.example.hobbybungae.domain.post.dto.PostAddRequestDto;
+import com.example.hobbybungae.domain.post.dto.PostUpdateRequestDto;
 import com.example.hobbybungae.domain.state.entity.State;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -70,16 +71,7 @@ public class Post extends TimeStamp {
 		this.user = user;
 	}
 
-	private Post(PostRequestDto requestDto) {
-		this.title = requestDto.title();
-		this.contents = requestDto.content();
-		this.state = requestDto.state();
-		// 각 Hobby들에 대한 연관관계 저장
-		List<Hobby> hobbies = requestDto.hobbies();
-		hobbies.forEach(this::addHobby);
-	}
-
-	private Post(PostRequestDto requestDto, User user) {
+	private Post(PostAddRequestDto requestDto, User user) {
 		this.title = requestDto.title();
 		this.contents = requestDto.content();
 		this.state = requestDto.state();
@@ -89,15 +81,11 @@ public class Post extends TimeStamp {
 		hobbies.forEach(this::addHobby);
 	}
 
-	public static Post of(PostRequestDto requestDto) {
-		return new Post(requestDto);
-	}
-
-	public static Post of(PostRequestDto requestDto, User user) {
+	public static Post of(PostAddRequestDto requestDto, User user) {
 		return new Post(requestDto, user);
 	}
 
-	public void update(PostRequestDto requestDto, User user) {
+	public void update(PostUpdateRequestDto requestDto, User user) {
 		this.title = requestDto.title();
 		this.contents = requestDto.content();
 		this.state = requestDto.state();

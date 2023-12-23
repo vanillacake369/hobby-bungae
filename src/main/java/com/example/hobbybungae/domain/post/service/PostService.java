@@ -3,8 +3,9 @@ package com.example.hobbybungae.domain.post.service;
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.hobby.exception.NotFoundHobbyException;
 import com.example.hobbybungae.domain.hobby.service.HobbyService;
-import com.example.hobbybungae.domain.post.dto.PostRequestDto;
+import com.example.hobbybungae.domain.post.dto.PostAddRequestDto;
 import com.example.hobbybungae.domain.post.dto.PostResponseDto;
+import com.example.hobbybungae.domain.post.dto.PostUpdateRequestDto;
 import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.post.exception.InvalidPostModifierException;
 import com.example.hobbybungae.domain.post.exception.NotFoundPostException;
@@ -49,8 +50,7 @@ public class PostService {
 		log.info("취미 검증 통과");
 	}
 
-	public PostResponseDto addPost(PostRequestDto requestDto, User user)
-		throws NotFoundHobbyException, NotFoundStateException {
+	public PostResponseDto addPost(PostAddRequestDto requestDto, User user) throws NotFoundHobbyException, NotFoundStateException {
 		log.info("Post Service :: addPost");
 
 		// 취미카테고리 & 지역 데이터 존재여부 검증
@@ -95,7 +95,7 @@ public class PostService {
 		return responseDtos;
 	}
 
-	public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user)
+	public PostResponseDto updatePost(Long postId, PostUpdateRequestDto requestDto, User user)
 		throws InvalidPostModifierException {
 		Post post = getPostById(postId);
 		validateUserIsAuthor(post.getUser().getId(), user.getId());

@@ -1,7 +1,8 @@
 package com.example.hobbybungae.domain.post.controller;
 
-import com.example.hobbybungae.domain.post.dto.PostRequestDto;
+import com.example.hobbybungae.domain.post.dto.PostAddRequestDto;
 import com.example.hobbybungae.domain.post.dto.PostResponseDto;
+import com.example.hobbybungae.domain.post.dto.PostUpdateRequestDto;
 import com.example.hobbybungae.domain.post.service.PostService;
 import com.example.hobbybungae.security.UserDetailsImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -50,8 +51,10 @@ public class PostController {
 	}
 
 	@PostMapping
-	public ResponseEntity<PostResponseDto> addPost(@RequestBody PostRequestDto requestDto,
-		@AuthenticationPrincipal UserDetailsImpl userDetails) throws JsonProcessingException {
+	public ResponseEntity<PostResponseDto> addPost(
+		@RequestBody PostAddRequestDto requestDto,
+		@AuthenticationPrincipal UserDetailsImpl userDetails
+	) throws JsonProcessingException {
 		PostResponseDto responseDto = postService.addPost(requestDto, userDetails.getUser());
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
 	}
@@ -59,7 +62,7 @@ public class PostController {
 	@PutMapping("/{postId}")
 	public ResponseEntity<PostResponseDto> updatePost(
 		@PathVariable Long postId,
-		@Valid @RequestBody PostRequestDto requestDto,
+		@Valid @RequestBody PostUpdateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails
 	) {
 		PostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());

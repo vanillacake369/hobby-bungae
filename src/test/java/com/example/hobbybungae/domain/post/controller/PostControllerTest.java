@@ -4,7 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
-import com.example.hobbybungae.domain.post.dto.PostRequestDto;
+import com.example.hobbybungae.domain.post.dto.PostAddRequestDto;
 import com.example.hobbybungae.domain.post.service.PostService;
 import com.example.hobbybungae.domain.state.entity.State;
 import com.example.hobbybungae.domain.user.entity.User;
@@ -47,7 +47,7 @@ class PostControllerTest {
 	@Test
 	void addPost() throws Exception {
 		// GIVEN
-		PostRequestDto postRequestDto = new PostRequestDto("졸려요",
+		PostAddRequestDto postRequestDto = new PostAddRequestDto("졸려요",
 			"잠 좀 자게 해주삼",
 			new State("경기도", "수원시", "장안구"),
 			List.of(new Hobby("코딩"),
