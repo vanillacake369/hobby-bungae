@@ -248,7 +248,9 @@ class PostRepositoryTest {
 		User user = User.builder()
 			.name("user")
 			.idName("userIdName")
-			.password("userPassword")
+			.email("userEmail@email.com")
+			.nickName("userNickName")
+			.password("userPassword!@#")
 			.introduction("userIntroduction")
 			.build();
 		User savedUser = userRepository.save(user);
