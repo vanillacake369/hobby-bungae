@@ -6,17 +6,18 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.example.hobbybungae.config.QueryDslConfiguration;
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.hobby.exception.NotFoundHobbyException;
 import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
 import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.post.entity.PostHobby;
 import com.example.hobbybungae.domain.post.exception.NotFoundPostException;
+import com.example.hobbybungae.domain.post.unit.PostSelectCondition;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.util.ProxyUtils;
@@ -36,7 +38,7 @@ import org.springframework.util.Assert;
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Transactional
+@Import(QueryDslConfiguration.class)
 class PostRepositoryTest {
 
 	@Autowired
@@ -67,7 +69,12 @@ class PostRepositoryTest {
 			.nickName("tony98")
 			.password("whatSup12***")
 			.build();
-		Post post = new Post(1L, "postTitle", "postContents", user);
+		Post post = Post.builder()
+			.id(1L)
+			.title("postTitle")
+			.contents("postContents")
+			.user(user)
+			.build();
 		this.user = userRepository.save(user);
 		this.post = postRepository.save(post);
 	}
@@ -337,5 +344,23 @@ class PostRepositoryTest {
 		// THEN
 		List<PostHobby> all = postHobbyRepository.findAll();
 		assertEquals(0, all.size());
+	}
+
+	@Test
+	@DisplayName("Condition에 따른 Post 리스트를 조회합니다.")
+	public void querydsl_Post조회_ByCondition() {
+		// GIVEN
+		PostSelectCondition condition = PostSelectCondition.builder()
+			.userId(user.getId())
+			.title(post.getTitle())
+			.contents(post.getContents())
+			.build();
+
+		// WHEN
+		List<Post> posts = postRepository.findPostsBy(condition);
+
+		// THEN
+		assertEquals(1, posts.size());
+		assertEquals(post, posts.get(0));
 	}
 }

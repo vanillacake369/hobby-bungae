@@ -14,4 +14,8 @@ public class NotFoundStateException extends DomainException {
 	public NotFoundStateException(String field, String value) {
 		super(ErrorCode.NOT_FOUND_STATE, new ErrorDetail(field, value));
 	}
+
+	public NotFoundStateException() {
+		super(ErrorCode.NOT_FOUND_STATE, new ErrorDetail());
+	}
 }

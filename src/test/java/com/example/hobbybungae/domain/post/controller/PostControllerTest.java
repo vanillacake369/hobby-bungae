@@ -8,6 +8,7 @@ import com.example.hobbybungae.domain.post.dto.PostAddRequestDto;
 import com.example.hobbybungae.domain.post.service.PostService;
 import com.example.hobbybungae.domain.state.entity.State;
 import com.example.hobbybungae.domain.user.entity.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,16 +16,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-@WebMvcTest(PostController.class)
 @ActiveProfiles("test")
-@MockBean(JpaMetamodelMappingContext.class)
+@WebMvcTest(controllers = PostController.class)
 class PostControllerTest {
 
 	@Autowired
@@ -32,6 +31,9 @@ class PostControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@MockBean
 	private PostService postService;

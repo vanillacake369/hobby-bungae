@@ -28,11 +28,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Table(name = "post")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@ToString
 public class Post extends TimeStamp {
 
 	@JsonIgnore
@@ -64,10 +66,11 @@ public class Post extends TimeStamp {
 	private String contents;
 
 	@Builder
-	public Post(Long id, String title, String contents, User user) {
+	public Post(Long id, String title, String contents, State state, User user) {
 		this.id = id;
 		this.title = title;
 		this.contents = contents;
+		this.state = state;
 		this.user = user;
 	}
 
