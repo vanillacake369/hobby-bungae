@@ -19,7 +19,6 @@ import com.example.hobbybungae.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -77,14 +76,6 @@ class PostRepositoryTest {
 			.build();
 		this.user = userRepository.save(user);
 		this.post = postRepository.save(post);
-	}
-
-	@AfterEach
-	void tearDown() {
-		postHobbyRepository.deleteAll();
-		postRepository.deleteAll();
-		hobbyRepository.deleteAll();
-		userRepository.deleteAll();
 	}
 
 	@Test
