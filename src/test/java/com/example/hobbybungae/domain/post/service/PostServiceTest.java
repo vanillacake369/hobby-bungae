@@ -8,7 +8,7 @@ import com.example.hobbybungae.domain.comment.entity.Comment;
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
 import com.example.hobbybungae.domain.hobby.repository.HobbyRepository;
 import com.example.hobbybungae.domain.hobby.service.HobbyService;
-import com.example.hobbybungae.domain.post.dto.PostRequestDto;
+import com.example.hobbybungae.domain.post.dto.PostAddRequestDto;
 import com.example.hobbybungae.domain.post.dto.PostResponseDto;
 import com.example.hobbybungae.domain.post.entity.Post;
 import com.example.hobbybungae.domain.post.exception.InvalidPostModifierException;
@@ -16,7 +16,7 @@ import com.example.hobbybungae.domain.post.repository.PostRepository;
 import com.example.hobbybungae.domain.state.entity.State;
 import com.example.hobbybungae.domain.state.service.StateService;
 import com.example.hobbybungae.domain.user.entity.User;
-import com.example.hobbybungae.global_exception.ErrorCode;
+import com.example.hobbybungae.global.exception.ErrorCode;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
@@ -52,10 +52,10 @@ class PostServiceTest {
 	@Autowired
 	private HobbyRepository hobbyRepository;
 
-	public static Stream<Arguments> getPostRequestAndUser() {
+	public static Stream<Arguments> getPostAddRequestAndUser() {
 		return Stream.of(
 			Arguments.of(
-				new PostRequestDto("졸려요",
+				new PostAddRequestDto("졸려요",
 					"잠 좀 자게 해주삼",
 					new State("경기도", "수원시", "장안구"),
 					List.of(new Hobby("코딩"),
@@ -125,9 +125,9 @@ class PostServiceTest {
 
 	@ParameterizedTest
 	@DisplayName("게시글을 작성합니다.")
-	@MethodSource("getPostRequestAndUser")
+	@MethodSource("getPostAddRequestAndUser")
 	@Transactional
-	public void 게시글_작성(PostRequestDto requestDto, User user) {
+	public void 게시글_작성(PostAddRequestDto requestDto, User user) {
 		// WHEN
 		PostResponseDto postResponseDto = postService.addPost(requestDto, user);
 
@@ -138,9 +138,9 @@ class PostServiceTest {
 
 	@ParameterizedTest
 	@DisplayName("게시글을 삭제합니다.")
-	@MethodSource("getPostRequestAndUser")
+	@MethodSource("getPostAddRequestAndUser")
 	@Transactional
-	public void 게시글삭제(PostRequestDto requestDto, User user) {
+	public void 게시글삭제(PostAddRequestDto requestDto, User user) {
 		// GIVEN
 		PostResponseDto postResponseDto = postService.addPost(requestDto, user);
 

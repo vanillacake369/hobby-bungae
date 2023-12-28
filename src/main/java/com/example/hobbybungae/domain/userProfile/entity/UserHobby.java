@@ -42,7 +42,7 @@ public class UserHobby {
 	// Hobby 추가 및 업데이트
 	public static UserHobby addUserAndHobby(User user, Hobby hobby) {
 		UserHobby userHobby = new UserHobby(user, hobby);
-		userHobby.getHobby().getUserHobbyList().add(userHobby);
+		userHobby.getHobby().getUserHobbies().add(userHobby);
 		return userHobby;
 	}
 }

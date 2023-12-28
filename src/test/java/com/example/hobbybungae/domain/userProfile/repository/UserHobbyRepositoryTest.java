@@ -10,13 +10,8 @@ import com.example.hobbybungae.domain.user.entity.User;
 import com.example.hobbybungae.domain.user.exception.NotFoundUserException;
 import com.example.hobbybungae.domain.user.repository.UserRepository;
 import com.example.hobbybungae.domain.userProfile.entity.UserHobby;
-import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -39,18 +34,18 @@ class UserHobbyRepositoryTest {
 	@Autowired
 	HobbyRepository hobbyRepository;
 
-	public static Stream<Arguments> getUserIdAndNewHobbyList() {
-		return Stream.of(
-			Arguments.of(
-				1L,
-				List.of(
-					new Hobby("야구"),
-					new Hobby("축구"),
-					new Hobby("농구")
-				)
-			)
-		);
-	}
+//	public static Stream<Arguments> getUserIdAndNewHobbyList() {
+//		return Stream.of(
+//			Arguments.of(
+//				1L,
+//				List.of(
+//					new Hobby("야구"),
+//					new Hobby("축구"),
+//					new Hobby("농구")
+//				)
+//			)
+//		);
+//	}
 
 	@Test
 	@DisplayName("Hobby를 입력받아 UserHobby를 생성, 이에 대한 다대다 양방향 관계를 resolve합니다.")
@@ -75,29 +70,28 @@ class UserHobbyRepositoryTest {
 		assertEquals(userHobbyOfUser, userHobbyOfHobby);
 	}
 
-	@ParameterizedTest
-	@MethodSource("getUserIdAndNewHobbyList")
+	@Test
 	@DisplayName("Hobby를 입력받아 수정 시, 현재 유저의 취미를 모두 삭제하고 새로 등록합니다.")
-	public void 기존취미삭제_새로운취미등록(Long id, List<Hobby> hobbies) {
+	public void 기존취미삭제_새로운취미등록() {
 		// GIVEN
 		User user = User.builder()
-			.id(id)
 			.idName("idName")
 			.name("name")
 			.password("password")
 			.build();
 		Hobby golf = new Hobby("골프");
 		Hobby tennis = new Hobby("테니스");
+
 		user.addHobby(golf);
 		user.addHobby(tennis);
 
 		// WHEN
 		user.removeHobbies();
-		
+
 		// THEN
-		boolean leftoutUserOfGolf = golf.getUserHobbyList().stream()
+		boolean leftoutUserOfGolf = golf.getUserHobbies().stream()
 			.anyMatch(userHobby -> userHobby.getUser().equals(user));
-		boolean leftoutUserOfTennis = tennis.getUserHobbyList().stream()
+		boolean leftoutUserOfTennis = tennis.getUserHobbies().stream()
 			.anyMatch(userHobby -> userHobby.getUser().equals(user));
 		boolean hasGolf = user.getUserHobbies().stream()
 			.anyMatch(userHobby -> userHobby.getHobby().equals(golf));

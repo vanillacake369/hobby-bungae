@@ -4,7 +4,8 @@ package com.example.hobbybungae.domain.post.entity;
 import com.example.hobbybungae.domain.comment.entity.Comment;
 import com.example.hobbybungae.domain.common.TimeStamp;
 import com.example.hobbybungae.domain.hobby.entity.Hobby;
-import com.example.hobbybungae.domain.post.dto.PostRequestDto;
+import com.example.hobbybungae.domain.post.dto.PostAddRequestDto;
+import com.example.hobbybungae.domain.post.dto.PostUpdateRequestDto;
 import com.example.hobbybungae.domain.state.entity.State;
 import com.example.hobbybungae.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -42,7 +43,7 @@ public class Post extends TimeStamp {
 	@OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<Comment> comments = new ArrayList<>();
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@Setter(AccessLevel.NONE)
 	@JoinColumn(name = "state_id")
 	State state;
@@ -63,21 +64,15 @@ public class Post extends TimeStamp {
 	private String contents;
 
 	@Builder
-	public Post(String title, String contents) {
+	public Post(Long id, String title, String contents, State state, User user) {
+		this.id = id;
 		this.title = title;
 		this.contents = contents;
+		this.state = state;
+		this.user = user;
 	}
 
-	private Post(PostRequestDto requestDto) {
-		this.title = requestDto.title();
-		this.contents = requestDto.content();
-		this.state = requestDto.state();
-		// 각 Hobby들에 대한 연관관계 저장
-		List<Hobby> hobbies = requestDto.hobbies();
-		hobbies.forEach(this::addHobby);
-	}
-
-	private Post(PostRequestDto requestDto, User user) {
+	private Post(PostAddRequestDto requestDto, User user) {
 		this.title = requestDto.title();
 		this.contents = requestDto.content();
 		this.state = requestDto.state();
@@ -87,15 +82,11 @@ public class Post extends TimeStamp {
 		hobbies.forEach(this::addHobby);
 	}
 
-	public static Post of(PostRequestDto requestDto) {
-		return new Post(requestDto);
-	}
-
-	public static Post of(PostRequestDto requestDto, User user) {
+	public static Post of(PostAddRequestDto requestDto, User user) {
 		return new Post(requestDto, user);
 	}
 
-	public void update(PostRequestDto requestDto, User user) {
+	public void update(PostUpdateRequestDto requestDto, User user) {
 		this.title = requestDto.title();
 		this.contents = requestDto.content();
 		this.state = requestDto.state();
@@ -114,7 +105,7 @@ public class Post extends TimeStamp {
 		if (!postHobbies.isEmpty()) {
 			postHobbies.forEach(postHobby ->
 				postHobby.getHobby()
-					.getPostHobbyList()
+					.getPostHobbies()
 					.remove(postHobby)
 			);
 		}
@@ -123,18 +114,16 @@ public class Post extends TimeStamp {
 
 	/**
 	 * Post와 다대다 연관관계의 Hobby를 입력받아 연관관계 해결
-	 *
 	 * @param hobby 입력된 Hobby
 	 */
 	public void addHobby(Hobby hobby) {
 		// 새로운 연관관계 추가
-		PostHobby postHobby = PostHobby.addPostAndHobby(this, hobby);
-		postHobbies.add(postHobby);
+		PostHobby postHobby = PostHobby.addPostAndHobby(this, hobby); // 새로운 인스턴스 생성 & hobby에 대해서 PostHobby 추가
+		postHobbies.add(postHobby); // post에 대해서 PostHobby 추가
 	}
 
 	/**
 	 * Post와 1대다 관계의 User를 입력받아 연관관계 해결
-	 *
 	 * @param user 로그인 된 User
 	 */
 	public void setAuthor(User user) {

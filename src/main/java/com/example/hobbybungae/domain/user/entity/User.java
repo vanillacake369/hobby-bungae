@@ -15,7 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +23,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User extends TimeStamp {
 
 	@OneToMany(targetEntity = UserHobby.class, mappedBy = "user")
@@ -44,24 +46,18 @@ public class User extends TimeStamp {
 	@Column(nullable = false)
 	private String name;
 
+	@Column(nullable = false)
+	private String email;
+
+	@Column(nullable = false)
+	private String nickName;
+	@Column(nullable = false)
+	private String password;
 	@Column
 	private String introduction;
 
-	@Column(nullable = false)
-	private String password;
-
-	@Builder
-	public User(Long id, String idName, String name, String introduction, String password) {
-		this.id = id;
-		this.idName = idName;
-		this.name = name;
-		this.introduction = introduction;
-		this.password = password;
-	}
-
 	/**
 	 * User와 다대다 연관관계의 Hobby를 입력받아 연관관계 해결
-	 *
 	 * @param hobby 입력된 Hobby
 	 */
 	public void addHobby(Hobby hobby) {
@@ -88,26 +84,10 @@ public class User extends TimeStamp {
 		if (!userHobbies.isEmpty()) {
 			userHobbies.forEach(userHobby ->
 				userHobby.getHobby()
-					.getUserHobbyList()
+					.getUserHobbies()
 					.remove(userHobby)
 			);
 		}
 		userHobbies.clear();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (!(o instanceof User user)) {
-			return false;
-		}
-		return getId().equals(user.getId());
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getId());
 	}
 }
